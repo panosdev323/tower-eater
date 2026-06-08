@@ -1,5 +1,6 @@
 import { soundManager } from '../systems/SoundManager.js';
 import { ProgressManager } from '../systems/ProgressManager.js';
+import { openPrivacyPolicy } from '../privacyPolicy.js';
 
 export class PauseMenu {
   constructor(onResume, onRestart, onMusicToggle, onSoundsToggle) {
@@ -43,7 +44,7 @@ export class PauseMenu {
       <p class="pm-warning">⚠️ Resets ALL progress — back to Level 1.</p>
 
       <div class="pm-divider"></div>
-      <a class="pm-privacy" href="#" id="pm-privacy">🔒 Privacy Policy</a>
+      <button class="pm-privacy" id="pm-privacy">🔒 Privacy Policy</button>
     `;
 
     this.overlay.appendChild(this.modal);
@@ -69,10 +70,8 @@ export class PauseMenu {
       }
     };
 
-    document.getElementById('pm-privacy').onclick = (e) => {
-      e.preventDefault();
-      window.open('https://yoursite.com/privacy', '_blank');
-    };
+    // ── Privacy: native browser on mobile, new tab on web ──────────
+    document.getElementById('pm-privacy').onclick = () => openPrivacyPolicy();
 
     this.overlay.onclick = (e) => {
       if (e.target === this.overlay) this.hide();
