@@ -374,24 +374,56 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  _fireBullet(tower, from, targetX, targetY, duration) {
+    _fireBullet(tower, from, targetX, targetY, duration) {
     const bullet = this.add.image(from.x, from.y, `bullet_${tower.type}`).setDepth(6);
     this.tweens.add({
-      targets: bullet,
-      x: targetX, y: targetY,
-      duration,
-      ease: 'Linear',
-      onComplete: () => {
+        targets: bullet,
+        x: targetX, y: targetY,
+        duration, ease: 'Linear',
+        onComplete: () => {
         bullet.destroy();
         const dx   = this.monsterSprite.x - targetX;
         const dy   = this.monsterSprite.y - targetY;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < this.tileSize) {
-          this.takeDamage(Math.floor(10 * (1 - this.monsterArmor / 100)));
+            this.takeDamage(Math.floor(10 * (1 - this.monsterArmor / 100)));
+
+            // Frozen mechanic: freeze monster briefly
+            if (this.mechanics.freezeDuration && tower.type === 'ice' && !this.frozen) {
+            this._applyFreeze();
+            }
         }
-      }
+        }
     });
-  }
+    }
+
+    _applyFreeze() {
+    if (this.frozen || this.gameOver) return;
+    this.frozen = true;
+
+    // Visual: blue tint + ice overlay
+    this.monsterSprite.setTint(0x44aaff);
+    this.monsterGlow.setFillStyle(0x44aaff);
+
+    const freezeOverlay = this.add.circle(
+        this.monsterSprite.x, this.monsterSprite.y,
+        28, 0x44aaff, 0.3
+    ).setDepth(6);
+
+    // Block movement
+    const origSpeed   = this.monsterSpeed;
+    this.monsterSpeed = 99999; // effectively frozen
+
+    this.showMsg('❄️ FROZEN!', '#44aaff', this.mechanics.freezeDuration);
+
+    this.time.delayedCall(this.mechanics.freezeDuration, () => {
+        this.frozen       = false;
+        this.monsterSpeed = origSpeed;
+        this.monsterSprite.clearTint();
+        this.monsterGlow.setFillStyle(0x00ff88);
+        freezeOverlay.destroy();
+    });
+    }
 
   _fireGrenade(from, targetX, targetY) {
     // Visual: bigger, orange-ish circle projectile
@@ -653,11 +685,10 @@ export class GameScene extends Phaser.Scene {
         fontSize: '18px', color: '#aaaaaa'
     }).setOrigin(0.5).setDepth(51);
 
-    const countdown = this.add.text(240, 510, '3', {
+    const countdown = this.add.text(240, 510, '5', {
         fontSize: '60px', color: '#ffdd00', fontStyle: 'bold'
     }).setOrigin(0.5).setDepth(51);
 
-    // Settings button μέσα στο overlay
     const settingsHint = this.add.text(240, 600, '⚙️ Settings', {
         fontSize: '16px', color: '#888888',
         backgroundColor: '#1a1a1a',
@@ -666,37 +697,23 @@ export class GameScene extends Phaser.Scene {
     settingsHint.on('pointerdown', () => this._openPause());
 
     this.isMoving = true;
-
-    let count = 3;
+    let count = 5;
 
     const tick = () => {
         count--;
-
         if (count > 0) {
         countdown.setText(String(count));
-        this.tweens.add({
-            targets: countdown,
-            scaleX: 1.4, scaleY: 1.4,
-            duration: 200, yoyo: true
-        });
+        this.tweens.add({ targets: countdown, scaleX: 1.4, scaleY: 1.4, duration: 200, yoyo: true });
         this.time.delayedCall(800, tick);
-
         } else {
-        // GO!
         countdown.setText('GO!');
         countdown.setStyle({ color: '#00ff88' });
-
         this.tweens.add({
             targets: [overlay, txt, sub, countdown, settingsHint],
-            alpha: 0,
-            duration: 400,
-            delay: 400,
+            alpha: 0, duration: 400, delay: 400,
             onComplete: () => {
-            overlay.destroy();
-            txt.destroy();
-            sub.destroy();
-            countdown.destroy();
-            settingsHint.destroy();
+            overlay.destroy(); txt.destroy();
+            sub.destroy(); countdown.destroy(); settingsHint.destroy();
             this.isMoving = false;
             this._startShootTimer();
             }

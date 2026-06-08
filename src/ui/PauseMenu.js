@@ -8,18 +8,14 @@ export class PauseMenu {
   }
 
   _build() {
-    // Overlay
     this.overlay = document.createElement('div');
     this.overlay.id = 'pause-overlay';
 
-    // Modal
     this.modal = document.createElement('div');
     this.modal.id = 'pause-modal';
     this.modal.innerHTML = `
       <div class="pm-title">⏸ PAUSED</div>
-
       <button class="pm-btn pm-primary" id="pm-resume">▶ Resume</button>
-
       <div class="pm-music-row">
         <span class="pm-label">🎵 Background Music</span>
         <label class="pm-switch">
@@ -27,19 +23,16 @@ export class PauseMenu {
           <span class="pm-slider"></span>
         </label>
       </div>
-
       <div class="pm-divider"></div>
-
       <button class="pm-btn pm-danger" id="pm-restart">↺ Start Over</button>
-      <p class="pm-warning">⚠️ This will reset ALL progress and return to Level 1.</p>
-
-      <a class="pm-privacy" href="#" id="pm-privacy">Privacy Policy</a>
+      <p class="pm-warning">⚠️ Resets ALL progress — back to Level 1.</p>
+      <div class="pm-divider"></div>
+      <a class="pm-privacy" href="#" id="pm-privacy">🔒 Privacy Policy</a>
     `;
 
     this.overlay.appendChild(this.modal);
     document.body.appendChild(this.overlay);
 
-    // Events
     document.getElementById('pm-resume').onclick = () => this.hide();
     document.getElementById('pm-restart').onclick = () => {
       if (confirm('Are you sure? All progress will be lost.')) {
@@ -56,7 +49,6 @@ export class PauseMenu {
       window.open('https://yoursite.com/privacy', '_blank');
     };
 
-    // Click overlay to close
     this.overlay.onclick = (e) => {
       if (e.target === this.overlay) this.hide();
     };
