@@ -15,7 +15,7 @@ export class GameScene extends Phaser.Scene {
     this.level = LEVELS[this.levelIndex];
     this.world = this.level.world;
     this.theme = SpriteFactory.getWorldTheme(this.world);
-
+    this.invincible = false;
     this.tileSize = 48;
     this.cols = 10;
     this.rows = 16;
@@ -265,84 +265,185 @@ export class GameScene extends Phaser.Scene {
     });
     }
 
-  takeDamage(amount) {
-    if (this.gameOver) return;
+    takeDamage(amount) {
+    if (this.gameOver || this.invincible) return;
+    
+    this.invincible = true;
     this.monsterHP = Math.max(0, this.monsterHP - amount);
     const ratio = this.monsterHP / this.monsterMaxHP;
     this.hpBarFill.setScale(ratio, 1);
     this.hpBarFill.setFillStyle(ratio > 0.5 ? 0x00ff88 : ratio > 0.25 ? 0xffaa00 : 0xff4444);
     this.hpText.setText('HP ' + this.monsterHP);
-    this.monsterSprite.setTint(0xffffff);
-    this.time.delayedCall(120, () => {
-      if (!this.gameOver) this.monsterSprite.clearTint();
-    });
-    if (this.monsterHP <= 0) this.endGame(false);
-  }
 
-  checkCollisions() {
+    // Έντονο κόκκινο flash
+    this.monsterSprite.setTint(0xff0000);
+    this.cameras.main.flash(80, 255, 0, 0, false);
+
+    // HP bar shake
+    const origX = this.hpBarFill.x;
+    this.tweens.add({
+        targets: this.hpBarFill,
+        x: origX + 4,
+        duration: 40, yoyo: true, repeat: 3, ease: 'Linear',
+        onComplete: () => this.hpBarFill.x = origX
+    });
+
+    this.time.delayedCall(120, () => {
+        if (!this.gameOver) this.monsterSprite.clearTint();
+    });
+
+    // Invincibility frames — 500ms
+    this.time.delayedCall(500, () => { this.invincible = false; });
+
+    if (this.monsterHP <= 0) this.deathAnimation();
+    }
+
+    deathAnimation() {
+        this.gameOver = true;
+        this.isMoving = false;
+        this.input.off('pointerdown');
+        this.input.off('pointermove');
+
+        // Κόκκινη λάμψη
+        this.cameras.main.flash(300, 255, 0, 0, false);
+        this.cameras.main.shake(400, 0.02);
+
+        // 6 κομμάτια που εκτοξεύονται
+        const cx = this.monsterSprite.x;
+        const cy = this.monsterSprite.y;
+        const angles = [0, 60, 120, 180, 240, 300];
+        const pieces = angles.map(deg => {
+            const rad = (deg * Math.PI) / 180;
+            const piece = this.add.circle(cx, cy, 6, 0x00ff88).setDepth(10);
+            this.tweens.add({
+            targets: piece,
+            x: cx + Math.cos(rad) * 60,
+            y: cy + Math.sin(rad) * 60,
+            scaleX: 0, scaleY: 0,
+            alpha: 0,
+            duration: 600,
+            ease: 'Power2'
+            });
+            return piece;
+        });
+
+        // Το monster sprite "εξαφανίζεται"
+        this.tweens.add({
+            targets: [this.monsterSprite, this.monsterGlow],
+            scaleX: 2, scaleY: 2,
+            alpha: 0,
+            duration: 400,
+            ease: 'Power2'
+        });
+
+        // Μετά από 800ms πήγαινε στο LevelScene
+        this.time.delayedCall(800, () => {
+            this.scene.start('LevelScene', {
+            level: this.level,
+            win: false,
+            stats: {
+                hp: this.monsterHP, maxHp: this.monsterMaxHP,
+                eaten: this.towersEaten, power: this.monsterPower,
+                evolutions: this.evolutions
+            }
+            });
+        });
+    }
+
+    checkCollisions() {
     if (this.gameOver) return;
 
     if (this.baseUnlocked &&
         this.monsterCell.col === this.baseCell.col &&
         this.monsterCell.row === this.baseCell.row) {
-      this.endGame(true);
-      return;
+        this.endGame(true);
+        return;
     }
 
     for (let i = this.towers.length - 1; i >= 0; i--) {
-      const t = this.towers[i];
-      if (t.cell.col === this.monsterCell.col && t.cell.row === this.monsterCell.row) {
+        const t = this.towers[i];
+        if (t.cell.col === this.monsterCell.col && t.cell.row === this.monsterCell.row) {
         t.hp -= this.monsterPower;
         const ratio = Math.max(0, t.hp / t.maxHp);
         t.hpBar.setScale(ratio, 1);
         t.hpBar.setFillStyle(ratio > 0.5 ? 0x00ff00 : 0xff4400);
         if (t.hp <= 0) {
-          t.sprite.destroy(); t.hpBar.destroy(); t.hpBarBg.destroy();
-          this.evolve(t.type);
-          this.towers.splice(i, 1);
-          this.cameras.main.shake(200, 0.01);
+            // ── particles ──
+            const tx = t.sprite.x, ty = t.sprite.y;
+            t.sprite.destroy(); t.hpBar.destroy(); t.hpBarBg.destroy();
+            [...Array(8)].forEach((_, i) => {
+            const rad = (i / 8) * Math.PI * 2;
+            const color = t.type === 'fire' ? 0xff6600 : t.type === 'ice' ? 0x44aaff : 0xaa44ff;
+            const p = this.add.circle(tx, ty, 4, color).setDepth(10);
+            this.tweens.add({
+                targets: p,
+                x: tx + Math.cos(rad) * 40,
+                y: ty + Math.sin(rad) * 40,
+                scaleX: 0, scaleY: 0,
+                alpha: 0,
+                duration: 400,
+                ease: 'Power2',
+                onComplete: () => p.destroy()
+            });
+            });
+            // ───────────────
+            this.evolve(t.type);
+            this.towers.splice(i, 1);
+            this.cameras.main.shake(200, 0.01);
         }
         break;
-      }
+        }
     }
-  }
+    }
 
-  updatePath() {
+    updatePath() {
     if (!this.pathGraphics) this.pathGraphics = this.add.graphics().setDepth(1);
     this.pathGraphics.clear();
+    if (this.pathBlinkTimer) { this.pathBlinkTimer.remove(); this.pathBlinkTimer = null; }
 
-    const goal    = this.baseUnlocked ? this.baseCell : this.findNearestTower();
+    const goal = this.baseUnlocked ? this.baseCell : this.findNearestTower();
     if (!goal) return;
 
     const blocked = this.towers
-      .filter(t => !(t.cell.col === goal.col && t.cell.row === goal.row))
-      .map(t => t.cell);
+        .filter(t => !(t.cell.col === goal.col && t.cell.row === goal.row))
+        .map(t => t.cell);
 
     const path = PathFinder.findPath(this.monsterCell, goal, this.cols, this.rows, blocked);
     if (!path.length) {
-      this.pathGraphics.fillStyle(0xff0000, 0.2);
-      const mp = this.cellToPixel(this.monsterCell);
-      this.pathGraphics.fillCircle(mp.x, mp.y, 28);
-      return;
+        // Blink κόκκινο αντί για στατικό circle
+        let visible = true;
+        this.pathBlinkTimer = this.time.addEvent({
+        delay: 300, loop: true,
+        callback: () => {
+            this.pathGraphics.clear();
+            if (visible) {
+            this.pathGraphics.fillStyle(0xff0000, 0.4);
+            const mp = this.cellToPixel(this.monsterCell);
+            this.pathGraphics.fillCircle(mp.x, mp.y, 28);
+            }
+            visible = !visible;
+        }
+        });
+        return;
     }
 
     const accentColor = parseInt(this.theme.accent.replace('#',''), 16);
     path.forEach((cell, i) => {
-      const alpha = 0.25 - (i / path.length) * 0.15;
-      this.pathGraphics.fillStyle(accentColor, alpha);
-      this.pathGraphics.fillRect(
+        const alpha = 0.25 - (i / path.length) * 0.15;
+        this.pathGraphics.fillStyle(accentColor, alpha);
+        this.pathGraphics.fillRect(
         this.offsetX + cell.col * this.tileSize + 5,
         this.offsetY + cell.row * this.tileSize + 5,
         this.tileSize - 10, this.tileSize - 10
-      );
+        );
     });
 
     const next = path[0];
-    const pos  = this.cellToPixel(next);
+    const pos = this.cellToPixel(next);
     this.pathGraphics.fillStyle(accentColor, 0.6);
     this.pathGraphics.fillCircle(pos.x, pos.y, 7);
     this.pathGraphics.setVisible(this.pathVisible);
-  }
+    }
 
   findNearestTower() {
     if (!this.towers.length) return null;
