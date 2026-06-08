@@ -238,22 +238,32 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  towerShoot() {
+    towerShoot() {
     if (this.gameOver) return;
     this.towers.forEach(tower => {
-      const from   = this.cellToPixel(tower.cell);
-      const bullet = this.add.image(from.x, from.y, `bullet_${tower.type}`).setDepth(6);
-      this.tweens.add({
+        const from   = this.cellToPixel(tower.cell);
+        const targetX = this.monsterSprite.x;  // πάρε τη θέση ΤΩΡΑ
+        const targetY = this.monsterSprite.y;
+        const bullet = this.add.image(from.x, from.y, `bullet_${tower.type}`).setDepth(6);
+        this.tweens.add({
         targets: bullet,
-        x: this.monsterSprite.x, y: this.monsterSprite.y,
-        duration: 500, ease: 'Linear',
+        x: targetX,
+        y: targetY,
+        duration: 500,
+        ease: 'Linear',
         onComplete: () => {
-          bullet.destroy();
-          this.takeDamage(Math.floor(10 * (1 - this.monsterArmor / 100)));
+            bullet.destroy();
+            // Έλεγξε αν το monster είναι κοντά στο σημείο πρόσκρουσης
+            const dx = this.monsterSprite.x - targetX;
+            const dy = this.monsterSprite.y - targetY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < this.tileSize) {  // μέσα σε 1 tile = πέτυχε
+            this.takeDamage(Math.floor(10 * (1 - this.monsterArmor / 100)));
+            }
         }
-      });
+        });
     });
-  }
+    }
 
   takeDamage(amount) {
     if (this.gameOver) return;
