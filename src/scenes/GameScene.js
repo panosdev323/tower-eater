@@ -145,33 +145,90 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  setupInput() {
-    this.input.on('pointerdown', (pointer) => {
-      if (this.gameOver) return;
-      const col = Math.floor((pointer.x - this.offsetX) / this.tileSize);
-      const row = Math.floor((pointer.y - this.offsetY) / this.tileSize);
-      if (col < 0 || col >= this.cols || row < 0 || row >= this.rows) return;
-      const dc = Math.abs(col - this.monsterCell.col);
-      const dr = Math.abs(row - this.monsterCell.row);
-      if (dc + dr !== 1) return;
-      this.moveMonster({ col, row });
-    });
-  }
+    setupInput() {
+    let startX = 0;
+    let startY = 0;
+    let moving = false;
+    const SWIPE_THRESHOLD = 10;
 
-  moveMonster(targetCell) {
+    this.input.on('pointerdown', (pointer) => {
+        if (this.gameOver) return;
+        startX = pointer.x;
+        startY = pointer.y;
+    });
+
+    this.input.on('pointerup', (pointer) => {
+        if (this.gameOver) return;
+        if (moving) return;
+
+        const dx = pointer.x - startX;
+        const dy = pointer.y - startY;
+
+        if (Math.abs(dx) < SWIPE_THRESHOLD && Math.abs(dy) < SWIPE_THRESHOLD) return;
+
+        let dc = 0, dr = 0;
+        if (Math.abs(dx) > Math.abs(dy)) {
+        dc = dx > 0 ? 1 : -1;
+        } else {
+        dr = dy > 0 ? 1 : -1;
+        }
+
+        moving = true;
+        this.slideMonster(dc, dr, () => { moving = false; });
+    });
+    }
+
+    slideMonster(dc, dr, onDone) {
+    const next = {
+        col: this.monsterCell.col + dc,
+        row: this.monsterCell.row + dr
+    };
+
+    // Όρια grid
+    if (next.col < 0 || next.col >= this.cols ||
+        next.row < 0 || next.row >= this.rows) {
+        onDone();
+        return;
+    }
+
+    // Πύργος μπροστά — μπαίνουμε μέσα (για να τον φάμε)
+    const tower = this.towers.find(
+        t => t.cell.col === next.col && t.cell.row === next.row
+    );
+
+    this.moveMonster(next, () => {
+        // Αν ήταν πύργος, σταματάμε μετά το eat
+        if (tower) {
+        onDone();
+        return;
+        }
+
+        // Αν φτάσαμε στη βάση, σταματάμε
+        if (this.gameOver) {
+        onDone();
+        return;
+        }
+
+        // Συνέχισε sliding στην ίδια κατεύθυνση
+        this.slideMonster(dc, dr, onDone);
+    });
+    }
+
+    moveMonster(targetCell, onComplete) {
     this.monsterCell = targetCell;
     const pos = this.cellToPixel(targetCell);
     this.tweens.add({
-      targets: [this.monster, this.monsterRing],
-      x: pos.x, y: pos.y,
-      duration: this.monsterSpeed,
-      ease: 'Power2',
-      onComplete: () => {
+        targets: [this.monster, this.monsterRing],
+        x: pos.x, y: pos.y,
+        duration: this.monsterSpeed,
+        ease: 'Power2',
+        onComplete: () => {
         this.checkCollisions();
         this.updatePath();
-      }
+        if (onComplete) onComplete();
+        }
     });
-  }
+    }
 
   evolve(towerType) {
     const evoDefs = {
