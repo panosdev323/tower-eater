@@ -1,5 +1,9 @@
 export class SpriteFactory {
 
+  static svgToBase64(svg) {
+    return btoa(unescape(encodeURIComponent(svg)));
+  }
+
   static getWorld(levelId) {
     if (levelId <= 10) return 'dungeon';
     if (levelId <= 20) return 'forest';
@@ -41,7 +45,7 @@ export class SpriteFactory {
         <path d="M16 30 Q24 36 32 30" stroke="#003322" stroke-width="2" fill="none"/>
         <path d="M8 14 L14 20 M40 14 L34 20" stroke="#00ff88" stroke-width="2"/>
       </svg>`;
-    scene.textures.addBase64('monster', 'data:image/svg+xml;base64,' + btoa(svg));
+    scene.textures.addBase64('monster', 'data:image/svg+xml;base64,' + this.svgToBase64(svg));
   }
 
   // ── BASES ─────────────────────────────────────────────
@@ -93,7 +97,7 @@ export class SpriteFactory {
     };
 
     Object.entries(bases).forEach(([world, svg]) => {
-      scene.textures.addBase64(`base_${world}`, 'data:image/svg+xml;base64,' + btoa(svg));
+      scene.textures.addBase64(`base_${world}`, 'data:image/svg+xml;base64,' + this.svgToBase64(svg));
     });
 
     // Locked base
@@ -105,7 +109,7 @@ export class SpriteFactory {
         <circle cx="32" cy="40" r="4" fill="#888888"/>
         <rect x="30" y="40" width="4" height="6" fill="#888888"/>
       </svg>`;
-    scene.textures.addBase64('base_locked', 'data:image/svg+xml;base64,' + btoa(locked));
+    scene.textures.addBase64('base_locked', 'data:image/svg+xml;base64,' + this.svgToBase64(locked));
   }
 
   // ── TOWERS ────────────────────────────────────────────
@@ -235,7 +239,7 @@ export class SpriteFactory {
     };
 
     Object.entries(towers).forEach(([key, svg]) => {
-      scene.textures.addBase64(`tower_${key}`, 'data:image/svg+xml;base64,' + btoa(svg));
+        scene.textures.addBase64(`tower_${key}`, 'data:image/svg+xml;base64,' + this.svgToBase64(svg));
     });
   }
 
@@ -292,7 +296,7 @@ export class SpriteFactory {
     };
 
     Object.entries(tiles).forEach(([world, svg]) => {
-      scene.textures.addBase64(`terrain_${world}`, 'data:image/svg+xml;base64,' + btoa(svg));
+        scene.textures.addBase64(`terrain_${world}`, 'data:image/svg+xml;base64,' + this.svgToBase64(svg));
     });
   }
 
@@ -304,7 +308,7 @@ export class SpriteFactory {
       arcane: `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"><circle cx="6" cy="6" r="5" fill="#aa44ff"/><circle cx="6" cy="6" r="3" fill="#dd88ff"/></svg>`,
     };
     Object.entries(bullets).forEach(([type, svg]) => {
-      scene.textures.addBase64(`bullet_${type}`, 'data:image/svg+xml;base64,' + btoa(svg));
+        scene.textures.addBase64(`bullet_${type}`, 'data:image/svg+xml;base64,' + this.svgToBase64(svg));
     });
   }
 }
