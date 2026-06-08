@@ -24,7 +24,7 @@ export class LevelScene extends Phaser.Scene {
 
   showWin(cx) {
     const nextLevel = this.levelData.id + 1;
-    const hasNext = nextLevel <= 5;
+    const hasNext = nextLevel <= 50;
 
     this.add.text(cx, 180, '✅ LEVEL CLEAR', {
       fontSize: '36px', color: '#ffdd00', fontStyle: 'bold'
@@ -71,7 +71,7 @@ export class LevelScene extends Phaser.Scene {
         this.scene.start('GameScene', { levelIndex: nextLevel - 1 });
       });
 
-      this.add.text(cx, 630, `Level ${nextLevel} / 5`, {
+      this.add.text(cx, 630, `Level ${nextLevel} / 50`, {
         fontSize: '16px', color: '#666666'
       }).setOrigin(0.5);
     } else {
@@ -134,7 +134,7 @@ export class LevelScene extends Phaser.Scene {
       fontSize: '16px', color: '#555555'
     }).setOrigin(0.5).setInteractive();
     menuBtn.on('pointerdown', () => {
-      this.scene.start('GameScene', { levelIndex: 0 });
+      this.scene.start('GameScene', { levelIndex: this.levelData.id - 1 });
     });
   }
 }
