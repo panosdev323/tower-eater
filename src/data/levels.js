@@ -3,9 +3,6 @@ function makeTower(col, row, type) {
   return { col, row, type };
 }
 
-// Tower type rotation
-const T = ['fire', 'ice', 'arcane'];
-
 export const LEVELS = Array.from({ length: 50 }, (_, i) => {
   const id = i + 1;
   const world = id <= 10 ? 'dungeon'
@@ -25,21 +22,44 @@ export const LEVELS = Array.from({ length: 50 }, (_, i) => {
   const nameIndex = (id - 1) % 10;
   const name = worldNames[world][nameIndex];
 
-  // Progressive tower count: 1,2,3,4,5,6,7,8,9,10 ανά world
   const towerCount = nameIndex + 1;
   const required = Math.max(1, Math.floor(towerCount * 0.6));
 
-  // Shoot delay: αρχίζει slow, γίνεται πιο γρήγορο
+  // Shoot delay: starts slow, gets faster
   const shootDelay = Math.max(600, 2000 - id * 28);
 
-  // Τοποθέτηση πύργων — διαφορετικά patterns
   const towers = generateTowers(towerCount, id);
 
-  return { id, name, world, shootDelay, required, towers };
+  // ── Per-world mechanics ──────────────────────────────────────────────
+  // dungeon (1-10):   baseline, no extras
+  // forest (11-20):   bullets are faster (bulletDuration ms instead of 500)
+  // volcanic (21-30): every grenadePeriod-th shot is a grenade (AoE, 2× dmg)
+  // frozen (41-50):   towers shoot ice shards that slow monster temporarily  ← same as dungeon for now
+  // void (41-50):     towers move randomly every towerMoveDelay ms
+
+  let mechanics = {};
+
+  if (world === 'forest') {
+    // bullet travel time shrinks from 400ms (lvl11) down to 220ms (lvl20)
+    const t = (id - 11) / 9; // 0..1
+    mechanics.bulletDuration = Math.round(400 - t * 180); // 400→220
+  }
+
+  if (world === 'volcanic') {
+    // every 3rd shot is a grenade; grenade period stays at 3 for all volcanic
+    mechanics.grenadePeriod = 3;
+  }
+
+  if (world === 'void') {
+    // towers move every 2500ms (lvl41) down to 1600ms (lvl50)
+    const t = (id - 41) / 9;
+    mechanics.towerMoveDelay = Math.round(2500 - t * 900); // 2500→1600
+  }
+
+  return { id, name, world, shootDelay, required, towers, mechanics };
 });
 
 function generateTowers(count, levelId) {
-  // Grid positions — αποφεύγουμε start (col1,row13) και base (col5,row1)
   const positions = [
     {col:5, row:5}, {col:7, row:9}, {col:3, row:7},
     {col:8, row:4}, {col:2, row:4}, {col:6, row:12},
@@ -47,7 +67,6 @@ function generateTowers(count, levelId) {
     {col:6, row:7}, {col:9, row:6}, {col:1, row:6},
   ];
 
-  // Rotate positions per level για variety
   const offset = (levelId * 3) % positions.length;
   const rotated = [...positions.slice(offset), ...positions.slice(0, offset)];
 

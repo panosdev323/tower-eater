@@ -2,6 +2,10 @@ import Phaser from 'phaser';
 import { BootScene } from './scenes/BootScene.js';
 import { GameScene } from './scenes/GameScene.js';
 import { LevelScene } from './scenes/LevelScene.js';
+import { PauseMenu } from './ui/PauseMenu.js';
+
+// Global access για το GameScene
+window.__PauseMenuClass__ = { PauseMenu };
 
 const config = {
   type: Phaser.AUTO,
