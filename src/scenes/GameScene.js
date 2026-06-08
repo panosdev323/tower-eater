@@ -643,53 +643,68 @@ export class GameScene extends Phaser.Scene {
   }
 
     _showGetReady() {
-    const overlay = this.add.rectangle(240, 427, 480, 854, 0x000000, 0.6).setDepth(50);
-    const txt = this.add.text(240, 400, 'GET READY', {
+    const overlay  = this.add.rectangle(240, 427, 480, 854, 0x000000, 0.6).setDepth(50);
+    const txt      = this.add.text(240, 380, 'GET READY', {
         fontSize: '36px', color: '#ffffff', fontStyle: 'bold',
         stroke: '#000000', strokeThickness: 4
     }).setOrigin(0.5).setDepth(51);
 
-    const sub = this.add.text(240, 450, 'Swipe to move', {
+    const sub = this.add.text(240, 430, 'Swipe to move', {
         fontSize: '18px', color: '#aaaaaa'
     }).setOrigin(0.5).setDepth(51);
 
-    // Countdown 3..2..1..GO
-    let count = 3;
-    const countdown = this.add.text(240, 520, count.toString(), {
+    const countdown = this.add.text(240, 510, '3', {
         fontSize: '60px', color: '#ffdd00', fontStyle: 'bold'
     }).setOrigin(0.5).setDepth(51);
 
-    const timer = this.time.addEvent({
-        delay: 800,
-        repeat: 3,
-        callback: () => {
+    // Settings button μέσα στο overlay
+    const settingsHint = this.add.text(240, 600, '⚙️ Settings', {
+        fontSize: '16px', color: '#888888',
+        backgroundColor: '#1a1a1a',
+        padding: { x: 16, y: 8 }
+    }).setOrigin(0.5).setDepth(51).setInteractive();
+    settingsHint.on('pointerdown', () => this._openPause());
+
+    this.isMoving = true;
+
+    let count = 3;
+
+    const tick = () => {
         count--;
+
         if (count > 0) {
-            countdown.setText(count.toString());
-            this.tweens.add({
+        countdown.setText(String(count));
+        this.tweens.add({
             targets: countdown,
             scaleX: 1.4, scaleY: 1.4,
             duration: 200, yoyo: true
-            });
-        } else {
-            countdown.setText('GO!').setColor('#00ff88');
-            this.tweens.add({
-            targets: [overlay, txt, sub, countdown],
-            alpha: 0, duration: 400,
-            onComplete: () => {
-                overlay.destroy(); txt.destroy();
-                sub.destroy(); countdown.destroy();
-                // ← Shoot timer ξεκινάει ΜΕΤΑ το countdown
-                this._startShootTimer();
-            }
-            });
-        }
-        }
-    });
+        });
+        this.time.delayedCall(800, tick);
 
-    // Block input κατά τη διάρκεια
-    this.isMoving = true;
-    this.time.delayedCall(800 * 4, () => { this.isMoving = false; });
+        } else {
+        // GO!
+        countdown.setText('GO!');
+        countdown.setStyle({ color: '#00ff88' });
+
+        this.tweens.add({
+            targets: [overlay, txt, sub, countdown, settingsHint],
+            alpha: 0,
+            duration: 400,
+            delay: 400,
+            onComplete: () => {
+            overlay.destroy();
+            txt.destroy();
+            sub.destroy();
+            countdown.destroy();
+            settingsHint.destroy();
+            this.isMoving = false;
+            this._startShootTimer();
+            }
+        });
+        }
+    };
+
+    this.time.delayedCall(800, tick);
     }
 
     _startShootTimer() {
