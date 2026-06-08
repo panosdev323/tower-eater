@@ -3,9 +3,12 @@ import { BootScene } from './scenes/BootScene.js';
 import { GameScene } from './scenes/GameScene.js';
 import { LevelScene } from './scenes/LevelScene.js';
 import { PauseMenu } from './ui/PauseMenu.js';
+import { soundManager } from './systems/SoundManager.js';
+import { ProgressManager } from './systems/ProgressManager.js';
 
-// Global access για το GameScene
 window.__PauseMenuClass__ = { PauseMenu };
+window.__soundManager__   = soundManager;
+window.__progress__       = ProgressManager;
 
 const config = {
   type: Phaser.AUTO,

@@ -1,6 +1,8 @@
 import { PathFinder } from '../systems/PathFinder.js';
 import { LEVELS } from '../data/levels.js';
 import { SpriteFactory } from '../systems/SpriteFactory.js';
+import { soundManager } from '../systems/SoundManager.js';
+import { ProgressManager } from '../systems/ProgressManager.js';
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -49,6 +51,10 @@ export class GameScene extends Phaser.Scene {
     this.createUI();
     this.setupInput();
     this.updatePath();
+
+    // Αποθήκευσε το τρέχον level
+    ProgressManager.saveLevel(this.levelIndex);
+    ProgressManager.updateBest(this.levelIndex);
 
     // ── Settings button ──────────────────────────────────
     const settingsBtn = document.getElementById('settings-btn');
@@ -202,6 +208,7 @@ export class GameScene extends Phaser.Scene {
   // ── Movement ────────────────────────────────────────────────────────
 
   moveMonster(targetCell, onComplete) {
+    soundManager.move();
     this.monsterCell = targetCell;
     const pos = this.cellToPixel(targetCell);
     this.tweens.add({
@@ -290,6 +297,7 @@ export class GameScene extends Phaser.Scene {
   // ── Base unlock ──────────────────────────────────────────────────────
 
   unlockBase() {
+    soundManager.unlockBase();
     this.baseUnlocked = true;
     this.baseSprLocked.setVisible(false);
     this.baseSprUnlocked.setVisible(true);
@@ -353,7 +361,7 @@ export class GameScene extends Phaser.Scene {
 
   towerShoot() {
     if (this.gameOver) return;
-
+    soundManager.shoot();
     this._shotCounter++;
     const isGrenade = this.mechanics.grenadePeriod &&
                       (this._shotCounter % this.mechanics.grenadePeriod === 0);
@@ -399,6 +407,7 @@ export class GameScene extends Phaser.Scene {
 
     _applyFreeze() {
     if (this.frozen || this.gameOver) return;
+    soundManager.freeze();
     this.frozen = true;
 
     // Visual: blue tint + ice overlay
@@ -445,6 +454,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   _grenadeExplode(cx, cy) {
+    soundManager.grenade();
     // Visual explosion
     const boom = this.add.circle(cx, cy, 10, 0xff9900, 0.9).setDepth(7);
     this.tweens.add({
@@ -472,6 +482,7 @@ export class GameScene extends Phaser.Scene {
 
   takeDamage(amount) {
     if (this.gameOver || this.invincible) return;
+    soundManager.hit();
 
     this.invincible = true;
     this.monsterHP  = Math.max(0, this.monsterHP - amount);
@@ -501,6 +512,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   deathAnimation() {
+    soundManager.death();
     this.gameOver  = true;
     this.isMoving  = false;
     this.input.off('pointerdown');
@@ -562,6 +574,7 @@ export class GameScene extends Phaser.Scene {
         t.hpBar.setFillStyle(ratio > 0.5 ? 0x00ff00 : 0xff4400);
 
         if (t.hp <= 0) {
+          soundManager.eatTower();
           const tx = t.sprite.x, ty = t.sprite.y;
           t.sprite.destroy(); t.hpBar.destroy(); t.hpBarBg.destroy();
           [...Array(8)].forEach((_, i) => {
@@ -665,6 +678,7 @@ export class GameScene extends Phaser.Scene {
         evolutions: this.evolutions
       }
     });
+    if (win) soundManager.win();
   }
 
   cellToPixel(cell) {
@@ -675,6 +689,7 @@ export class GameScene extends Phaser.Scene {
   }
 
     _showGetReady() {
+    soundManager.countdown();
     const overlay  = this.add.rectangle(240, 427, 480, 854, 0x000000, 0.6).setDepth(50);
     const txt      = this.add.text(240, 380, 'GET READY', {
         fontSize: '36px', color: '#ffffff', fontStyle: 'bold',
@@ -707,6 +722,7 @@ export class GameScene extends Phaser.Scene {
         this.time.delayedCall(800, tick);
         } else {
         countdown.setText('GO!');
+        soundManager.go();
         countdown.setStyle({ color: '#00ff88' });
         this.tweens.add({
             targets: [overlay, txt, sub, countdown, settingsHint],
@@ -745,10 +761,8 @@ export class GameScene extends Phaser.Scene {
             this._cleanupListeners();
             this.scene.start('GameScene', { levelIndex: 0 });
         },
-        (musicOn) => {               // onMusicToggle
-            // music logic αργότερα
-            console.log('Music:', musicOn);
-        }
+        (musicOn) => { console.log('Music:', musicOn); },
+        (soundsOn) => { console.log('Sounds:', soundsOn); }
         );
     }
     this.pauseMenu.show();
