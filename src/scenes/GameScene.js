@@ -148,23 +148,25 @@ export class GameScene extends Phaser.Scene {
     setupInput() {
     let startX = 0;
     let startY = 0;
-    let moving = false;
-    const SWIPE_THRESHOLD = 10;
+    let lastCell = null;
+    const THRESHOLD = 24; // pixels για να μετρήσει ως κίνηση
 
     this.input.on('pointerdown', (pointer) => {
         if (this.gameOver) return;
         startX = pointer.x;
         startY = pointer.y;
+        lastCell = { ...this.monsterCell };
     });
 
-    this.input.on('pointerup', (pointer) => {
+    this.input.on('pointermove', (pointer) => {
         if (this.gameOver) return;
-        if (moving) return;
+        if (!pointer.isDown) return;
+        if (this.isMoving) return;
 
         const dx = pointer.x - startX;
         const dy = pointer.y - startY;
 
-        if (Math.abs(dx) < SWIPE_THRESHOLD && Math.abs(dy) < SWIPE_THRESHOLD) return;
+        if (Math.abs(dx) < THRESHOLD && Math.abs(dy) < THRESHOLD) return;
 
         let dc = 0, dr = 0;
         if (Math.abs(dx) > Math.abs(dy)) {
@@ -173,8 +175,23 @@ export class GameScene extends Phaser.Scene {
         dr = dy > 0 ? 1 : -1;
         }
 
-        moving = true;
-        this.slideMonster(dc, dr, () => { moving = false; });
+        const next = {
+        col: this.monsterCell.col + dc,
+        row: this.monsterCell.row + dr
+        };
+
+        // Όρια
+        if (next.col < 0 || next.col >= this.cols ||
+            next.row < 0 || next.row >= this.rows) return;
+
+        // Reset start point για το επόμενο step
+        startX = pointer.x;
+        startY = pointer.y;
+
+        this.isMoving = true;
+        this.moveMonster(next, () => {
+        this.isMoving = false;
+        });
     });
     }
 
