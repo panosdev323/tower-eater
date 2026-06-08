@@ -67,14 +67,6 @@ export class GameScene extends Phaser.Scene {
     // ── GET READY overlay ────────────────────────────────
     this._showGetReady();
 
-    // ── Main shoot loop ──────────────────────────────────────────────
-    this.time.addEvent({
-      delay: this.level.shootDelay,
-      callback: this.towerShoot,
-      callbackScope: this,
-      loop: true
-    });
-
     // ── Void: moving towers ──────────────────────────────────────────
     if (this.mechanics.towerMoveDelay) {
       this.time.addEvent({
