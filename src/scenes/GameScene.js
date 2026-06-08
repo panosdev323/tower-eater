@@ -18,9 +18,9 @@ export class GameScene extends Phaser.Scene {
     this.world     = this.level.world;
     this.theme     = SpriteFactory.getWorldTheme(this.world);
     this.mechanics = this.level.mechanics ?? {};
-    this.hasMovedOnce = false;
 
     this.invincible = false;
+    this.frozen     = false;
     this.tileSize   = 48;
     this.cols       = 10;
     this.rows       = 16;
@@ -38,10 +38,8 @@ export class GameScene extends Phaser.Scene {
     this.isMoving     = false;
     this.gameOver     = false;
 
-    // volcanic: grenade shot counter
     this._shotCounter = 0;
 
-    // Background
     this.add.rectangle(240, 427, 480, 854, parseInt(this.theme.bg.replace('#',''), 16));
 
     this.drawGrid();
@@ -52,28 +50,29 @@ export class GameScene extends Phaser.Scene {
     this.setupInput();
     this.updatePath();
 
-    // Αποθήκευσε το τρέχον level
     ProgressManager.saveLevel(this.levelIndex);
     ProgressManager.updateBest(this.levelIndex);
 
-    // ── Settings button ──────────────────────────────────
     const settingsBtn = document.getElementById('settings-btn');
     if (settingsBtn) {
-        // Αφαίρεσε παλιό listener αν υπάρχει
-        settingsBtn.onclick = null;
-        settingsBtn.onclick = () => this._openPause();
+      settingsBtn.onclick = null;
+      settingsBtn.onclick = () => this._openPause();
     }
 
-    // ── Pause / Resume events ────────────────────────────
-    this._pauseHandler  = () => this.scene.pause();
-    this._resumeHandler = () => this.scene.resume();
+    // Guard: only pause/resume if GameScene is the active, running scene
+    this._pauseHandler = () => {
+      if (this.scene.isActive('GameScene') && !this.scene.isPaused('GameScene')) {
+        this.scene.pause('GameScene');
+      }
+    };
+    this._resumeHandler = () => {
+      if (this.scene.isActive('GameScene') && this.scene.isPaused('GameScene')) {
+        this.scene.resume('GameScene');
+      }
+    };
     window.addEventListener('pauseGame',  this._pauseHandler);
     window.addEventListener('resumeGame', this._resumeHandler);
 
-    // ── GET READY overlay ────────────────────────────────
-    this._showGetReady();
-
-    // ── Void: moving towers ──────────────────────────────────────────
     if (this.mechanics.towerMoveDelay) {
       this.time.addEvent({
         delay: this.mechanics.towerMoveDelay,
@@ -82,9 +81,11 @@ export class GameScene extends Phaser.Scene {
         loop: true
       });
     }
+
+    this._showGetReady();
   }
 
-  // ── Grid / Sprites ──────────────────────────────────────────────────
+  // ── Grid / Sprites ────────────────────────────────────────────────────
 
   drawGrid() {
     for (let r = 0; r < this.rows; r++) {
@@ -123,12 +124,11 @@ export class GameScene extends Phaser.Scene {
   createBase() {
     this.baseCell = { col: 5, row: 1 };
     const pos     = this.cellToPixel(this.baseCell);
-
     this.baseSprLocked   = this.add.image(pos.x, pos.y, 'base_locked').setDepth(3);
     this.baseSprUnlocked = this.add.image(pos.x, pos.y, `base_${this.world}`).setDepth(3).setVisible(false);
   }
 
-  // ── UI ──────────────────────────────────────────────────────────────
+  // ── UI ────────────────────────────────────────────────────────────────
 
   createUI() {
     const worldIcons = { dungeon:'⚔️', forest:'🌿', volcanic:'🌋', frozen:'❄️', void:'💀' };
@@ -140,10 +140,10 @@ export class GameScene extends Phaser.Scene {
       fontSize: '13px', color: '#666666'
     }).setOrigin(1, 0).setDepth(10);
 
-    // Mechanic badge (forest / volcanic / void)
     const badgeText = this.world === 'forest'   ? '⚡ Fast Bullets'
                     : this.world === 'volcanic'  ? '💣 Grenades'
                     : this.world === 'void'      ? '👁 Moving Towers'
+                    : this.world === 'frozen'    ? '❄️ Freeze'
                     : '';
     if (badgeText) {
       this.add.text(240, 6, badgeText, {
@@ -151,7 +151,6 @@ export class GameScene extends Phaser.Scene {
       }).setOrigin(0.5, 0).setDepth(10);
     }
 
-    // HP bar
     this.add.rectangle(240, 24, 302, 14, 0x222222).setDepth(10);
     this.hpBarFill = this.add.rectangle(90, 24, 300, 12, 0x00ff88).setDepth(11).setOrigin(0, 0.5);
     this.hpText    = this.add.text(240, 24, 'HP 100', { fontSize: '10px', color: '#000' }).setOrigin(0.5).setDepth(12);
@@ -177,7 +176,7 @@ export class GameScene extends Phaser.Scene {
       });
   }
 
-  // ── Input ───────────────────────────────────────────────────────────
+  // ── Input ─────────────────────────────────────────────────────────────
 
   setupInput() {
     let startX = 0, startY = 0;
@@ -189,7 +188,8 @@ export class GameScene extends Phaser.Scene {
     });
 
     this.input.on('pointermove', (p) => {
-      if (this.gameOver || !p.isDown || this.isMoving) return;
+      // Block if frozen, not started, already mid-move, or game over
+      if (this.gameOver || !p.isDown || this.isMoving || this.frozen) return;
       const dx = p.x - startX, dy = p.y - startY;
       if (Math.abs(dx) < THRESHOLD && Math.abs(dy) < THRESHOLD) return;
 
@@ -205,12 +205,23 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  // ── Movement ────────────────────────────────────────────────────────
+  // ── Movement ──────────────────────────────────────────────────────────
 
   moveMonster(targetCell, onComplete) {
     soundManager.move();
     this.monsterCell = targetCell;
     const pos = this.cellToPixel(targetCell);
+
+    // Keep freeze overlay on top of monster while moving
+    if (this._freezeOverlay) {
+      this.tweens.add({
+        targets: this._freezeOverlay,
+        x: pos.x, y: pos.y,
+        duration: this.monsterSpeed,
+        ease: 'Power2'
+      });
+    }
+
     this.tweens.add({
       targets: [this.monsterSprite, this.monsterGlow],
       x: pos.x, y: pos.y,
@@ -224,14 +235,13 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  // ── VOID: Moving towers ──────────────────────────────────────────────
+  // ── VOID: Moving towers ───────────────────────────────────────────────
+
   moveTowersRandomly() {
     if (this.gameOver) return;
-
     const dirs = [{dc:0,dr:-1},{dc:0,dr:1},{dc:-1,dr:0},{dc:1,dr:0}];
 
     this.towers.forEach(tower => {
-      // Pulse warning before moving
       this.tweens.add({
         targets: tower.sprite,
         scaleX: 1.3, scaleY: 1.3,
@@ -240,80 +250,60 @@ export class GameScene extends Phaser.Scene {
 
       this.time.delayedCall(300, () => {
         if (this.gameOver) return;
-
-        // Shuffle directions for randomness
         const shuffled = Phaser.Utils.Array.Shuffle([...dirs]);
 
         for (const dir of shuffled) {
           const nc = tower.cell.col + dir.dc;
           const nr = tower.cell.row + dir.dr;
-
-          // Bounds check
           if (nc < 0 || nc >= this.cols || nr < 0 || nr >= this.rows) continue;
 
-          // Collision check: no other tower, not the base, not the monster
           const occupied =
             this.towers.some(t => t !== tower && t.cell.col === nc && t.cell.row === nr) ||
             (nc === this.baseCell.col && nr === this.baseCell.row) ||
             (nc === this.monsterCell.col && nr === this.monsterCell.row);
-
           if (occupied) continue;
 
-          // Move!
           tower.cell = { col: nc, row: nr };
           const newPos = this.cellToPixel(tower.cell);
 
           this.tweens.add({
             targets: [tower.sprite, tower.hpBarBg, tower.hpBar],
-            x: newPos.x,
-            duration: 400,
-            ease: 'Power2'
+            x: newPos.x, duration: 400, ease: 'Power2'
           });
-          // HP bar Y offset
           this.tweens.add({
             targets: [tower.hpBarBg, tower.hpBar],
-            y: newPos.y - 28,
-            duration: 400,
-            ease: 'Power2',
-            onComplete: () => {
-              // Re-anchor hpBar origin x after move
-              tower.hpBar.x = newPos.x - 18;
-            }
+            y: newPos.y - 28, duration: 400, ease: 'Power2',
+            onComplete: () => { tower.hpBar.x = newPos.x - 18; }
           });
           this.tweens.add({
             targets: tower.sprite,
-            y: newPos.y,
-            duration: 400,
-            ease: 'Power2',
+            y: newPos.y, duration: 400, ease: 'Power2',
             onComplete: () => this.updatePath()
           });
-
-          break; // one move per tower per tick
+          break;
         }
       });
     });
   }
 
-  // ── Base unlock ──────────────────────────────────────────────────────
+  // ── Base unlock ───────────────────────────────────────────────────────
 
   unlockBase() {
     soundManager.unlockBase();
     this.baseUnlocked = true;
     this.baseSprLocked.setVisible(false);
     this.baseSprUnlocked.setVisible(true);
-
     this.tweens.add({
       targets: this.baseSprUnlocked,
       scaleX: 1.3, scaleY: 1.3,
       duration: 300, yoyo: true, ease: 'Power2'
     });
-
     this.cameras.main.flash(400, 255, 221, 0, false);
     this.showMsg('🔓 BASE UNLOCKED! Reach it!', '#ffdd00', 2500);
     this.updatePath();
   }
 
-  // ── Evolution ────────────────────────────────────────────────────────
+  // ── Evolution ─────────────────────────────────────────────────────────
 
   evolve(towerType) {
     const defs = {
@@ -349,7 +339,6 @@ export class GameScene extends Phaser.Scene {
     this.monsterSprite.setTint(evo.color);
     this.monsterGlow.setFillStyle(evo.color);
     this.showMsg(evo.label, '#ffffff', 1500);
-
     this.tweens.add({
       targets: this.monsterSprite,
       scaleX: 1.4, scaleY: 1.4,
@@ -357,7 +346,7 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  // ── Shooting ─────────────────────────────────────────────────────────
+  // ── Shooting ──────────────────────────────────────────────────────────
 
   towerShoot() {
     if (this.gameOver) return;
@@ -365,15 +354,12 @@ export class GameScene extends Phaser.Scene {
     this._shotCounter++;
     const isGrenade = this.mechanics.grenadePeriod &&
                       (this._shotCounter % this.mechanics.grenadePeriod === 0);
-
-    // Travel time: forest speeds up bullets, default 500ms
-    const duration = this.mechanics.bulletDuration ?? 500;
+    const duration  = this.mechanics.bulletDuration ?? 500;
 
     this.towers.forEach(tower => {
       const from    = this.cellToPixel(tower.cell);
       const targetX = this.monsterSprite.x;
       const targetY = this.monsterSprite.y;
-
       if (isGrenade) {
         this._fireGrenade(from, targetX, targetY);
       } else {
@@ -382,65 +368,75 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-    _fireBullet(tower, from, targetX, targetY, duration) {
+  _fireBullet(tower, from, targetX, targetY, duration) {
     const bullet = this.add.image(from.x, from.y, `bullet_${tower.type}`).setDepth(6);
     this.tweens.add({
-        targets: bullet,
-        x: targetX, y: targetY,
-        duration, ease: 'Linear',
-        onComplete: () => {
+      targets: bullet,
+      x: targetX, y: targetY,
+      duration, ease: 'Linear',
+      onComplete: () => {
         bullet.destroy();
         const dx   = this.monsterSprite.x - targetX;
         const dy   = this.monsterSprite.y - targetY;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < this.tileSize) {
-            this.takeDamage(Math.floor(10 * (1 - this.monsterArmor / 100)));
-
-            // Frozen mechanic: freeze monster briefly
-            if (this.mechanics.freezeDuration && tower.type === 'ice' && !this.frozen) {
+          this.takeDamage(Math.floor(10 * (1 - this.monsterArmor / 100)));
+          if (this.mechanics.freezeDuration && tower.type === 'ice' && !this.frozen) {
             this._applyFreeze();
-            }
+          }
         }
-        }
+      }
     });
-    }
+  }
 
-    _applyFreeze() {
+  _applyFreeze() {
     if (this.frozen || this.gameOver) return;
     soundManager.freeze();
-    this.frozen = true;
+    this.frozen   = true;
+    this.isMoving = true; // block swipe while frozen
 
-    // Visual: blue tint + ice overlay
     this.monsterSprite.setTint(0x44aaff);
     this.monsterGlow.setFillStyle(0x44aaff);
 
-    const freezeOverlay = this.add.circle(
-        this.monsterSprite.x, this.monsterSprite.y,
-        28, 0x44aaff, 0.3
+    this._freezeOverlay = this.add.circle(
+      this.monsterSprite.x, this.monsterSprite.y,
+      28, 0x44aaff, 0.3
     ).setDepth(6);
 
-    // Block movement
-    const origSpeed   = this.monsterSpeed;
-    this.monsterSpeed = 99999; // effectively frozen
+    const FREEZE_MS = this.mechanics.freezeDuration ?? 4000;
+    this.showMsg('❄️ FROZEN!', '#44aaff', FREEZE_MS);
 
-    this.showMsg('❄️ FROZEN!', '#44aaff', this.mechanics.freezeDuration);
+    // Pulse once per second so player knows it's counting down
+    let remaining = Math.round(FREEZE_MS / 1000);
+    const pulseTick = () => {
+      if (!this.frozen) return;
+      remaining--;
+      this.tweens.add({
+        targets: this._freezeOverlay,
+        scaleX: 1.4, scaleY: 1.4,
+        duration: 150, yoyo: true, ease: 'Power2'
+      });
+      if (remaining > 0) this.time.delayedCall(1000, pulseTick);
+    };
+    this.time.delayedCall(1000, pulseTick);
 
-    this.time.delayedCall(this.mechanics.freezeDuration, () => {
-        this.frozen       = false;
-        this.monsterSpeed = origSpeed;
-        this.monsterSprite.clearTint();
-        this.monsterGlow.setFillStyle(0x00ff88);
-        freezeOverlay.destroy();
-    });
+    this.time.delayedCall(FREEZE_MS, () => this._thaw());
+  }
+
+  _thaw() {
+    if (!this.frozen) return;
+    this.frozen   = false;
+    this.isMoving = false;
+    this.monsterSprite.clearTint();
+    this.monsterGlow.setFillStyle(0x00ff88);
+    if (this._freezeOverlay) {
+      this._freezeOverlay.destroy();
+      this._freezeOverlay = null;
     }
+  }
 
   _fireGrenade(from, targetX, targetY) {
-    // Visual: bigger, orange-ish circle projectile
     const grenade = this.add.circle(from.x, from.y, 10, 0xff6600).setDepth(6);
-    // Arc: go up first then come down
-    const midX = (from.x + targetX) / 2;
-    const midY = Math.min(from.y, targetY) - 80;
-
     this.tweens.add({
       targets: grenade,
       x: { value: targetX, ease: 'Linear' },
@@ -455,23 +451,18 @@ export class GameScene extends Phaser.Scene {
 
   _grenadeExplode(cx, cy) {
     soundManager.grenade();
-    // Visual explosion
     const boom = this.add.circle(cx, cy, 10, 0xff9900, 0.9).setDepth(7);
     this.tweens.add({
       targets: boom,
-      scaleX: 4, scaleY: 4,
-      alpha: 0,
-      duration: 350,
-      ease: 'Power2',
+      scaleX: 4, scaleY: 4, alpha: 0,
+      duration: 350, ease: 'Power2',
       onComplete: () => boom.destroy()
     });
 
-    // AoE damage: check if monster is within 1.5 tiles
     const dx   = this.monsterSprite.x - cx;
     const dy   = this.monsterSprite.y - cy;
     const dist = Math.sqrt(dx * dx + dy * dy);
     if (dist < this.tileSize * 1.5) {
-      // Double damage, ignores half of armor
       const effectiveArmor = this.monsterArmor / 2;
       this.takeDamage(Math.floor(20 * (1 - effectiveArmor / 100)));
       this.cameras.main.shake(150, 0.015);
@@ -513,8 +504,9 @@ export class GameScene extends Phaser.Scene {
 
   deathAnimation() {
     soundManager.death();
-    this.gameOver  = true;
-    this.isMoving  = false;
+    this._thaw();
+    this.gameOver = true;
+    this.isMoving = false;
     this.input.off('pointerdown');
     this.input.off('pointermove');
 
@@ -542,6 +534,7 @@ export class GameScene extends Phaser.Scene {
     });
 
     this.time.delayedCall(800, () => {
+      this._cleanupListeners();
       this.scene.start('LevelScene', {
         level: this.level, win: false,
         stats: {
@@ -666,10 +659,13 @@ export class GameScene extends Phaser.Scene {
   }
 
   endGame(win) {
+    this._thaw();
     this.gameOver = true;
     this.isMoving = false;
     this.input.off('pointerdown');
     this.input.off('pointermove');
+    if (win) soundManager.win();
+    this._cleanupListeners();
     this.scene.start('LevelScene', {
       level: this.level, win,
       stats: {
@@ -678,7 +674,6 @@ export class GameScene extends Phaser.Scene {
         evolutions: this.evolutions
       }
     });
-    if (win) soundManager.win();
   }
 
   cellToPixel(cell) {
@@ -688,90 +683,100 @@ export class GameScene extends Phaser.Scene {
     };
   }
 
-    _showGetReady() {
-    soundManager.countdown();
-    const overlay  = this.add.rectangle(240, 427, 480, 854, 0x000000, 0.6).setDepth(50);
-    const txt      = this.add.text(240, 380, 'GET READY', {
-        fontSize: '36px', color: '#ffffff', fontStyle: 'bold',
-        stroke: '#000000', strokeThickness: 4
+  // ── Get Ready countdown ───────────────────────────────────────────────
+
+  _showGetReady() {
+    this.isMoving = true; // block all input during countdown
+
+    const overlay = this.add.rectangle(240, 427, 480, 854, 0x000000, 0.6).setDepth(50);
+    const txt     = this.add.text(240, 380, 'GET READY', {
+      fontSize: '36px', color: '#ffffff', fontStyle: 'bold',
+      stroke: '#000000', strokeThickness: 4
     }).setOrigin(0.5).setDepth(51);
 
     const sub = this.add.text(240, 430, 'Swipe to move', {
-        fontSize: '18px', color: '#aaaaaa'
+      fontSize: '18px', color: '#aaaaaa'
     }).setOrigin(0.5).setDepth(51);
 
-    const countdown = this.add.text(240, 510, '5', {
-        fontSize: '60px', color: '#ffdd00', fontStyle: 'bold'
+    const countdownTxt = this.add.text(240, 510, '5', {
+      fontSize: '60px', color: '#ffdd00', fontStyle: 'bold'
     }).setOrigin(0.5).setDepth(51);
 
     const settingsHint = this.add.text(240, 600, '⚙️ Settings', {
-        fontSize: '16px', color: '#888888',
-        backgroundColor: '#1a1a1a',
-        padding: { x: 16, y: 8 }
+      fontSize: '16px', color: '#888888',
+      backgroundColor: '#1a1a1a',
+      padding: { x: 16, y: 8 }
     }).setOrigin(0.5).setDepth(51).setInteractive();
     settingsHint.on('pointerdown', () => this._openPause());
 
-    this.isMoving = true;
     let count = 5;
 
     const tick = () => {
-        count--;
-        if (count > 0) {
-        countdown.setText(String(count));
-        this.tweens.add({ targets: countdown, scaleX: 1.4, scaleY: 1.4, duration: 200, yoyo: true });
-        this.time.delayedCall(800, tick);
-        } else {
-        countdown.setText('GO!');
-        soundManager.go();
-        countdown.setStyle({ color: '#00ff88' });
+      count--;
+      if (count > 0) {
+        countdownTxt.setText(String(count));
+        // AudioContext is unlocked by now (user tapped to get here)
+        soundManager.countdown();
         this.tweens.add({
-            targets: [overlay, txt, sub, countdown, settingsHint],
-            alpha: 0, duration: 400, delay: 400,
-            onComplete: () => {
-            overlay.destroy(); txt.destroy();
-            sub.destroy(); countdown.destroy(); settingsHint.destroy();
-            this.isMoving = false;
-            this._startShootTimer();
-            }
+          targets: countdownTxt,
+          scaleX: 1.4, scaleY: 1.4,
+          duration: 200, yoyo: true
         });
-        }
+        this.time.delayedCall(800, tick);
+      } else {
+        countdownTxt.setText('GO!').setStyle({ color: '#00ff88' });
+        soundManager.go();
+        this.tweens.add({
+          targets: [overlay, txt, sub, countdownTxt, settingsHint],
+          alpha: 0, duration: 400, delay: 300,
+          onComplete: () => {
+            overlay.destroy(); txt.destroy();
+            sub.destroy(); countdownTxt.destroy(); settingsHint.destroy();
+            this.isMoving = false;     // unlock swipe
+            this._startShootTimer();   // towers start shooting
+          }
+        });
+      }
     };
 
+    // Delay first tick so AudioContext is definitely unlocked
     this.time.delayedCall(800, tick);
-    }
+  }
 
-    _startShootTimer() {
+  _startShootTimer() {
     if (this.shootTimer) this.shootTimer.remove();
     this.shootTimer = this.time.addEvent({
-        delay: this.level.shootDelay,
-        callback: this.towerShoot,
-        callbackScope: this,
-        loop: true
+      delay: this.level.shootDelay,
+      callback: this.towerShoot,
+      callbackScope: this,
+      loop: true
     });
-    }
+  }
 
-    _openPause() {
+  // ── Pause menu ────────────────────────────────────────────────────────
+
+  _openPause() {
     if (!this.pauseMenu) {
-        const { PauseMenu } = window.__PauseMenuClass__;
-        this.pauseMenu = new PauseMenu(
-        () => {},                    // onResume — το handle το κάνει το event
-        () => {                      // onRestart
-            this.pauseMenu.destroy();
-            this.pauseMenu = null;
-            this._cleanupListeners();
-            this.scene.start('GameScene', { levelIndex: 0 });
+      const { PauseMenu } = window.__PauseMenuClass__;
+      this.pauseMenu = new PauseMenu(
+        () => {},
+        () => {
+          this.pauseMenu.destroy();
+          this.pauseMenu = null;
+          this._cleanupListeners();
+          this.scene.start('GameScene', { levelIndex: 0 });
         },
-        (musicOn) => { console.log('Music:', musicOn); },
+        (musicOn)  => { console.log('Music:', musicOn); },
         (soundsOn) => { console.log('Sounds:', soundsOn); }
-        );
+      );
     }
     this.pauseMenu.show();
-    }
+  }
 
-    _cleanupListeners() {
+  _cleanupListeners() {
     window.removeEventListener('pauseGame',  this._pauseHandler);
     window.removeEventListener('resumeGame', this._resumeHandler);
     const btn = document.getElementById('settings-btn');
     if (btn) btn.onclick = null;
-    }
+  }
 }
