@@ -61,15 +61,20 @@ export class GameScene extends Phaser.Scene {
 
     // Guard: only pause/resume if GameScene is the active, running scene
     this._pauseHandler = () => {
-      if (this.scene.isActive('GameScene') && !this.scene.isPaused('GameScene')) {
+      if (!this.scene.isPaused('GameScene')) {
         this.scene.pause('GameScene');
       }
     };
     this._resumeHandler = () => {
-      if (this.scene.isActive('GameScene') && this.scene.isPaused('GameScene')) {
+      if (this.scene.isPaused('GameScene')) {
         this.scene.resume('GameScene');
       }
     };
+
+    // Αποθήκευσε globally για cleanup από άλλα scenes
+    window.__lastPauseHandler__  = this._pauseHandler;
+    window.__lastResumeHandler__ = this._resumeHandler;
+
     window.addEventListener('pauseGame',  this._pauseHandler);
     window.addEventListener('resumeGame', this._resumeHandler);
 
@@ -369,15 +374,20 @@ export class GameScene extends Phaser.Scene {
   }
 
   _fireBullet(tower, from, targetX, targetY, duration) {
+    // Spread: μεγάλο στα εύκολα levels, μικρό στα δύσκολα
+    const spread = this.level.id < 20 ? 40 : this.level.id < 40 ? 25 : 10;
+    const tx = targetX + (Math.random() - 0.5) * spread;
+    const ty = targetY + (Math.random() - 0.5) * spread;
+
     const bullet = this.add.image(from.x, from.y, `bullet_${tower.type}`).setDepth(6);
     this.tweens.add({
       targets: bullet,
-      x: targetX, y: targetY,
+      x: tx, y: ty,
       duration, ease: 'Linear',
       onComplete: () => {
         bullet.destroy();
-        const dx   = this.monsterSprite.x - targetX;
-        const dy   = this.monsterSprite.y - targetY;
+        const dx   = this.monsterSprite.x - tx;
+        const dy   = this.monsterSprite.y - ty;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < this.tileSize) {
           this.takeDamage(Math.floor(10 * (1 - this.monsterArmor / 100)));
@@ -497,7 +507,7 @@ export class GameScene extends Phaser.Scene {
       if (!this.gameOver) this.monsterSprite.clearTint();
     });
 
-    this.time.delayedCall(500, () => { this.invincible = false; });
+    this.time.delayedCall(200, () => { this.invincible = false; });
 
     if (this.monsterHP <= 0) this.deathAnimation();
   }
