@@ -36,7 +36,7 @@ function makeMechanics(worlds, shootDelay, levelId) {
     m.towerMoveDelay = Math.round(2500 - t * 1200); // 2500→1300ms
   }
   if (worlds.includes('frozen')) {
-    m.freezeDuration = 800; // ms που freezάρει ο monster
+    m.freezeDuration = 3000; // ms που freezάρει ο monster
   }
 
   return m;
