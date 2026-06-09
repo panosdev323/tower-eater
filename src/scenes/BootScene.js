@@ -8,15 +8,21 @@ export class BootScene extends Phaser.Scene {
   }
 
   preload() {
-    const bar = this.add.rectangle(240, 427, 4, 20, 0x00ff88);
-    this.tweens.add({ targets: bar, scaleX: 60, duration: 800, ease: 'Power2' });
+    // ── Loading bar ──────────────────────────────────────────────
+    const barBg  = this.add.rectangle(240, 427, 304, 10, 0x222222);
+    const barFill = this.add.rectangle(88, 427, 0, 8, 0x00ff88).setOrigin(0, 0.5);
+
+    this.load.on('progress', (v) => {
+      barFill.width = 300 * v;
+    });
+
+    // ── Load all assets here, where Phaser expects them ──────────
+    SpriteFactory.preloadAll(this);
   }
 
   create() {
-    SpriteFactory.preloadAll(this);
-
-    this.time.delayedCall(300, () => {
-      // Έλεγξε αν είναι η πρώτη φορά
+    // Small delay so the loading bar flash isn't jarring
+    this.time.delayedCall(200, () => {
       const isFirstTime = !localStorage.getItem('te_seen_intro');
 
       if (isFirstTime) {

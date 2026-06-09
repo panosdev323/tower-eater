@@ -136,9 +136,8 @@ export class GameScene extends Phaser.Scene {
       fontSize: '13px', color: '#aaaaaa'
     }).setDepth(10);
 
-    // Level number — αριστερά από το 🗺️ αντί top-right
-    this.add.text(400, 62, `Lv.${this.level.id}`, {
-      fontSize: '13px', color: '#555555'
+    this.add.text(470, 6, `Lv.${this.level.id}`, {
+      fontSize: '13px', color: '#666666'
     }).setOrigin(1, 0).setDepth(10);
 
     const badgeText = this.world === 'forest'   ? '⚡ Fast Bullets'
@@ -151,19 +150,6 @@ export class GameScene extends Phaser.Scene {
         fontSize: '11px', color: '#ff9900'
       }).setOrigin(0.5, 0).setDepth(10);
     }
-
-    // Badge — δείχνει ΟΛΑ τα active mechanics για mix worlds
-    const badges = [];
-    if (this.level.worlds?.includes('forest'))   badges.push('⚡');
-    if (this.level.worlds?.includes('volcanic')) badges.push('💣');
-    if (this.level.worlds?.includes('frozen'))   badges.push('❄️');
-    if (this.level.worlds?.includes('void'))     badges.push('👁');
-    if (badges.length) {
-      this.add.text(240, 6, badges.join(' '), {
-        fontSize: '13px', color: '#ff9900'
-      }).setOrigin(0.5, 0).setDepth(10);
-    }
-
 
     this.add.rectangle(240, 24, 302, 14, 0x222222).setDepth(10);
     this.hpBarFill = this.add.rectangle(90, 24, 300, 12, 0x00ff88).setDepth(11).setOrigin(0, 0.5);
@@ -726,16 +712,15 @@ export class GameScene extends Phaser.Scene {
     let count = 5;
 
     const tick = () => {
-      count--;
       if (count > 0) {
         countdownTxt.setText(String(count));
-        // AudioContext is unlocked by now (user tapped to get here)
         soundManager.countdown();
         this.tweens.add({
           targets: countdownTxt,
           scaleX: 1.4, scaleY: 1.4,
           duration: 200, yoyo: true
         });
+        count--;
         this.time.delayedCall(800, tick);
       } else {
         countdownTxt.setText('GO!').setStyle({ color: '#00ff88' });
