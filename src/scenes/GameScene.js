@@ -314,7 +314,7 @@ export class GameScene extends Phaser.Scene {
   evolve(towerType) {
     const defs = {
       fire:   { label: '🔥 +Speed', color: 0xff6600, apply: () => {
-        this.monsterSpeed = Math.max(60, this.monsterSpeed - 20);
+        this.monsterSpeed = Math.max(50, this.monsterSpeed - 25);
         this.speedText.setText('💨 ' + (150/this.monsterSpeed).toFixed(1) + 'x');
       }},
       ice:    { label: '❄️ +Armor', color: 0x66ccff, apply: () => {
