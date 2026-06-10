@@ -88,7 +88,7 @@ export class IntroScreen {
         <p class="intro-lead">You are the monster.</p>
         <p class="intro-body">
           The towers stand between you and the base.
-          Eat them. Evolve. Destroy everything.
+          Eat towers to mutate. Every tower makes you stronger. Build the perfect monster and reach the base.
         </p>
       </div>
     `;
