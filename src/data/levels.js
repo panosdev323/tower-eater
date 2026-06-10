@@ -41,7 +41,7 @@ function makeMechanics(worlds, shootDelay, levelId) {
   }
 
   if (worlds.includes('frozen')) {
-    m.freezeDuration = 4000;
+    m.freezeDuration = 2000;
   }
 
   return m;
@@ -108,7 +108,7 @@ for (let i = 0; i < 10; i++) {
   const id         = 11 + i;
   const towerCount = i + 2;
   const required   = Math.max(1, Math.floor(towerCount * 0.6));
-  const shootDelay = Math.round(900 - i * 30);
+  const shootDelay = Math.round(1100 - i * 30);
   levels.push(buildLevel(id, ['forest'], towerCount, required, shootDelay));
 }
 
@@ -117,7 +117,7 @@ for (let i = 0; i < 10; i++) {
   const id         = 21 + i;
   const towerCount = i + 3;
   const required   = Math.max(1, Math.floor(towerCount * 0.6));
-  const shootDelay = Math.round(700 - i * 25);
+  const shootDelay = Math.round(900 - i * 25);
   levels.push(buildLevel(id, ['volcanic'], towerCount, required, shootDelay));
 }
 
@@ -126,7 +126,7 @@ for (let i = 0; i < 10; i++) {
   const id         = 31 + i;
   const towerCount = i + 4;
   const required   = Math.max(1, Math.floor(towerCount * 0.6));
-  const shootDelay = Math.round(500 - i * 20);
+  const shootDelay = Math.round(700 - i * 20);
   levels.push(buildLevel(id, ['frozen'], towerCount, required, shootDelay));
 }
 
@@ -135,7 +135,7 @@ for (let i = 0; i < 10; i++) {
   const id         = 41 + i;
   const towerCount = i + 5;
   const required   = Math.max(1, Math.floor(towerCount * 0.6));
-  const shootDelay = Math.round(300 - i * 20);
+  const shootDelay = Math.round(500 - i * 20);
   levels.push(buildLevel(id, ['void'], towerCount, required, shootDelay));
 }
 
