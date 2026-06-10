@@ -3,6 +3,7 @@ import { LEVELS } from '../data/levels.js';
 import { SpriteFactory } from '../systems/SpriteFactory.js';
 import { soundManager } from '../systems/SoundManager.js';
 import { ProgressManager } from '../systems/ProgressManager.js';
+import { ContinueScreen } from '../ui/ContinueScreen.js';
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -525,6 +526,7 @@ export class GameScene extends Phaser.Scene {
 
     const cx = this.monsterSprite.x;
     const cy = this.monsterSprite.y;
+
     [0, 60, 120, 180, 240, 300].forEach(deg => {
       const rad   = (deg * Math.PI) / 180;
       const piece = this.add.circle(cx, cy, 6, 0x00ff88).setDepth(10);
@@ -543,16 +545,27 @@ export class GameScene extends Phaser.Scene {
       duration: 400, ease: 'Power2'
     });
 
-    this.time.delayedCall(800, () => {
-      this._cleanupListeners();
-      this.scene.start('LevelScene', {
-        level: this.level, win: false,
-        stats: {
-          hp: this.monsterHP, maxHp: this.monsterMaxHP,
-          eaten: this.towersEaten, power: this.monsterPower,
-          evolutions: this.evolutions
+    // Μικρό delay πριν το continue screen
+    this.time.delayedCall(900, () => {
+      new ContinueScreen(
+        // onContinue — ξαναρχίζει το ίδιο level με full HP
+        () => {
+          this._cleanupListeners();
+          this.scene.start('GameScene', { levelIndex: this.levelIndex });
+        },
+        // onGiveUp — πάει στο LevelScene normally
+        () => {
+          this._cleanupListeners();
+          this.scene.start('LevelScene', {
+            level: this.level, win: false,
+            stats: {
+              hp: 0, maxHp: this.monsterMaxHP,
+              eaten: this.towersEaten, power: this.monsterPower,
+              evolutions: this.evolutions
+            }
+          });
         }
-      });
+      );
     });
   }
 
