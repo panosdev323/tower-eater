@@ -10,6 +10,10 @@ export class GameScene extends Phaser.Scene {
     super({ key: 'GameScene' });
   }
 
+  preload() {
+    this.load.image('monster', 'assets/images/monster.png');
+  }
+
   init(data) {
     this.levelIndex = data?.levelIndex ?? 0;
   }
@@ -106,7 +110,7 @@ export class GameScene extends Phaser.Scene {
   createMonster() {
     this.monsterCell   = { col: 1, row: 13 };
     const pos          = this.cellToPixel(this.monsterCell);
-    this.monsterSprite = this.add.image(pos.x, pos.y, 'monster').setDepth(5);
+    this.monsterSprite = this.add.image(pos.x, pos.y, 'monster_png').setDepth(5);
     this.monsterGlow   = this.add.circle(pos.x, pos.y, 26, 0x00ff88, 0.15).setDepth(4);
   }
 
