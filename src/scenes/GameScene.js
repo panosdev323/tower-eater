@@ -274,17 +274,14 @@ export class GameScene extends Phaser.Scene {
 
           this.tweens.add({
             targets: [tower.sprite, tower.hpBarBg, tower.hpBar],
-            x: newPos.x, duration: 400, ease: 'Power2'
-          });
-          this.tweens.add({
-            targets: [tower.hpBarBg, tower.hpBar],
-            y: newPos.y - 28, duration: 400, ease: 'Power2',
-            onComplete: () => { tower.hpBar.x = newPos.x - 18; }
-          });
-          this.tweens.add({
-            targets: tower.sprite,
-            y: newPos.y, duration: 400, ease: 'Power2',
-            onComplete: () => this.updatePath()
+            x: newPos.x, y: newPos.y,
+            duration: 400, ease: 'Power2',
+            onComplete: () => {
+              tower.hpBar.x   = newPos.x - 18;
+              tower.hpBarBg.y = newPos.y - 28;
+              tower.hpBar.y   = newPos.y - 28;
+              this.updatePath();
+            }
           });
           break;
         }
@@ -516,7 +513,17 @@ export class GameScene extends Phaser.Scene {
     });
 
     this.time.delayedCall(120, () => {
-      if (!this.gameOver) this.monsterSprite.clearTint();
+      if (this.gameOver) return;
+      this.monsterSprite.clearTint();
+      // Επαναφορά glow στο χρώμα evolution αν υπάρχει
+      const lastEvo = this.evolutions[this.evolutions.length - 1];
+      if (lastEvo) {
+        const evoColors = { fire: 0xff6600, ice: 0x66ccff, arcane: 0xcc66ff };
+        this.monsterSprite.setTint(evoColors[lastEvo]);
+        this.monsterGlow.setFillStyle(evoColors[lastEvo]);
+      } else {
+        this.monsterGlow.setFillStyle(0x00ff88);
+      }
     });
 
     this.time.delayedCall(150, () => { this.invincible = false; });
@@ -765,8 +772,14 @@ export class GameScene extends Phaser.Scene {
           onComplete: () => {
             overlay.destroy(); txt.destroy();
             sub.destroy(); countdownTxt.destroy(); settingsHint.destroy();
-            this.isMoving = false;     // unlock swipe
-            this._startShootTimer();   // towers start shooting
+            this.isMoving = false;
+            this._startShootTimer();
+            
+            if (this.levelIndex >= 80) {
+              this.time.delayedCall(500, () => {
+                this.showMsg('🔥 HELL MODE', '#ff4444', 2000);
+              });
+            }
           }
         });
       }
