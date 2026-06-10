@@ -170,128 +170,351 @@ export class SpriteFactory {
       // DUNGEON
       fire_dungeon: `
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
-          <rect x="8" y="16" width="32" height="28" fill="#3a0a00" rx="2"/>
-          <rect x="4" y="12" width="10" height="16" fill="#4a1000" rx="1"/>
-          <rect x="34" y="12" width="10" height="16" fill="#4a1000" rx="1"/>
-          <rect x="14" y="8" width="8" height="10" fill="#4a1000"/>
-          <rect x="26" y="8" width="8" height="10" fill="#4a1000"/>
-          <ellipse cx="24" cy="20" rx="8" ry="6" fill="#ff4400" opacity="0.9"/>
-          <ellipse cx="24" cy="18" rx="5" ry="4" fill="#ffaa00"/>
-          <ellipse cx="24" cy="16" rx="3" ry="3" fill="#ffff00"/>
+          <rect x="8" y="16" width="32" height="28" fill="#2a0600" rx="2"/>
+          <rect x="4" y="12" width="10" height="16" fill="#3d0c00" rx="1"/>
+          <rect x="34" y="12" width="10" height="16" fill="#3d0c00" rx="1"/>
+          <rect x="14" y="8" width="8" height="10" fill="#3d0c00"/>
+          <rect x="26" y="8" width="8" height="10" fill="#3d0c00"/>
+          <rect x="6" y="10" width="3" height="4" fill="#1a0400"/>
+          <rect x="10" y="10" width="3" height="4" fill="#1a0400"/>
+          <rect x="35" y="10" width="3" height="4" fill="#1a0400"/>
+          <rect x="39" y="10" width="3" height="4" fill="#1a0400"/>
+          <rect x="15" y="6" width="3" height="4" fill="#1a0400"/>
+          <rect x="27" y="6" width="3" height="4" fill="#1a0400"/>
+          <rect x="14" y="22" width="6" height="8" fill="#1a0400"/>
+          <rect x="28" y="22" width="6" height="8" fill="#1a0400"/>
+          <rect x="20" y="26" width="8" height="18" fill="#220800"/>
+          <rect x="21" y="19" width="6" height="9" fill="#110300"/>
+          <ellipse cx="24" cy="19" rx="9" ry="7" fill="#cc2200" opacity="0.7"/>
+          <ellipse cx="24" cy="17" rx="6" ry="5" fill="#ff5500" opacity="0.85"/>
+          <ellipse cx="22" cy="14" rx="3" ry="4" fill="#ff9900"/>
+          <ellipse cx="26" cy="13" rx="2" ry="3" fill="#ffbb00"/>
+          <ellipse cx="24" cy="12" rx="2" ry="2" fill="#ffff88"/>
+          <rect x="9" y="28" width="4" height="3" fill="#ff3300" opacity="0.4"/>
+          <rect x="35" y="28" width="4" height="3" fill="#ff3300" opacity="0.4"/>
         </svg>`,
+
       ice_dungeon: `
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
-          <rect x="8" y="16" width="32" height="28" fill="#0a1a3a" rx="2"/>
-          <rect x="4" y="12" width="10" height="16" fill="#0a2040" rx="1"/>
-          <rect x="34" y="12" width="10" height="16" fill="#0a2040" rx="1"/>
-          <rect x="14" y="8" width="8" height="10" fill="#0a2040"/>
-          <rect x="26" y="8" width="8" height="10" fill="#0a2040"/>
-          <text x="24" y="26" text-anchor="middle" fill="#aaddff" font-size="16">❄</text>
+          <rect x="8" y="16" width="32" height="28" fill="#06121f" rx="2"/>
+          <rect x="4" y="12" width="10" height="16" fill="#091828" rx="1"/>
+          <rect x="34" y="12" width="10" height="16" fill="#091828" rx="1"/>
+          <rect x="14" y="8" width="8" height="10" fill="#091828"/>
+          <rect x="26" y="8" width="8" height="10" fill="#091828"/>
+          <rect x="6" y="10" width="3" height="4" fill="#040d14"/>
+          <rect x="10" y="10" width="3" height="4" fill="#040d14"/>
+          <rect x="35" y="10" width="3" height="4" fill="#040d14"/>
+          <rect x="39" y="10" width="3" height="4" fill="#040d14"/>
+          <rect x="15" y="6" width="3" height="4" fill="#040d14"/>
+          <rect x="27" y="6" width="3" height="4" fill="#040d14"/>
+          <rect x="14" y="22" width="6" height="8" fill="#040d14"/>
+          <rect x="28" y="22" width="6" height="8" fill="#040d14"/>
+          <rect x="20" y="26" width="8" height="18" fill="#07101a"/>
+          <line x1="24" y1="10" x2="24" y2="32" stroke="#88ccff" stroke-width="1" opacity="0.8"/>
+          <line x1="12" y1="21" x2="36" y2="21" stroke="#88ccff" stroke-width="1" opacity="0.8"/>
+          <line x1="15" y1="13" x2="33" y2="29" stroke="#88ccff" stroke-width="0.7" opacity="0.6"/>
+          <line x1="33" y1="13" x2="15" y2="29" stroke="#88ccff" stroke-width="0.7" opacity="0.6"/>
+          <circle cx="24" cy="21" r="7" fill="#0055aa" opacity="0.5"/>
+          <circle cx="24" cy="21" r="4" fill="#2299ee" opacity="0.6"/>
+          <circle cx="24" cy="21" r="2" fill="#aaddff" opacity="0.9"/>
+          <polygon points="24,11 25.2,14.6 29,14.6 26,16.8 27.2,20.4 24,18.2 20.8,20.4 22,16.8 19,14.6 22.8,14.6" fill="#cceeff" opacity="0.5"/>
+          <rect x="9" y="28" width="4" height="3" fill="#44aaff" opacity="0.3"/>
+          <rect x="35" y="28" width="4" height="3" fill="#44aaff" opacity="0.3"/>
+          <polygon points="7,11 8,9 9,11" fill="#aaddff" opacity="0.7"/>
+          <polygon points="36,9 37,7 38,9" fill="#aaddff" opacity="0.7"/>
+          <polygon points="15,7 16,5 17,7" fill="#aaddff" opacity="0.7"/>
+          <polygon points="28,7 29,5 30,7" fill="#aaddff" opacity="0.7"/>
         </svg>`,
+
       arcane_dungeon: `
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
-          <rect x="8" y="16" width="32" height="28" fill="#1a0a3a" rx="2"/>
-          <rect x="4" y="12" width="10" height="16" fill="#2a0a4a" rx="1"/>
-          <rect x="34" y="12" width="10" height="16" fill="#2a0a4a" rx="1"/>
-          <polygon points="24,8 28,18 38,18 30,24 33,34 24,28 15,34 18,24 10,18 20,18" fill="#aa44ff" opacity="0.9"/>
+          <rect x="8" y="16" width="32" height="28" fill="#100820" rx="2"/>
+          <rect x="4" y="12" width="10" height="16" fill="#180a2e" rx="1"/>
+          <rect x="34" y="12" width="10" height="16" fill="#180a2e" rx="1"/>
+          <rect x="14" y="8" width="8" height="10" fill="#180a2e"/>
+          <rect x="26" y="8" width="8" height="10" fill="#180a2e"/>
+          <rect x="6" y="10" width="3" height="4" fill="#0b0518"/>
+          <rect x="10" y="10" width="3" height="4" fill="#0b0518"/>
+          <rect x="35" y="10" width="3" height="4" fill="#0b0518"/>
+          <rect x="39" y="10" width="3" height="4" fill="#0b0518"/>
+          <rect x="15" y="6" width="3" height="4" fill="#0b0518"/>
+          <rect x="27" y="6" width="3" height="4" fill="#0b0518"/>
+          <rect x="14" y="22" width="6" height="8" fill="#0b0518"/>
+          <rect x="28" y="22" width="6" height="8" fill="#0b0518"/>
+          <rect x="20" y="26" width="8" height="18" fill="#0e0720"/>
+          <circle cx="24" cy="20" r="9" fill="#5500aa" opacity="0.4"/>
+          <polygon points="24,9 26.4,16.2 34,16.2 28,21 30.4,28.2 24,24 17.6,28.2 20,21 14,16.2 21.6,16.2" fill="#bb44ff" opacity="0.85"/>
+          <circle cx="24" cy="20" r="3" fill="#dd99ff" opacity="0.8"/>
+          <circle cx="24" cy="20" r="1.5" fill="#ffffff" opacity="0.7"/>
+          <circle cx="11" cy="18" r="1.5" fill="#9933cc" opacity="0.7"/>
+          <circle cx="37" cy="18" r="1.5" fill="#9933cc" opacity="0.7"/>
+          <circle cx="17" cy="12" r="1" fill="#cc55ff" opacity="0.6"/>
+          <circle cx="31" cy="12" r="1" fill="#cc55ff" opacity="0.6"/>
+          <rect x="9" y="28" width="4" height="3" fill="#aa44ff" opacity="0.35"/>
+          <rect x="35" y="28" width="4" height="3" fill="#aa44ff" opacity="0.35"/>
         </svg>`,
 
       // FOREST
       fire_forest: `
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
-          <rect x="20" y="28" width="8" height="16" fill="#5a3a0a"/>
-          <ellipse cx="24" cy="22" rx="14" ry="12" fill="#2a4a0a"/>
-          <ellipse cx="24" cy="16" rx="10" ry="9" fill="#3a6a0a"/>
-          <ellipse cx="24" cy="18" rx="5" ry="5" fill="#ff6600" opacity="0.9"/>
-          <ellipse cx="24" cy="15" rx="3" ry="3" fill="#ffaa00"/>
+          <rect x="20" y="30" width="8" height="14" fill="#3d2506"/>
+          <rect x="21" y="30" width="2" height="14" fill="#2a1804" opacity="0.5"/>
+          <rect x="25" y="30" width="2" height="14" fill="#2a1804" opacity="0.5"/>
+          <ellipse cx="24" cy="25" rx="15" ry="13" fill="#1e3605"/>
+          <ellipse cx="19" cy="27" rx="8" ry="7" fill="#1a3004"/>
+          <ellipse cx="29" cy="27" rx="8" ry="7" fill="#1a3004"/>
+          <ellipse cx="24" cy="19" rx="11" ry="10" fill="#2a5208"/>
+          <ellipse cx="24" cy="14" rx="8" ry="7" fill="#357010"/>
+          <ellipse cx="20" cy="22" rx="5" ry="5" fill="#ff5500" opacity="0.85"/>
+          <ellipse cx="28" cy="21" rx="4" ry="4" fill="#ff3300" opacity="0.7"/>
+          <ellipse cx="24" cy="18" rx="4" ry="5" fill="#ff7700" opacity="0.9"/>
+          <ellipse cx="24" cy="14" rx="3" ry="3" fill="#ffaa00"/>
+          <ellipse cx="22" cy="11" rx="2" ry="2.5" fill="#ffdd00"/>
+          <ellipse cx="26" cy="12" rx="1.5" ry="2" fill="#ffee88"/>
         </svg>`,
+
       ice_forest: `
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
-          <rect x="20" y="28" width="8" height="16" fill="#3a2a1a"/>
-          <ellipse cx="24" cy="22" rx="14" ry="12" fill="#1a3a2a"/>
-          <ellipse cx="24" cy="16" rx="10" ry="9" fill="#2a5a3a"/>
-          <text x="24" y="22" text-anchor="middle" fill="#aaffdd" font-size="14">❄</text>
+          <rect x="20" y="30" width="8" height="14" fill="#28201a"/>
+          <rect x="21" y="30" width="2" height="14" fill="#1a1410" opacity="0.5"/>
+          <ellipse cx="24" cy="25" rx="15" ry="13" fill="#0f2218"/>
+          <ellipse cx="19" cy="27" rx="8" ry="7" fill="#0b1c13"/>
+          <ellipse cx="29" cy="27" rx="8" ry="7" fill="#0b1c13"/>
+          <ellipse cx="24" cy="19" rx="11" ry="10" fill="#153320"/>
+          <ellipse cx="24" cy="14" rx="8" ry="7" fill="#1a4028"/>
+          <ellipse cx="14" cy="22" rx="3" ry="6" fill="#cceeff" opacity="0.7"/>
+          <ellipse cx="34" cy="24" rx="2.5" ry="5" fill="#cceeff" opacity="0.6"/>
+          <ellipse cx="20" cy="16" rx="2" ry="4" fill="#ddeeff" opacity="0.5"/>
+          <ellipse cx="28" cy="15" rx="2" ry="4" fill="#ddeeff" opacity="0.5"/>
+          <line x1="24" y1="14" x2="24" y2="26" stroke="#88ccff" stroke-width="1.2" opacity="0.9"/>
+          <line x1="18" y1="20" x2="30" y2="20" stroke="#88ccff" stroke-width="1.2" opacity="0.9"/>
+          <line x1="19.5" y1="15.5" x2="28.5" y2="24.5" stroke="#88ccff" stroke-width="0.9" opacity="0.7"/>
+          <line x1="28.5" y1="15.5" x2="19.5" y2="24.5" stroke="#88ccff" stroke-width="0.9" opacity="0.7"/>
+          <circle cx="24" cy="20" r="3" fill="#55aadd" opacity="0.7"/>
+          <circle cx="24" cy="20" r="1.5" fill="#aaddff" opacity="0.9"/>
         </svg>`,
+
       arcane_forest: `
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
-          <rect x="20" y="28" width="8" height="16" fill="#3a1a3a"/>
-          <ellipse cx="24" cy="22" rx="14" ry="12" fill="#2a0a2a"/>
-          <ellipse cx="24" cy="16" rx="10" ry="9" fill="#4a0a4a"/>
-          <circle cx="24" cy="18" r="6" fill="#cc44ff" opacity="0.8"/>
-          <circle cx="24" cy="18" r="3" fill="#ffffff" opacity="0.6"/>
+          <rect x="20" y="30" width="8" height="14" fill="#2a0f2a"/>
+          <rect x="21" y="30" width="2" height="14" fill="#1a081a" opacity="0.5"/>
+          <ellipse cx="24" cy="25" rx="15" ry="13" fill="#1a051a"/>
+          <ellipse cx="19" cy="27" rx="8" ry="7" fill="#150415"/>
+          <ellipse cx="29" cy="27" rx="8" ry="7" fill="#150415"/>
+          <ellipse cx="24" cy="19" rx="11" ry="10" fill="#220822"/>
+          <ellipse cx="24" cy="14" rx="8" ry="7" fill="#300a30"/>
+          <circle cx="16" cy="22" r="2" fill="#cc44ff" opacity="0.6"/>
+          <circle cx="32" cy="25" r="1.5" fill="#cc44ff" opacity="0.5"/>
+          <circle cx="20" cy="14" r="1.5" fill="#ee88ff" opacity="0.6"/>
+          <circle cx="30" cy="16" r="1" fill="#ee88ff" opacity="0.5"/>
+          <circle cx="24" cy="19" r="8" fill="#6600aa" opacity="0.3"/>
+          <circle cx="24" cy="19" r="5" fill="#9922dd" opacity="0.5"/>
+          <circle cx="24" cy="19" r="2.5" fill="#cc66ff" opacity="0.85"/>
+          <circle cx="24" cy="19" r="1" fill="#f0ccff" opacity="0.9"/>
+          <line x1="24" y1="11" x2="24" y2="27" stroke="#cc44ff" stroke-width="0.5" opacity="0.4"/>
+          <line x1="16" y1="19" x2="32" y2="19" stroke="#cc44ff" stroke-width="0.5" opacity="0.4"/>
         </svg>`,
 
       // VOLCANIC
       fire_volcanic: `
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
-          <polygon points="24,4 42,44 6,44" fill="#2a0500"/>
-          <polygon points="24,10 38,40 10,40" fill="#3a0a00"/>
-          <ellipse cx="24" cy="18" rx="7" ry="5" fill="#ff2200"/>
-          <ellipse cx="24" cy="15" rx="4" ry="3" fill="#ff6600"/>
-          <ellipse cx="24" cy="13" rx="2" ry="2" fill="#ffff00"/>
+          <polygon points="24,4 44,44 4,44" fill="#1c0300"/>
+          <polygon points="24,8 41,44 7,44" fill="#2c0500"/>
+          <polygon points="24,12 38,44 10,44" fill="#3a0800"/>
+          <rect x="10" y="38" width="28" height="6" fill="#4a0a00"/>
+          <ellipse cx="13" cy="42" rx="3" ry="2" fill="#220400"/>
+          <ellipse cx="35" cy="42" rx="3" ry="2" fill="#220400"/>
+          <ellipse cx="17" cy="38" rx="2" ry="3" fill="#ff1100" opacity="0.5"/>
+          <ellipse cx="31" cy="38" rx="2" ry="3" fill="#ff1100" opacity="0.5"/>
+          <ellipse cx="24" cy="18" rx="8" ry="6" fill="#cc1100" opacity="0.7"/>
+          <ellipse cx="24" cy="15" rx="5" ry="4" fill="#ff3300" opacity="0.85"/>
+          <ellipse cx="22" cy="12" rx="3" ry="3.5" fill="#ff6600"/>
+          <ellipse cx="26" cy="11" rx="2" ry="3" fill="#ff8800"/>
+          <ellipse cx="24" cy="9" rx="2" ry="2.5" fill="#ffcc00"/>
+          <ellipse cx="24" cy="7" rx="1.5" ry="1.5" fill="#ffff88"/>
+          <line x1="16" y1="30" x2="14" y2="44" stroke="#ff4400" stroke-width="0.7" opacity="0.4"/>
+          <line x1="32" y1="30" x2="34" y2="44" stroke="#ff4400" stroke-width="0.7" opacity="0.4"/>
         </svg>`,
+
       ice_volcanic: `
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
-          <polygon points="24,4 42,44 6,44" fill="#001a2a"/>
-          <polygon points="24,10 38,40 10,40" fill="#002a3a"/>
-          <text x="24" y="28" text-anchor="middle" fill="#44ccff" font-size="16">❄</text>
+          <polygon points="24,4 44,44 4,44" fill="#000d18"/>
+          <polygon points="24,8 41,44 7,44" fill="#001522"/>
+          <polygon points="24,12 38,44 10,44" fill="#001d2e"/>
+          <rect x="10" y="38" width="28" height="6" fill="#002233"/>
+          <ellipse cx="13" cy="42" rx="3" ry="2" fill="#000a12"/>
+          <ellipse cx="35" cy="42" rx="3" ry="2" fill="#000a12"/>
+          <ellipse cx="17" cy="38" rx="2" ry="3" fill="#44aaff" opacity="0.4"/>
+          <ellipse cx="31" cy="38" rx="2" ry="3" fill="#44aaff" opacity="0.4"/>
+          <line x1="24" y1="16" x2="24" y2="32" stroke="#88ccff" stroke-width="1.2" opacity="0.85"/>
+          <line x1="16" y1="24" x2="32" y2="24" stroke="#88ccff" stroke-width="1.2" opacity="0.85"/>
+          <line x1="18.3" y1="18.3" x2="29.7" y2="29.7" stroke="#88ccff" stroke-width="0.9" opacity="0.65"/>
+          <line x1="29.7" y1="18.3" x2="18.3" y2="29.7" stroke="#88ccff" stroke-width="0.9" opacity="0.65"/>
+          <circle cx="24" cy="24" r="5" fill="#0055aa" opacity="0.5"/>
+          <circle cx="24" cy="24" r="2.5" fill="#44aaee" opacity="0.7"/>
+          <circle cx="24" cy="24" r="1" fill="#aaddff" opacity="0.95"/>
+          <polygon points="24,13 25,16.5 24,4 23,16.5" fill="#cceeff" opacity="0.3"/>
+          <line x1="16" y1="30" x2="14" y2="44" stroke="#44aaff" stroke-width="0.7" opacity="0.3"/>
+          <line x1="32" y1="30" x2="34" y2="44" stroke="#44aaff" stroke-width="0.7" opacity="0.3"/>
         </svg>`,
+
       arcane_volcanic: `
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
-          <polygon points="24,4 42,44 6,44" fill="#1a001a"/>
-          <polygon points="24,10 38,40 10,40" fill="#2a002a"/>
-          <polygon points="24,8 28,20 40,20 30,27 34,39 24,32 14,39 18,27 8,20 20,20" fill="#ff44ff" opacity="0.8"/>
+          <polygon points="24,4 44,44 4,44" fill="#100010"/>
+          <polygon points="24,8 41,44 7,44" fill="#180018"/>
+          <polygon points="24,12 38,44 10,44" fill="#200020"/>
+          <rect x="10" y="38" width="28" height="6" fill="#250025"/>
+          <ellipse cx="13" cy="42" rx="3" ry="2" fill="#0a000a"/>
+          <ellipse cx="35" cy="42" rx="3" ry="2" fill="#0a000a"/>
+          <ellipse cx="17" cy="38" rx="2" ry="3" fill="#cc00ff" opacity="0.35"/>
+          <ellipse cx="31" cy="38" rx="2" ry="3" fill="#cc00ff" opacity="0.35"/>
+          <circle cx="24" cy="22" r="9" fill="#550055" opacity="0.4"/>
+          <polygon points="24,9 26.6,17 35,17 28.5,22 31,30.5 24,25.5 17,30.5 19.5,22 13,17 21.4,17" fill="#ee00ff" opacity="0.85"/>
+          <circle cx="24" cy="22" r="3.5" fill="#ff66ff" opacity="0.7"/>
+          <circle cx="24" cy="22" r="1.5" fill="#ffffff" opacity="0.65"/>
+          <line x1="16" y1="30" x2="14" y2="44" stroke="#cc00ff" stroke-width="0.7" opacity="0.35"/>
+          <line x1="32" y1="30" x2="34" y2="44" stroke="#cc00ff" stroke-width="0.7" opacity="0.35"/>
         </svg>`,
 
       // FROZEN
       fire_frozen: `
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
-          <rect x="10" y="18" width="28" height="26" fill="#aaccee" rx="2" opacity="0.9"/>
-          <rect x="6" y="12" width="10" height="18" fill="#bbddff" rx="1"/>
-          <rect x="32" y="12" width="10" height="18" fill="#bbddff" rx="1"/>
-          <ellipse cx="24" cy="20" rx="6" ry="5" fill="#ff4400" opacity="0.9"/>
-          <ellipse cx="24" cy="17" rx="3" ry="3" fill="#ffaa00"/>
+          <rect x="10" y="18" width="28" height="26" fill="#8aaabb" rx="2" opacity="0.95"/>
+          <rect x="6" y="12" width="10" height="18" fill="#a0bbcc" rx="1"/>
+          <rect x="32" y="12" width="10" height="18" fill="#a0bbcc" rx="1"/>
+          <rect x="7" y="10" width="3" height="4" fill="#7a9aaa"/>
+          <rect x="11" y="10" width="3" height="4" fill="#7a9aaa"/>
+          <rect x="33" y="10" width="3" height="4" fill="#7a9aaa"/>
+          <rect x="37" y="10" width="3" height="4" fill="#7a9aaa"/>
+          <ellipse cx="11" cy="29" rx="2" ry="5" fill="#cce0ee" opacity="0.7"/>
+          <ellipse cx="37" cy="29" rx="2" ry="5" fill="#cce0ee" opacity="0.7"/>
+          <ellipse cx="16" cy="15" rx="1.5" ry="3" fill="#cce0ee" opacity="0.5"/>
+          <ellipse cx="33" cy="15" rx="1.5" ry="3" fill="#cce0ee" opacity="0.5"/>
+          <rect x="18" y="28" width="12" height="16" fill="#7a9aaa"/>
+          <rect x="20" y="20" width="8" height="10" fill="#5a7888"/>
+          <ellipse cx="24" cy="20" rx="7" ry="6" fill="#cc2200" opacity="0.85"/>
+          <ellipse cx="24" cy="17" rx="4.5" ry="4" fill="#ff5500" opacity="0.9"/>
+          <ellipse cx="22" cy="14" rx="2.5" ry="3" fill="#ff9900"/>
+          <ellipse cx="26" cy="13" rx="1.5" ry="2.5" fill="#ffcc00"/>
+          <ellipse cx="24" cy="12" rx="1.5" ry="1.5" fill="#ffff88"/>
         </svg>`,
+
       ice_frozen: `
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
-          <rect x="10" y="18" width="28" height="26" fill="#cceeff" rx="2"/>
-          <rect x="6" y="12" width="10" height="18" fill="#ddeeff" rx="1"/>
-          <rect x="32" y="12" width="10" height="18" fill="#ddeeff" rx="1"/>
-          <text x="24" y="30" text-anchor="middle" fill="#0088cc" font-size="18">❄</text>
+          <rect x="10" y="18" width="28" height="26" fill="#b8d8ee" rx="2"/>
+          <rect x="6" y="12" width="10" height="18" fill="#cce4f4" rx="1"/>
+          <rect x="32" y="12" width="10" height="18" fill="#cce4f4" rx="1"/>
+          <rect x="7" y="10" width="3" height="4" fill="#9bbdd0"/>
+          <rect x="11" y="10" width="3" height="4" fill="#9bbdd0"/>
+          <rect x="33" y="10" width="3" height="4" fill="#9bbdd0"/>
+          <rect x="37" y="10" width="3" height="4" fill="#9bbdd0"/>
+          <ellipse cx="11" cy="29" rx="2" ry="5" fill="#ddf0ff" opacity="0.8"/>
+          <ellipse cx="37" cy="29" rx="2" ry="5" fill="#ddf0ff" opacity="0.8"/>
+          <ellipse cx="16" cy="15" rx="1.5" ry="3" fill="#ddf0ff" opacity="0.6"/>
+          <ellipse cx="33" cy="15" rx="1.5" ry="3" fill="#ddf0ff" opacity="0.6"/>
+          <rect x="18" y="28" width="12" height="16" fill="#99bbcc"/>
+          <rect x="20" y="20" width="8" height="10" fill="#7799aa"/>
+          <line x1="24" y1="19" x2="24" y2="32" stroke="#2277aa" stroke-width="1.5" opacity="0.9"/>
+          <line x1="17" y1="25.5" x2="31" y2="25.5" stroke="#2277aa" stroke-width="1.5" opacity="0.9"/>
+          <line x1="19" y1="21" x2="29" y2="30" stroke="#2277aa" stroke-width="1" opacity="0.7"/>
+          <line x1="29" y1="21" x2="19" y2="30" stroke="#2277aa" stroke-width="1" opacity="0.7"/>
+          <circle cx="24" cy="25.5" r="4" fill="#55aadd" opacity="0.6"/>
+          <circle cx="24" cy="25.5" r="2" fill="#aaddff" opacity="0.9"/>
+          <polygon points="11,11 12,9 13,11" fill="#aaccdd" opacity="0.8"/>
+          <polygon points="34,11 35,9 36,11" fill="#aaccdd" opacity="0.8"/>
+          <polygon points="7,11 8,9 9,11" fill="#aaccdd" opacity="0.7"/>
+          <polygon points="38,11 39,9 40,11" fill="#aaccdd" opacity="0.7"/>
         </svg>`,
+
       arcane_frozen: `
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
-          <rect x="10" y="18" width="28" height="26" fill="#8899cc" rx="2"/>
-          <rect x="6" y="12" width="10" height="18" fill="#99aadd" rx="1"/>
-          <rect x="32" y="12" width="10" height="18" fill="#99aadd" rx="1"/>
-          <polygon points="24,8 28,20 40,18 30,26 34,38 24,30 14,38 18,26 8,18 20,20" fill="#cc88ff" opacity="0.9"/>
+          <rect x="10" y="18" width="28" height="26" fill="#6677aa" rx="2"/>
+          <rect x="6" y="12" width="10" height="18" fill="#7788bb" rx="1"/>
+          <rect x="32" y="12" width="10" height="18" fill="#7788bb" rx="1"/>
+          <rect x="7" y="10" width="3" height="4" fill="#5566990"/>
+          <rect x="11" y="10" width="3" height="4" fill="#556699"/>
+          <rect x="33" y="10" width="3" height="4" fill="#556699"/>
+          <rect x="37" y="10" width="3" height="4" fill="#556699"/>
+          <ellipse cx="11" cy="29" rx="2" ry="5" fill="#99aacc" opacity="0.7"/>
+          <ellipse cx="37" cy="29" rx="2" ry="5" fill="#99aacc" opacity="0.7"/>
+          <rect x="18" y="28" width="12" height="16" fill="#556699"/>
+          <rect x="20" y="20" width="8" height="10" fill="#445588"/>
+          <circle cx="24" cy="24" r="8" fill="#330066" opacity="0.45"/>
+          <polygon points="24,13 26.6,21 35,21 28.5,26 31,34 24,29 17,34 19.5,26 13,21 21.4,21" fill="#cc88ff" opacity="0.9"/>
+          <circle cx="24" cy="24" r="3" fill="#dd99ff" opacity="0.75"/>
+          <circle cx="24" cy="24" r="1.3" fill="#ffffff" opacity="0.7"/>
+          <circle cx="8" cy="18" r="1.5" fill="#aa77ff" opacity="0.65"/>
+          <circle cx="40" cy="18" r="1.5" fill="#aa77ff" opacity="0.65"/>
+          <circle cx="8" cy="24" r="1" fill="#cc99ff" opacity="0.5"/>
+          <circle cx="40" cy="24" r="1" fill="#cc99ff" opacity="0.5"/>
         </svg>`,
 
       // VOID
       fire_void: `
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
-          <circle cx="24" cy="28" r="18" fill="#0f000f"/>
-          <circle cx="24" cy="28" r="13" fill="#1f001f"/>
-          <ellipse cx="24" cy="22" rx="7" ry="6" fill="#ff0044" opacity="0.9"/>
-          <ellipse cx="24" cy="19" rx="4" ry="4" fill="#ff4488"/>
-          <ellipse cx="24" cy="17" rx="2" ry="2" fill="#ffaacc"/>
+          <circle cx="24" cy="26" r="20" fill="#0a000a"/>
+          <circle cx="24" cy="26" r="16" fill="#140014"/>
+          <circle cx="24" cy="26" r="11" fill="#1e001e"/>
+          <ellipse cx="18" cy="22" rx="3" ry="5" fill="#330000" opacity="0.6"/>
+          <ellipse cx="30" cy="22" rx="3" ry="5" fill="#330000" opacity="0.6"/>
+          <circle cx="16" cy="18" r="2" fill="#550000" opacity="0.7"/>
+          <circle cx="32" cy="18" r="2" fill="#550000" opacity="0.7"/>
+          <ellipse cx="24" cy="20" rx="8" ry="7" fill="#aa0022" opacity="0.8"/>
+          <ellipse cx="24" cy="17" rx="5" ry="5" fill="#dd0044" opacity="0.85"/>
+          <ellipse cx="22" cy="14" rx="3" ry="3.5" fill="#ff2266"/>
+          <ellipse cx="26" cy="13" rx="2" ry="2.5" fill="#ff5599"/>
+          <ellipse cx="24" cy="11" rx="2" ry="2" fill="#ffaabb"/>
+          <ellipse cx="24" cy="9" rx="1.3" ry="1.3" fill="#ffddee"/>
+          <circle cx="14" cy="30" r="1.5" fill="#440011" opacity="0.6"/>
+          <circle cx="34" cy="30" r="1.5" fill="#440011" opacity="0.6"/>
+          <circle cx="19" cy="34" r="1" fill="#330011" opacity="0.5"/>
+          <circle cx="29" cy="34" r="1" fill="#330011" opacity="0.5"/>
         </svg>`,
+
       ice_void: `
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
-          <circle cx="24" cy="28" r="18" fill="#000f1f"/>
-          <circle cx="24" cy="28" r="13" fill="#001f2f"/>
-          <text x="24" y="32" text-anchor="middle" fill="#00ffff" font-size="16">❄</text>
+          <circle cx="24" cy="26" r="20" fill="#000a14"/>
+          <circle cx="24" cy="26" r="16" fill="#000f1e"/>
+          <circle cx="24" cy="26" r="11" fill="#001428"/>
+          <ellipse cx="18" cy="22" rx="3" ry="5" fill="#001a30" opacity="0.7"/>
+          <ellipse cx="30" cy="22" rx="3" ry="5" fill="#001a30" opacity="0.7"/>
+          <circle cx="16" cy="18" r="2" fill="#003355" opacity="0.8"/>
+          <circle cx="32" cy="18" r="2" fill="#003355" opacity="0.8"/>
+          <line x1="24" y1="18" x2="24" y2="34" stroke="#00ccff" stroke-width="1.5" opacity="0.9"/>
+          <line x1="16" y1="26" x2="32" y2="26" stroke="#00ccff" stroke-width="1.5" opacity="0.9"/>
+          <line x1="18.3" y1="20.3" x2="29.7" y2="31.7" stroke="#00ccff" stroke-width="1" opacity="0.7"/>
+          <line x1="29.7" y1="20.3" x2="18.3" y2="31.7" stroke="#00ccff" stroke-width="1" opacity="0.7"/>
+          <circle cx="24" cy="26" r="6" fill="#004488" opacity="0.55"/>
+          <circle cx="24" cy="26" r="3" fill="#0088cc" opacity="0.7"/>
+          <circle cx="24" cy="26" r="1.3" fill="#00eeff" opacity="0.95"/>
+          <circle cx="14" cy="30" r="1.5" fill="#002244" opacity="0.7"/>
+          <circle cx="34" cy="30" r="1.5" fill="#002244" opacity="0.7"/>
+          <circle cx="16" cy="34" r="1" fill="#003366" opacity="0.5"/>
+          <circle cx="32" cy="34" r="1" fill="#003366" opacity="0.5"/>
         </svg>`,
+
       arcane_void: `
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
-          <circle cx="24" cy="28" r="18" fill="#0f000f"/>
-          <circle cx="24" cy="28" r="13" fill="#1f001f"/>
-          <polygon points="24,8 27,18 38,16 29,23 33,34 24,27 15,34 19,23 10,16 21,18" fill="#ff00ff" opacity="0.9"/>
+          <circle cx="24" cy="26" r="20" fill="#08000f"/>
+          <circle cx="24" cy="26" r="16" fill="#10001e"/>
+          <circle cx="24" cy="26" r="11" fill="#18002d"/>
+          <ellipse cx="18" cy="22" rx="3" ry="5" fill="#200040" opacity="0.7"/>
+          <ellipse cx="30" cy="22" rx="3" ry="5" fill="#200040" opacity="0.7"/>
+          <circle cx="16" cy="18" r="2" fill="#440066" opacity="0.8"/>
+          <circle cx="32" cy="18" r="2" fill="#440066" opacity="0.8"/>
+          <circle cx="24" cy="24" r="9" fill="#440088" opacity="0.4"/>
+          <polygon points="24,11 27,20 37,20 29.5,26 32.5,35.5 24,29.5 15.5,35.5 18.5,26 11,20 21,20" fill="#ff00ff" opacity="0.9"/>
+          <circle cx="24" cy="24" r="3.5" fill="#ee66ff" opacity="0.75"/>
+          <circle cx="24" cy="24" r="1.5" fill="#ffffff" opacity="0.7"/>
+          <circle cx="14" cy="30" r="1.5" fill="#660088" opacity="0.65"/>
+          <circle cx="34" cy="30" r="1.5" fill="#660088" opacity="0.65"/>
+          <circle cx="18" cy="34" r="1" fill="#550077" opacity="0.5"/>
+          <circle cx="30" cy="34" r="1" fill="#550077" opacity="0.5"/>
         </svg>`
     };
 
     Object.entries(towers).forEach(([key, svg]) => {
-        scene.textures.addBase64(`tower_${key}`, 'data:image/svg+xml;base64,' + this.svgToBase64(svg));
+      scene.textures.addBase64(`tower_${key}`, 'data:image/svg+xml;base64,' + this.svgToBase64(svg));
     });
   }
 
