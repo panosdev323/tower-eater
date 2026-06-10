@@ -391,7 +391,7 @@ export class GameScene extends Phaser.Scene {
         const dy   = this.monsterSprite.y - ty;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < this.tileSize) {
-          this.takeDamage(Math.floor(10 * (1 - this.monsterArmor / 100)));
+          this.takeDamage(Math.floor(20 * (1 - this.monsterArmor / 100)));
           if (this.mechanics.freezeDuration && tower.type === 'ice' && !this.frozen) {
             this._applyFreeze();
           }
@@ -475,7 +475,7 @@ export class GameScene extends Phaser.Scene {
     const dist = Math.sqrt(dx * dx + dy * dy);
     if (dist < this.tileSize * 1.5) {
       const effectiveArmor = this.monsterArmor / 2;
-      this.takeDamage(Math.floor(20 * (1 - effectiveArmor / 100)));
+      this.takeDamage(Math.floor(40 * (1 - effectiveArmor / 100)));
       this.cameras.main.shake(150, 0.015);
     }
   }
@@ -508,7 +508,7 @@ export class GameScene extends Phaser.Scene {
       if (!this.gameOver) this.monsterSprite.clearTint();
     });
 
-    this.time.delayedCall(200, () => { this.invincible = false; });
+    this.time.delayedCall(150, () => { this.invincible = false; });
 
     if (this.monsterHP <= 0) this.deathAnimation();
   }

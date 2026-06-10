@@ -24,19 +24,24 @@ function generateTowers(count, levelId, worlds) {
 function makeMechanics(worlds, shootDelay, levelId) {
   const m = {};
 
+  // Bullet speed — κληρονομείται και αυξάνεται ανά world
   if (worlds.includes('forest')) {
-    const t = Math.min(1, (levelId - 11) / 40);
-    m.bulletDuration = Math.round(400 - t * 200); // 400→200ms
+    const t = Math.min(1, (levelId - 11) / 9);
+    m.bulletDuration = Math.round(300 - t * 100); // 300→200ms (γρηγορότερο)
   }
+
   if (worlds.includes('volcanic')) {
-    m.grenadePeriod = 3;
+    m.grenadePeriod  = 3;
+    m.bulletDuration = (m.bulletDuration ?? 300); // κρατάει forest speed αν mix
   }
+
   if (worlds.includes('void')) {
-    const t = Math.min(1, (levelId - 41) / 40);
-    m.towerMoveDelay = Math.round(2500 - t * 1200); // 2500→1300ms
+    const t = Math.min(1, (levelId - 41) / 9);
+    m.towerMoveDelay = Math.round(2000 - t * 900); // 2000→1100ms (πιο γρήγορη κίνηση)
   }
+
   if (worlds.includes('frozen')) {
-    m.freezeDuration = 3000; // ms που freezάρει ο monster
+    m.freezeDuration = 3000;
   }
 
   return m;
@@ -89,48 +94,48 @@ const levels = [];
 
 // ── WORLDS 1-50 ───────────────────────────────────────────────────────
 
-// Dungeon 1-10: 1→10 towers, required = 60% of towers, shootDelay 2000→1720
+// Dungeon 1-10: shootDelay 1600→1200 (ήταν 2000→1720)
 for (let i = 0; i < 10; i++) {
   const id         = i + 1;
   const towerCount = i + 1;
   const required   = Math.max(1, Math.floor(towerCount * 0.6));
-  const shootDelay = Math.round(2000 - i * 28);
+  const shootDelay = Math.round(1600 - i * 40);
   levels.push(buildLevel(id, ['dungeon'], towerCount, required, shootDelay));
 }
 
-// Forest 11-20: faster bullets
+// Forest 11-20: shootDelay 1100→800 + fast bullets
 for (let i = 0; i < 10; i++) {
   const id         = 11 + i;
-  const towerCount = i + 2; // 2→11
+  const towerCount = i + 2;
   const required   = Math.max(1, Math.floor(towerCount * 0.6));
-  const shootDelay = Math.round(1700 - i * 30);
+  const shootDelay = Math.round(1100 - i * 30);
   levels.push(buildLevel(id, ['forest'], towerCount, required, shootDelay));
 }
 
-// Volcanic 21-30: grenades
+// Volcanic 21-30: shootDelay 900→650 + grenades
 for (let i = 0; i < 10; i++) {
   const id         = 21 + i;
-  const towerCount = i + 3; // 3→12
+  const towerCount = i + 3;
   const required   = Math.max(1, Math.floor(towerCount * 0.6));
-  const shootDelay = Math.round(1400 - i * 28);
+  const shootDelay = Math.round(900 - i * 25);
   levels.push(buildLevel(id, ['volcanic'], towerCount, required, shootDelay));
 }
 
-// Frozen 31-40: freeze mechanic
+// Frozen 31-40: shootDelay 800→600 + freeze
 for (let i = 0; i < 10; i++) {
   const id         = 31 + i;
-  const towerCount = i + 4; // 4→13
+  const towerCount = i + 4;
   const required   = Math.max(1, Math.floor(towerCount * 0.6));
-  const shootDelay = Math.round(1200 - i * 25);
+  const shootDelay = Math.round(800 - i * 20);
   levels.push(buildLevel(id, ['frozen'], towerCount, required, shootDelay));
 }
 
-// Void 41-50: moving towers
+// Void 41-50: shootDelay 700→500 + moving towers
 for (let i = 0; i < 10; i++) {
   const id         = 41 + i;
-  const towerCount = i + 5; // 5→14
+  const towerCount = i + 5;
   const required   = Math.max(1, Math.floor(towerCount * 0.6));
-  const shootDelay = Math.round(1000 - i * 22);
+  const shootDelay = Math.round(700 - i * 20);
   levels.push(buildLevel(id, ['void'], towerCount, required, shootDelay));
 }
 
