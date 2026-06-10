@@ -354,6 +354,7 @@ export class GameScene extends Phaser.Scene {
 
   // ── Shooting ──────────────────────────────────────────────────────────
 
+  // Στο _fireBullet — cap στο πόσοι πύργοι πυροβολούν ανά salvo
   towerShoot() {
     if (this.gameOver) return;
     soundManager.shoot();
@@ -362,7 +363,15 @@ export class GameScene extends Phaser.Scene {
                       (this._shotCounter % this.mechanics.grenadePeriod === 0);
     const duration  = this.mechanics.bulletDuration ?? 500;
 
-    this.towers.forEach(tower => {
+    // Max 6 πύργοι ανά salvo σε high levels — τυχαία επιλογή
+    const maxShooters = this.level.id >= 71 ? 5
+                      : this.level.id >= 51 ? 7
+                      : this.towers.length;
+    const shooters = this.towers.length > maxShooters
+      ? Phaser.Utils.Array.Shuffle([...this.towers]).slice(0, maxShooters)
+      : this.towers;
+
+    shooters.forEach(tower => {
       const from    = this.cellToPixel(tower.cell);
       const targetX = this.monsterSprite.x;
       const targetY = this.monsterSprite.y;
@@ -789,7 +798,15 @@ export class GameScene extends Phaser.Scene {
           this.scene.start('GameScene', { levelIndex: 0 });
         },
         (musicOn)  => { console.log('Music:', musicOn); },
-        (soundsOn) => { console.log('Sounds:', soundsOn); }
+        (soundsOn) => { console.log('Sounds:', soundsOn); },
+        () => {
+          // onSeeIntro
+          localStorage.removeItem('te_seen_intro');
+          this.pauseMenu.destroy();
+          this.pauseMenu = null;
+          this._cleanupListeners();
+          this.scene.start('BootScene');
+        }
       );
     }
     this.pauseMenu.show();

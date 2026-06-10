@@ -3,11 +3,12 @@ import { ProgressManager } from '../systems/ProgressManager.js';
 import { openPrivacyPolicy } from '../privacyPolicy.js';
 
 export class PauseMenu {
-  constructor(onResume, onRestart, onMusicToggle, onSoundsToggle) {
+  constructor(onResume, onRestart, onMusicToggle, onSoundsToggle, onSeeIntro) {
     this.onResume       = onResume;
     this.onRestart      = onRestart;
     this.onMusicToggle  = onMusicToggle;
     this.onSoundsToggle = onSoundsToggle;
+    this.onSeeIntro = onSeeIntro;
     this._build();
   }
 
@@ -45,6 +46,8 @@ export class PauseMenu {
 
       <div class="pm-divider"></div>
       <button class="pm-privacy" id="pm-privacy">🔒 Privacy Policy</button>
+      <div class="pm-divider"></div>
+      <button class="pm-privacy" id="pm-see-intro">🎬 See Intro Again</button>
     `;
 
     this.overlay.appendChild(this.modal);
@@ -68,6 +71,12 @@ export class PauseMenu {
         this.hide();
         this.onRestart();
       }
+    };
+
+    document.getElementById('pm-see-intro').onclick = () => {
+      localStorage.removeItem('te_seen_intro');
+      this.hide();
+      if (this.onSeeIntro) this.onSeeIntro();
     };
 
     // ── Privacy: native browser on mobile, new tab on web ──────────
