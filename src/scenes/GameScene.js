@@ -711,7 +711,7 @@ export class GameScene extends Phaser.Scene {
   _showGetReady() {
     this.isMoving = true; // block all input during countdown
 
-    const overlay = this.add.rectangle(240, 427, 480, 854, 0x000000, 0.6).setDepth(50);
+    const overlay = this.add.rectangle(240, 427, 480, 854, 0x000000, 0.85).setDepth(50);
     const txt     = this.add.text(240, 380, 'GET READY', {
       fontSize: '36px', color: '#ffffff', fontStyle: 'bold',
       stroke: '#000000', strokeThickness: 4
