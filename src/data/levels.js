@@ -41,7 +41,8 @@ function makeMechanics(worlds, shootDelay, levelId) {
   }
 
   if (worlds.includes('frozen')) {
-    m.freezeDuration = 2000;
+    m.freezeDuration = 800;
+    m.freezePeriod = 3;
   }
 
   return m;
