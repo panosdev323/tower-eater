@@ -491,12 +491,57 @@ export class SpriteFactory {
   // ── BULLETS ───────────────────────────────────────────
   static createBulletTextures(scene) {
     const bullets = {
-      fire:   `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"><circle cx="6" cy="6" r="5" fill="#ff6600"/><circle cx="6" cy="6" r="3" fill="#ffaa00"/></svg>`,
-      ice:    `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"><circle cx="6" cy="6" r="5" fill="#44aaff"/><circle cx="6" cy="6" r="3" fill="#aaddff"/></svg>`,
-      arcane: `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"><circle cx="6" cy="6" r="5" fill="#aa44ff"/><circle cx="6" cy="6" r="3" fill="#dd88ff"/></svg>`,
+      fire: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+        <defs>
+          <radialGradient id="fg" cx="40%" cy="35%" r="60%">
+            <stop offset="0%" stop-color="#fff7aa"/>
+            <stop offset="40%" stop-color="#ff9900"/>
+            <stop offset="100%" stop-color="#cc2200" stop-opacity="0.9"/>
+          </radialGradient>
+        </defs>
+        <circle cx="8" cy="8" r="7" fill="#ff4400" opacity="0.35"/>
+        <circle cx="8" cy="8" r="5" fill="url(#fg)"/>
+        <ellipse cx="7" cy="6" rx="1.5" ry="2" fill="#fffde0" opacity="0.7"/>
+      </svg>`,
+
+      ice: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+        <defs>
+          <radialGradient id="ig" cx="40%" cy="35%" r="60%">
+            <stop offset="0%" stop-color="#eef9ff"/>
+            <stop offset="45%" stop-color="#55bbff"/>
+            <stop offset="100%" stop-color="#0055cc" stop-opacity="0.9"/>
+          </radialGradient>
+        </defs>
+        <circle cx="8" cy="8" r="7" fill="#44aaff" opacity="0.25"/>
+        <circle cx="8" cy="8" r="5" fill="url(#ig)"/>
+        <line x1="8" y1="4" x2="8" y2="12" stroke="#cceeff" stroke-width="0.8" opacity="0.8"/>
+        <line x1="4" y1="8" x2="12" y2="8" stroke="#cceeff" stroke-width="0.8" opacity="0.8"/>
+        <line x1="5.2" y1="5.2" x2="10.8" y2="10.8" stroke="#cceeff" stroke-width="0.6" opacity="0.6"/>
+        <line x1="10.8" y1="5.2" x2="5.2" y2="10.8" stroke="#cceeff" stroke-width="0.6" opacity="0.6"/>
+        <circle cx="7" cy="6.5" r="1" fill="white" opacity="0.6"/>
+      </svg>`,
+
+      arcane: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+        <defs>
+          <radialGradient id="ag" cx="40%" cy="35%" r="60%">
+            <stop offset="0%" stop-color="#f0ddff"/>
+            <stop offset="40%" stop-color="#cc55ff"/>
+            <stop offset="100%" stop-color="#550099" stop-opacity="0.95"/>
+          </radialGradient>
+        </defs>
+        <circle cx="8" cy="8" r="7" fill="#9900ff" opacity="0.2"/>
+        <circle cx="8" cy="8" r="5" fill="url(#ag)"/>
+        <polygon points="8,3.5 9.3,7 13,7 10.2,9.2 11.2,13 8,10.8 4.8,13 5.8,9.2 3,7 6.7,7"
+                fill="white" opacity="0.35" transform="scale(0.52) translate(9.3,9.3)"/>
+        <circle cx="7" cy="6.5" r="1" fill="#f8eeff" opacity="0.7"/>
+      </svg>`,
     };
+
     Object.entries(bullets).forEach(([type, svg]) => {
-        scene.textures.addBase64(`bullet_${type}`, 'data:image/svg+xml;base64,' + this.svgToBase64(svg));
+      scene.textures.addBase64(
+        `bullet_${type}`,
+        'data:image/svg+xml;base64,' + this.svgToBase64(svg)
+      );
     });
   }
 }
