@@ -383,8 +383,8 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
+  // GameScene.js — _fireBullet: μόνο ένας ice πύργος ανά salvo μπορεί να κάνει freeze
   _fireBullet(tower, from, targetX, targetY, duration) {
-    // Spread: μεγάλο στα εύκολα levels, μικρό στα δύσκολα
     const spread = this.level.id < 20 ? 40 : this.level.id < 40 ? 25 : 10;
     const tx = targetX + (Math.random() - 0.5) * spread;
     const ty = targetY + (Math.random() - 0.5) * spread;
@@ -401,9 +401,11 @@ export class GameScene extends Phaser.Scene {
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < this.tileSize) {
           this.takeDamage(Math.floor(20 * (1 - this.monsterArmor / 100)));
-          if (this.mechanics.freezeDuration && tower.type === 'ice' && !this.frozen) {
-            this._applyFreeze();
-          }
+          const canFreeze = this.mechanics.freezeDuration
+          && tower.type === 'ice'
+          && !this.frozen
+          && (this.level.id < 50 || this._shotCounter % (this.mechanics.freezePeriod ?? 4) === 0);
+          if (canFreeze) this._applyFreeze();
         }
       }
     });

@@ -43,7 +43,7 @@ function makeMechanics(worlds, shootDelay, levelId) {
   // Στο makeMechanics — το freeze να είναι λίγο πιο ελαφρύ σε mix worlds
   if (worlds.includes('frozen')) {
     m.freezeDuration = worlds.length > 1 ? 600 : 800; // λιγότερο σε mix
-    m.freezePeriod = 3;
+    m.freezePeriod   = worlds.length > 1 ? 6 : 3;
   }
 
   return m;
