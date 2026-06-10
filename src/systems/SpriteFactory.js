@@ -35,15 +35,17 @@ export class SpriteFactory {
   // ── MONSTER ──────────────────────────────────────────
   static createMonsterTexture(scene) {
     const svg = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
-        <circle cx="24" cy="24" r="20" fill="#00cc66" opacity="0.2"/>
-        <circle cx="24" cy="24" r="16" fill="#00ff88"/>
-        <circle cx="17" cy="20" r="4" fill="#003322"/>
-        <circle cx="31" cy="20" r="4" fill="#003322"/>
-        <circle cx="18" cy="20" r="2" fill="#00ffaa"/>
-        <circle cx="32" cy="20" r="2" fill="#00ffaa"/>
-        <path d="M16 30 Q24 36 32 30" stroke="#003322" stroke-width="2" fill="none"/>
-        <path d="M8 14 L14 20 M40 14 L34 20" stroke="#00ff88" stroke-width="2"/>
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+        <defs>
+          <radialGradient id="g1" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#7CFFB2"/>
+            <stop offset="100%" stop-color="#1B5E3F"/>
+          </radialGradient>
+        </defs>
+        <circle cx="32" cy="32" r="20" fill="url(#g1)" stroke="#0b1a12" stroke-width="2"/>
+        <circle cx="25" cy="28" r="3" fill="#0b1a12"/>
+        <circle cx="39" cy="28" r="3" fill="#0b1a12"/>
+        <path d="M24 40 Q32 46 40 40" stroke="#0b1a12" stroke-width="2" fill="none"/>
       </svg>`;
     scene.textures.addBase64('monster', 'data:image/svg+xml;base64,' + this.svgToBase64(svg));
   }
