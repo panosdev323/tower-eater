@@ -1,4 +1,3 @@
-/*
 import { Capacitor } from '@capacitor/core';
 import { AdMob, RewardAdPluginEvents } from '@capacitor-community/admob';
 
@@ -149,4 +148,3 @@ export const AdManager = {
     }
   }
 };
-*/

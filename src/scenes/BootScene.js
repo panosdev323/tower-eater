@@ -1,4 +1,4 @@
-// import { AdManager } from '../systems/AdManager.js';
+import { AdManager } from '../systems/AdManager.js';
 import { SpriteFactory } from '../systems/SpriteFactory.js';
 import { ProgressManager } from '../systems/ProgressManager.js';
 import { IntroScreen } from '../ui/IntroScreen.js';
@@ -22,7 +22,7 @@ export class BootScene extends Phaser.Scene {
   }
 
   create() {
-    // AdManager.initialize();
+    AdManager.initialize();
     // Small delay so the loading bar flash isn't jarring
     this.time.delayedCall(200, () => {
       const isFirstTime = !localStorage.getItem('te_seen_intro');
