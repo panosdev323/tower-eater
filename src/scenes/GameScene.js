@@ -492,8 +492,6 @@ export class GameScene extends Phaser.Scene {
       {col:0, row:0},
       {col:1, row:0}, {col:-1, row:0},
       {col:0, row:1}, {col:0,  row:-1},
-      {col:1, row:1}, {col:-1, row:-1},
-      {col:1, row:-1},{col:-1, row:1},
     ].forEach(({col, row}) => {
       const c = hitCell.col + col;
       const r = hitCell.row + row;
