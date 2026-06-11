@@ -354,6 +354,7 @@ export class GameScene extends Phaser.Scene {
   // Στο _fireBullet — cap στο πόσοι πύργοι πυροβολούν ανά salvo
   towerShoot() {
     if (this.gameOver) return;
+    if (!this.towers.length) return;
     soundManager.shoot();
     this._shotCounter++;
     const isGrenade = this.mechanics.grenadePeriod &&
