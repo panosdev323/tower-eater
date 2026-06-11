@@ -88,7 +88,11 @@ export class GameScene extends Phaser.Scene {
       });
     }
 
-    this._showGetReady();
+    if (AdManager.isShowing) {
+      window.__onAdClosed__ = () => this._showGetReady();
+    } else {
+      this._showGetReady();
+    }
   }
 
   // ── Grid / Sprites ────────────────────────────────────────────────────

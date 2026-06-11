@@ -18,7 +18,7 @@ const IS_TESTING = true;
 const IS_DEV    = !IS_NATIVE;
 
 export const AdManager = {
-
+  isShowing: false,
   async initialize() {
     if (!IS_NATIVE) return;
     try {
@@ -65,7 +65,7 @@ export const AdManager = {
 
     // Cooldown check
     if (this.isOnCooldown()) return 'cooldown';
-
+    this.isShowing = true;
     let rewardEarned    = false;
     let onLoaded        = null;
     let onFailedToLoad  = null;
@@ -145,6 +145,7 @@ export const AdManager = {
 
     } finally {
       cleanup();
+      this.isShowing = false;
     }
   }
 };
