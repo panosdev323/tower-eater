@@ -751,7 +751,6 @@ export class GameScene extends Phaser.Scene {
       fontSize: '18px', color: '#aaaaaa'
     }).setOrigin(0.5).setDepth(51);
 
-    // ── Αντί για auto-countdown, TAP TO START button ──
     const startBtn = this.add.text(240, 500, '▶  TAP TO START', {
       fontSize: '22px', color: '#000000',
       backgroundColor: '#00ff88',
@@ -759,7 +758,6 @@ export class GameScene extends Phaser.Scene {
       fontStyle: 'bold'
     }).setOrigin(0.5).setDepth(51).setInteractive();
 
-    // Pulse animation ώστε να τραβά το μάτι
     this.tweens.add({
       targets: startBtn,
       scaleX: 1.06, scaleY: 1.06,
@@ -774,49 +772,20 @@ export class GameScene extends Phaser.Scene {
     settingsHint.on('pointerdown', () => this._openPause());
 
     startBtn.on('pointerdown', () => {
-      startBtn.disableInteractive(); // prevent double-tap
-      this._runCountdown([overlay, txt, sub, startBtn, settingsHint]);
-    });
-  }
-
-  // Χωριστή μέθοδος για το countdown — καλείται μόνο μετά το tap
-  _runCountdown(toDestroy) {
-    const countdownTxt = this.add.text(240, 490, '3', {
-      fontSize: '70px', color: '#ffdd00', fontStyle: 'bold'
-    }).setOrigin(0.5).setDepth(51);
-
-    let count = 3; // 3 αρκεί εφόσον ο χρήστης ήδη είναι έτοιμος
-
-    const tick = () => {
-      if (count > 0) {
-        countdownTxt.setText(String(count));
-        soundManager.countdown();
-        this.tweens.add({
-          targets: countdownTxt,
-          scaleX: 1.4, scaleY: 1.4,
-          duration: 200, yoyo: true
-        });
-        count--;
-        this.time.delayedCall(800, tick);
-      } else {
-        countdownTxt.setText('GO!').setStyle({ color: '#00ff88' });
-        soundManager.go();
-        this.tweens.add({
-          targets: [...toDestroy, countdownTxt],
-          alpha: 0, duration: 400, delay: 300,
-          onComplete: () => {
-            [...toDestroy, countdownTxt].forEach(o => o.destroy());
-            this.isMoving = false;
-            this._startShootTimer();
-            if (this.levelIndex >= 80) {
-              this.time.delayedCall(500, () => this.showMsg('🔥 HELL MODE', '#ff4444', 2000));
-            }
+      startBtn.disableInteractive();
+      this.tweens.add({
+        targets: [overlay, txt, sub, startBtn, settingsHint],
+        alpha: 0, duration: 300,
+        onComplete: () => {
+          [overlay, txt, sub, startBtn, settingsHint].forEach(o => o.destroy());
+          this.isMoving = false;
+          this._startShootTimer();
+          if (this.levelIndex >= 80) {
+            this.time.delayedCall(500, () => this.showMsg('🔥 HELL MODE', '#ff4444', 2000));
           }
-        });
-      }
-    };
-
-    this.time.delayedCall(300, tick);
+        }
+      });
+    });
   }
 
   _startShootTimer() {
