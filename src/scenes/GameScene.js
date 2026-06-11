@@ -36,7 +36,7 @@ export class GameScene extends Phaser.Scene {
     this.monsterMaxHP = 100;
     this.monsterPower = 1;
     this.monsterArmor = 0;
-    this.monsterSpeed = Math.max(80, 150 - Math.floor(this.levelIndex / 10) * 25);
+    this.monsterSpeed = Math.max(80, 150 - Math.floor(this.levelIndex / 10) * 30);
     this.evolutions   = [];
     this.towersEaten  = 0;
     this.baseUnlocked = false;
