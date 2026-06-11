@@ -324,7 +324,7 @@ export class GameScene extends Phaser.Scene {
       ice: { msg: '🛡️ Armor + Freeze resist!', color: 0x66ccff, apply: () => {
         this.monsterArmor = Math.min(80, this.monsterArmor + 20);
         if (this.mechanics.freezeDuration) {
-          this.mechanics.freezeDuration = Math.max(200, this.mechanics.freezeDuration - 200);
+          this.mechanics.freezeDuration = Math.max(200, this.mechanics.freezeDuration - 100);
         }
       }},
       arcane: { msg: '⚔️ More power!',  color: 0xcc66ff, apply: () => {
