@@ -174,13 +174,9 @@ export class GameScene extends Phaser.Scene {
     this.hpBarFill = this.add.rectangle(90, 24, 300, 12, 0x00ff88).setDepth(11).setOrigin(0, 0.5);
     this.hpText    = this.add.text(240, 24, 'HP 100', { fontSize: '10px', color: '#000' }).setOrigin(0.5).setDepth(12);
 
-    this.powerText = this.add.text(10,  42, '⚔️ 1',   { fontSize: '13px', color: '#ffaa00' }).setDepth(10);
-    this.armorText = this.add.text(70,  42, '🛡️ 0%', { fontSize: '13px', color: '#44aaff' }).setDepth(10);
-    this.speedText = this.add.text(140, 42, '💨 1x',  { fontSize: '13px', color: '#aaffaa' }).setDepth(10);
-
-    this.eatCounter = this.add.text(470, 42, `🍴 0/${this.level.required}`, {
+    this.eatCounter = this.add.text(240, 42, `🏰 Eat ${this.level.required} more!`, {
       fontSize: '16px', color: '#ffffff'
-    }).setOrigin(1, 0).setDepth(10);
+    }).setOrigin(0.5, 0).setDepth(10);
 
     this.msgText = this.add.text(240, 824, '', {
       fontSize: '13px', color: '#ffffff', align: 'center'
@@ -323,30 +319,30 @@ export class GameScene extends Phaser.Scene {
 
   evolve(towerType) {
     const defs = {
-      fire:   { label: '🔥 +Speed', color: 0xff6600, apply: () => {
+      fire:   { msg: '💨 Faster!',      color: 0xff6600, apply: () => {
         this.monsterSpeed = Math.max(50, this.monsterSpeed - 25);
-        this.speedText.setText('💨 ' + (150/this.monsterSpeed).toFixed(1) + 'x');
       }},
-      ice:    { label: '❄️ +Armor', color: 0x66ccff, apply: () => {
+      ice:    { msg: '🛡️ More armor!', color: 0x66ccff, apply: () => {
         this.monsterArmor = Math.min(80, this.monsterArmor + 20);
-        this.armorText.setText('🛡️ ' + this.monsterArmor + '%');
       }},
-      arcane: { label: '✨ +Power', color: 0xcc66ff, apply: () => {
+      arcane: { msg: '⚔️ More power!',  color: 0xcc66ff, apply: () => {
         this.monsterPower += 2;
         this.monsterMaxHP += 20;
         this.monsterHP = Math.min(this.monsterMaxHP, this.monsterHP + 20);
-        this.powerText.setText('⚔️ ' + this.monsterPower);
       }},
     };
 
     const evo = defs[towerType];
     if (!evo) return;
     evo.apply();
+
     this.evolutions.push(towerType);
     this.towersEaten++;
 
-    this.eatCounter.setText(`🍴 ${this.towersEaten}/${this.level.required}`)
-      .setColor(this.towersEaten >= this.level.required ? '#ffdd00' : '#ffffff');
+    const remaining = Math.max(0, this.level.required - this.towersEaten);
+    this.eatCounter
+      .setText(remaining > 0 ? `🏰 Eat ${remaining} more!` : '🔓 Find the base!')
+      .setColor(remaining > 0 ? '#ffffff' : '#ffdd00');
 
     if (this.towersEaten >= this.level.required && !this.baseUnlocked) {
       this.time.delayedCall(300, () => this.unlockBase());
@@ -354,7 +350,7 @@ export class GameScene extends Phaser.Scene {
 
     this.monsterSprite.setTint(evo.color);
     this.monsterGlow.setFillStyle(evo.color);
-    this.showMsg(evo.label, '#ffffff', 1500);
+    this.showMsg(evo.msg, '#ffdd00', 1500);
     this.tweens.add({
       targets: this.monsterSprite,
       scaleX: 1.4, scaleY: 1.4,
