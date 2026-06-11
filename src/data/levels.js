@@ -12,8 +12,6 @@ function generateTowers(count, levelId, worlds) {
   const offset  = (levelId * 3) % POS_POOL.length;
   const rotated = [...POS_POOL.slice(offset), ...POS_POOL.slice(0, offset)];
   const types   = ['fire', 'ice', 'arcane'];
-
-  // Distribute tower types across worlds evenly
   return rotated.slice(0, count).map((pos, i) => ({
     ...pos,
     type:  types[i % 3],
@@ -24,36 +22,34 @@ function generateTowers(count, levelId, worlds) {
 function makeMechanics(worlds, shootDelay, levelId) {
   const m = {};
 
-  // Bullet speed — κληρονομείται και αυξάνεται ανά world
   if (worlds.includes('forest')) {
     const t = Math.min(1, (levelId - 11) / 9);
-    m.bulletDuration = Math.round(450 - t * 100); // 300→200ms (γρηγορότερο)
+    m.bulletDuration = Math.round(450 - t * 100);
   }
 
   if (worlds.includes('volcanic')) {
     m.grenadePeriod  = 3;
-    const t = Math.min(1, (levelId - 21) / 9); // ← ΠΡΟΣΘΕΣΕ ΕΔΩ
+    const t = Math.min(1, (levelId - 21) / 9);
     m.bulletDuration = m.bulletDuration ?? Math.round(400 - t * 80);
   }
 
   if (worlds.includes('void')) {
     const t = Math.min(1, (levelId - 41) / 9);
-    m.towerMoveDelay = Math.round(2000 - t * 1100); // 2000→1100ms (πιο γρήγορη κίνηση)
+    m.towerMoveDelay = Math.round(2000 - t * 1100);
     m.bulletDuration = m.bulletDuration ?? Math.round(380 - t * 80);
   }
 
-  // Στο makeMechanics — το freeze να είναι λίγο πιο ελαφρύ σε mix worlds
   if (worlds.includes('frozen')) {
     const t = Math.min(1, (levelId - 31) / 9);
-    m.bulletDuration = m.bulletDuration ?? Math.round(390 - t * 80)
-    m.freezeDuration = worlds.length > 1 ? 500 : 600; // λιγότερο σε mix
+    m.bulletDuration = m.bulletDuration ?? Math.round(390 - t * 80);
+    m.freezeDuration = worlds.length > 1 ? 500 : 600;
     m.freezePeriod   = worlds.length > 1 ? 6 : 3;
   }
 
   if (worlds.includes('poison')) {
     const t = Math.min(1, (levelId - 51) / 9);
-    m.poisonInterval = Math.round(2000 - t * 800); // 2000→1200ms
-    m.poisonDamage   = Math.round(3 + t * 4);      // 3→7 damage ανά tick
+    m.poisonInterval = Math.round(2000 - t * 800);
+    m.poisonDamage   = Math.round(3 + t * 4);
   }
 
   return m;
@@ -70,14 +66,22 @@ const WORLD_NAMES = {
 };
 
 const MIX_NAMES = [
+  // 2-world (61-96) — 36 names
   'Cursed Dungeon','Volcanic Grove','Frozen Crypt','Void Forest',
   'Ash Citadel','Lava Frost','Dark Volcano','Void Citadel',
   'Shadow Forge','Burning Ice','Null Crypt','Abyssal Grove',
   'Infernal Frost','Void Ember','Cursed Caldera','Dark Blizzard',
   'Bone Volcano','Shadow Ice','Lava Void','Cursed Abyss',
   'Frozen Rift','Dark Ember','Void Frost','Shadow Dungeon',
-  'Burning Void','Ice Rift','Dark Caldera','Frozen Null',
-  'Abyssal Fire','Cursed Void',
+  'Toxic Grove','Plague Void','Venom Rift','Poison Dungeon',
+  'Toxic Ember','Blight Forest','Poison Caldera','Venom Citadel',
+  'Plague Frost','Toxic Abyss','Venom Dark','Poison Rift',
+  // 3-world (97-106) — 10 names
+  'Cursed Inferno','Void Caldera','Plague Dungeon','Frozen Ember',
+  'Shadow Volcano','Toxic Citadel','Blight Rift','Venom Forge',
+  'Dark Plague','Abyssal Frost',
+  // 4-world (107-110) — 4 names
+  'The Convergence','Chaos Nexus','The Maelstrom','Oblivion Gate',
 ];
 
 const HELL_NAMES = [
@@ -97,17 +101,13 @@ function buildLevel(id, worlds, towerCount, required, shootDelay, nameOverride) 
 
   const mechanics = makeMechanics(worlds, shootDelay, id);
   const towers    = generateTowers(towerCount, id, worlds);
-
-  // Primary world = first world (determines terrain + base sprite)
   return { id, name, world: primaryWorld, worlds, shootDelay, required, towers, mechanics };
 }
 
 // ── Generate all levels ────────────────────────────────────────────────
 const levels = [];
 
-// ── WORLDS 1-50 ───────────────────────────────────────────────────────
-
-// Dungeon 1-10: shootDelay 1600→1200 (ήταν 2000→1720)
+// Dungeon 1-10
 for (let i = 0; i < 10; i++) {
   const id         = i + 1;
   const towerCount = i + 1;
@@ -116,7 +116,7 @@ for (let i = 0; i < 10; i++) {
   levels.push(buildLevel(id, ['dungeon'], towerCount, required, shootDelay));
 }
 
-// Forest 11-20: shootDelay 1100→800 + fast bullets
+// Forest 11-20
 for (let i = 0; i < 10; i++) {
   const id         = 11 + i;
   const towerCount = i + 2;
@@ -125,7 +125,7 @@ for (let i = 0; i < 10; i++) {
   levels.push(buildLevel(id, ['forest'], towerCount, required, shootDelay));
 }
 
-// Volcanic 21-30: shootDelay 900→650 + grenades
+// Volcanic 21-30
 for (let i = 0; i < 10; i++) {
   const id         = 21 + i;
   const towerCount = i + 3;
@@ -134,7 +134,7 @@ for (let i = 0; i < 10; i++) {
   levels.push(buildLevel(id, ['volcanic'], towerCount, required, shootDelay));
 }
 
-// Frozen 31-40: shootDelay 800→600 + freeze
+// Frozen 31-40
 for (let i = 0; i < 10; i++) {
   const id         = 31 + i;
   const towerCount = i + 4;
@@ -143,7 +143,7 @@ for (let i = 0; i < 10; i++) {
   levels.push(buildLevel(id, ['frozen'], towerCount, required, shootDelay));
 }
 
-// Void 41-50: shootDelay 700→500 + moving towers
+// Void 41-50
 for (let i = 0; i < 10; i++) {
   const id         = 41 + i;
   const towerCount = i + 5;
@@ -161,79 +161,139 @@ for (let i = 0; i < 10; i++) {
   levels.push(buildLevel(id, ['poison'], towerCount, required, shootDelay));
 }
 
-// ── MIX WORLDS 51-80 ──────────────────────────────────────────────────
+// ── MIX WORLDS 61-110 ────────────────────────────────────────────────
+// 2-world pairs first (easier mix), then 3-world, then 4-world
+// Difficulty rises gradually: more towers, faster shootDelay
+
 const mixConfigs = [
-  // 51-54: Dungeon + Forest
-  // 51-54: Dungeon + Forest
+  // ── 2-world pairs ────────────────────────────────────────────────────
+
+  // 61-62: Dungeon + Forest (lightest intro to mix)
   [['dungeon','forest'],  8, 4, 750],
   [['dungeon','forest'],  9, 5, 720],
-  [['dungeon','forest'], 10, 6, 690],
-  [['dungeon','forest'], 11, 6, 660],
 
-  // 55-58: Dungeon + Volcanic
-  [['dungeon','volcanic'], 10, 6, 640],
-  [['dungeon','volcanic'], 11, 6, 620],
-  [['dungeon','volcanic'], 12, 7, 600],
-  [['dungeon','volcanic'], 13, 7, 580],
+  // 63-64: Dungeon + Volcanic
+  [['dungeon','volcanic'], 9, 5, 700],
+  [['dungeon','volcanic'],10, 6, 675],
 
-  // 59-62: Forest + Volcanic
-  [['forest','volcanic'], 11, 6, 560],
-  [['forest','volcanic'], 12, 7, 545],
-  [['forest','volcanic'], 13, 7, 530],
-  [['forest','volcanic'], 14, 8, 515],
+  // 65-66: Forest + Volcanic
+  [['forest','volcanic'], 10, 6, 655],
+  [['forest','volcanic'], 11, 6, 635],
 
-  // 63-66: Forest + Frozen
-  [['forest','frozen'], 12, 7, 755],
-  [['forest','frozen'], 13, 7, 735],
-  [['forest','frozen'], 14, 8, 715],
-  [['forest','frozen'], 15, 8, 695],
+  // 67-68: Dungeon + Frozen
+  [['dungeon','frozen'], 10, 6, 615],
+  [['dungeon','frozen'], 11, 6, 595],
 
-  // 67-70: Volcanic + Frozen
-  [['volcanic','frozen'], 13, 7, 680],
-  [['volcanic','frozen'], 14, 8, 665],
-  [['volcanic','frozen'], 15, 8, 650],
-  [['volcanic','frozen'], 16, 9, 635],
+  // 69-70: Forest + Frozen
+  [['forest','frozen'], 11, 6, 578],
+  [['forest','frozen'], 12, 7, 561],
 
-  // 71-74: Frozen + Void
-  [['frozen','void'], 14, 8, 620],
-  [['frozen','void'], 15, 9, 605],
-  [['frozen','void'], 16, 9, 590],
-  [['frozen','void'], 17,10, 575],
+  // 71-72: Volcanic + Frozen
+  [['volcanic','frozen'], 12, 7, 544],
+  [['volcanic','frozen'], 13, 7, 527],
 
-  // 75-77: Dungeon + Forest + Volcanic
-  [['dungeon','forest','volcanic'], 15, 9, 560],
-  [['dungeon','forest','volcanic'], 16, 9, 545],
-  [['dungeon','forest','volcanic'], 17,10, 530],
+  // 73-74: Dungeon + Void
+  [['dungeon','void'], 12, 7, 510],
+  [['dungeon','void'], 13, 8, 495],
 
-  // 78-80: Forest + Volcanic + Void
-  [['forest','volcanic','void'], 16, 9, 515],
-  [['forest','volcanic','void'], 17,10, 500],
-  [['forest','volcanic','void'], 18,11, 485],
+  // 75-76: Forest + Void
+  [['forest','void'], 13, 7, 480],
+  [['forest','void'], 14, 8, 465],
+
+  // 77-78: Frozen + Void
+  [['frozen','void'], 13, 8, 450],
+  [['frozen','void'], 14, 8, 435],
+
+  // 79-80: Volcanic + Void
+  [['volcanic','void'], 14, 8, 420],
+  [['volcanic','void'], 15, 9, 405],
+
+  // 81-82: Dungeon + Poison
+  [['dungeon','poison'], 13, 7, 390],
+  [['dungeon','poison'], 14, 8, 375],
+
+  // 83-84: Forest + Poison
+  [['forest','poison'], 14, 8, 362],
+  [['forest','poison'], 15, 9, 349],
+
+  // 85-86: Volcanic + Poison
+  [['volcanic','poison'], 14, 8, 336],
+  [['volcanic','poison'], 15, 9, 323],
+
+  // 87-88: Frozen + Poison
+  [['frozen','poison'], 15, 9, 310],
+  [['frozen','poison'], 16, 9, 297],
+
+  // 89-90: Void + Poison
+  [['void','poison'], 15, 9, 284],
+  [['void','poison'], 16,10, 271],
+
+  // ── 3-world combos (harder) ──────────────────────────────────────────
+
+  // 91-92: Dungeon + Forest + Volcanic
+  [['dungeon','forest','volcanic'], 14, 8, 258],
+  [['dungeon','forest','volcanic'], 15, 9, 246],
+
+  // 93-94: Forest + Frozen + Void
+  [['forest','frozen','void'], 15, 9, 234],
+  [['forest','frozen','void'], 16,10, 222],
+
+  // 95-96: Volcanic + Frozen + Poison
+  [['volcanic','frozen','poison'], 15, 9, 212],
+  [['volcanic','frozen','poison'], 16,10, 202],
+
+  // 97-98: Dungeon + Void + Poison
+  [['dungeon','void','poison'], 16,10, 192],
+  [['dungeon','void','poison'], 17,11, 182],
+
+  // 99-100: Forest + Volcanic + Poison
+  [['forest','volcanic','poison'], 16,10, 172],
+  [['forest','volcanic','poison'], 17,11, 163],
+
+  // ── 4-world combos (very hard) ───────────────────────────────────────
+
+  // 101-102: Dungeon + Forest + Frozen + Void
+  [['dungeon','forest','frozen','void'], 17,11, 154],
+  [['dungeon','forest','frozen','void'], 18,12, 145],
+
+  // 103-104: Forest + Volcanic + Void + Poison
+  [['forest','volcanic','void','poison'], 18,12, 136],
+  [['forest','volcanic','void','poison'], 19,13, 128],
+
+  // 105-106: Dungeon + Volcanic + Frozen + Poison
+  [['dungeon','volcanic','frozen','poison'], 19,13, 120],
+  [['dungeon','volcanic','frozen','poison'], 20,14, 113],
+
+  // 107-110: All 5 worlds (brutal)
+  [['dungeon','forest','volcanic','frozen','void'],          19,14, 106],
+  [['dungeon','forest','volcanic','frozen','poison'],        20,15,  99],
+  [['forest','volcanic','frozen','void','poison'],           20,15,  92],
+  [['dungeon','forest','volcanic','frozen','void','poison'], 21,16,  86],
 ];
 
 mixConfigs.forEach(([worlds, towerCount, required, shootDelay], i) => {
-  const id = 51 + i;
+  const id = 61 + i;
   levels.push(buildLevel(id, worlds, towerCount, required, shootDelay, MIX_NAMES[i]));
 });
 
-// ── HELL MODE 81-90 ───────────────────────────────────────────────────
+// ── HELL MODE 111-120 ─────────────────────────────────────────────────
 const hellConfigs = [
-  [['dungeon','forest','volcanic','frozen'],        17, 11, 400],
-  [['dungeon','forest','volcanic','frozen'],        18, 12, 370],
-  [['dungeon','forest','volcanic','void'],          18, 12, 340],
-  [['dungeon','forest','volcanic','void'],          19, 13, 310],
-  [['forest','volcanic','frozen','void'],           19, 13, 280],
-  [['forest','volcanic','frozen','void'],           20, 14, 250],
-  [['dungeon','forest','volcanic','frozen','void'], 18, 14, 220],
-  [['dungeon','forest','volcanic','frozen','void'], 19, 15, 190],
-  [['dungeon','forest','volcanic','frozen','void'], 20, 16, 160],
-  [['dungeon','forest','volcanic','frozen','void'], 22, 18, 130],
+  [['dungeon','forest','volcanic','frozen'],                        18, 13, 380],
+  [['dungeon','forest','volcanic','frozen'],                        19, 14, 350],
+  [['dungeon','forest','volcanic','void'],                          19, 14, 320],
+  [['dungeon','forest','volcanic','void','poison'],                 20, 15, 290],
+  [['forest','volcanic','frozen','void','poison'],                  20, 15, 260],
+  [['forest','volcanic','frozen','void','poison'],                  21, 16, 230],
+  [['dungeon','forest','volcanic','frozen','void'],                 21, 16, 200],
+  [['dungeon','forest','volcanic','frozen','void','poison'],        22, 17, 170],
+  [['dungeon','forest','volcanic','frozen','void','poison'],        23, 18, 140],
+  [['dungeon','forest','volcanic','frozen','void','poison'],        25, 18, 110],
 ];
 
 hellConfigs.forEach(([worlds, towerCount, required, shootDelay], i) => {
-  const id = 81 + i;
+  const id = 111 + i;
   levels.push(buildLevel(id, worlds, towerCount, required, shootDelay, HELL_NAMES[i]));
 });
 
 export const LEVELS = levels;
-export const TOTAL_LEVELS = levels.length; // 90
+export const TOTAL_LEVELS = levels.length; // 120
