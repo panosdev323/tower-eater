@@ -27,13 +27,13 @@ function makeMechanics(worlds, shootDelay, levelId) {
   // Bullet speed — κληρονομείται και αυξάνεται ανά world
   if (worlds.includes('forest')) {
     const t = Math.min(1, (levelId - 11) / 9);
-    m.bulletDuration = Math.round(400 - t * 100); // 300→200ms (γρηγορότερο)
+    m.bulletDuration = Math.round(450 - t * 100); // 300→200ms (γρηγορότερο)
   }
 
   if (worlds.includes('volcanic')) {
     m.grenadePeriod  = 3;
     const t = Math.min(1, (levelId - 21) / 9); // ← ΠΡΟΣΘΕΣΕ ΕΔΩ
-    m.bulletDuration = m.bulletDuration ?? Math.round(350 - t * 80);
+    m.bulletDuration = m.bulletDuration ?? Math.round(400 - t * 80);
   }
 
   if (worlds.includes('void')) {
