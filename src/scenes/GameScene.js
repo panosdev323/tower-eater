@@ -368,15 +368,13 @@ export class GameScene extends Phaser.Scene {
       ? Phaser.Utils.Array.Shuffle([...this.towers]).slice(0, maxShooters)
       : this.towers;
 
-    shooters.forEach(tower => {
-      const from    = this.cellToPixel(tower.cell);
-      const targetX = this.monsterSprite.x;
-      const targetY = this.monsterSprite.y;
-      if (isGrenade) {
-        this._fireGrenade(from, targetX, targetY);
-      } else {
-        this._fireBullet(tower, from, targetX, targetY, duration);
-      }
+    shooters.forEach((tower, idx) => {
+      this.time.delayedCall(idx * 80, () => {
+        if (this.gameOver) return;
+        const from = this.cellToPixel(tower.cell);
+        if (isGrenade) this._fireGrenade(from, this.monsterSprite.x, this.monsterSprite.y);
+        else this._fireBullet(tower, from, this.monsterSprite.x, this.monsterSprite.y, duration);
+      });
     });
   }
 
