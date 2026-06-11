@@ -6,6 +6,7 @@ import { soundManager } from '../systems/SoundManager.js';
 import { ProgressManager } from '../systems/ProgressManager.js';
 import { ContinueScreen } from '../ui/ContinueScreen.js';
 
+let globalPathVisible = false;
 export class GameScene extends Phaser.Scene {
   constructor() {
     super({ key: 'GameScene' });
@@ -182,7 +183,7 @@ export class GameScene extends Phaser.Scene {
       fontSize: '13px', color: '#ffffff', align: 'center'
     }).setOrigin(0.5).setDepth(10);
 
-    this.pathVisible = false;
+    this.pathVisible = globalPathVisible;
   }
 
   // ── Input ─────────────────────────────────────────────────────────────
@@ -773,14 +774,15 @@ export class GameScene extends Phaser.Scene {
       duration: 600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut'
     });
 
-    const mapBtn = this.add.text(240, 600, '🗺️  Map: OFF', {
-      fontSize: '16px', color: '#aaaaaa',
+    const mapBtn = this.add.text(240, 600, this.pathVisible ? '🗺️  Map: ON' : '🗺️  Map: OFF', {
+      fontSize: '16px', color: this.pathVisible ? '#aaaaaa' : '#444444',
       backgroundColor: '#1a1a1a',
       padding: { x: 20, y: 14 }
     }).setOrigin(0.5).setDepth(51).setInteractive();
 
     mapBtn.on('pointerdown', () => {
       this.pathVisible = !this.pathVisible;
+      globalPathVisible = this.pathVisible; // persist
       this.updatePath();
       if (this.pathGraphics) this.pathGraphics.setVisible(this.pathVisible);
       mapBtn.setText(this.pathVisible ? '🗺️  Map: ON' : '🗺️  Map: OFF');
