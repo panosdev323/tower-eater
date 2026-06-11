@@ -101,7 +101,7 @@ for (let i = 0; i < 10; i++) {
   const id         = i + 1;
   const towerCount = i + 1;
   const required   = Math.max(1, Math.floor(towerCount * 0.6));
-  const shootDelay = Math.round(1200 - i * 40);
+  const shootDelay = Math.round(1300 - i * 40);
   levels.push(buildLevel(id, ['dungeon'], towerCount, required, shootDelay));
 }
 
@@ -110,7 +110,7 @@ for (let i = 0; i < 10; i++) {
   const id         = 11 + i;
   const towerCount = i + 2;
   const required   = Math.max(1, Math.floor(towerCount * 0.6));
-  const shootDelay = Math.round(1100 - i * 30);
+  const shootDelay = Math.round(1200 - i * 30);
   levels.push(buildLevel(id, ['forest'], towerCount, required, shootDelay));
 }
 
@@ -119,7 +119,7 @@ for (let i = 0; i < 10; i++) {
   const id         = 21 + i;
   const towerCount = i + 3;
   const required   = Math.max(1, Math.floor(towerCount * 0.6));
-  const shootDelay = Math.round(900 - i * 25);
+  const shootDelay = Math.round(1050 - i * 25);
   levels.push(buildLevel(id, ['volcanic'], towerCount, required, shootDelay));
 }
 
@@ -128,7 +128,7 @@ for (let i = 0; i < 10; i++) {
   const id         = 31 + i;
   const towerCount = i + 4;
   const required   = Math.max(1, Math.floor(towerCount * 0.6));
-  const shootDelay = Math.round(700 - i * 20);
+  const shootDelay = Math.round(800 - i * 20);
   levels.push(buildLevel(id, ['frozen'], towerCount, required, shootDelay));
 }
 
@@ -137,7 +137,7 @@ for (let i = 0; i < 10; i++) {
   const id         = 41 + i;
   const towerCount = i + 5;
   const required   = Math.max(1, Math.floor(towerCount * 0.6));
-  const shootDelay = Math.round(500 - i * 20);
+  const shootDelay = Math.round(700 - i * 18);
   levels.push(buildLevel(id, ['void'], towerCount, required, shootDelay));
 }
 
@@ -197,16 +197,16 @@ mixConfigs.forEach(([worlds, towerCount, required, shootDelay], i) => {
 
 // ── HELL MODE 81-90 ───────────────────────────────────────────────────
 const hellConfigs = [
-  [['dungeon','forest','volcanic','frozen'],        16, 10, 470],
-  [['dungeon','forest','volcanic','frozen'],        17, 10, 450],
-  [['dungeon','forest','volcanic','void'],          17, 11, 430],
-  [['dungeon','forest','volcanic','void'],          18, 11, 410],
-  [['forest','volcanic','frozen','void'],           18, 11, 390],
-  [['forest','volcanic','frozen','void'],           18, 12, 370],
-  [['dungeon','forest','volcanic','frozen','void'], 16, 12, 350],
-  [['dungeon','forest','volcanic','frozen','void'], 17, 13, 320],
-  [['dungeon','forest','volcanic','frozen','void'], 18, 14, 290],
-  [['dungeon','forest','volcanic','frozen','void'], 18, 15, 260], // THE END
+  [['dungeon','forest','volcanic','frozen'],        17, 11, 400],
+  [['dungeon','forest','volcanic','frozen'],        18, 12, 370],
+  [['dungeon','forest','volcanic','void'],          18, 12, 340],
+  [['dungeon','forest','volcanic','void'],          19, 13, 310],
+  [['forest','volcanic','frozen','void'],           19, 13, 280],
+  [['forest','volcanic','frozen','void'],           20, 14, 250],
+  [['dungeon','forest','volcanic','frozen','void'], 18, 14, 220],
+  [['dungeon','forest','volcanic','frozen','void'], 19, 15, 190],
+  [['dungeon','forest','volcanic','frozen','void'], 20, 16, 160],
+  [['dungeon','forest','volcanic','frozen','void'], 22, 18, 130],
 ];
 
 hellConfigs.forEach(([worlds, towerCount, required, shootDelay], i) => {

@@ -182,7 +182,7 @@ export class GameScene extends Phaser.Scene {
       fontSize: '13px', color: '#ffffff', align: 'center'
     }).setOrigin(0.5).setDepth(10);
 
-    this.pathVisible = true;
+    this.pathVisible = false;
   }
 
   // ── Input ─────────────────────────────────────────────────────────────
@@ -682,6 +682,7 @@ export class GameScene extends Phaser.Scene {
           visible = !visible;
         }
       });
+      this.pathGraphics.setVisible(this.pathVisible);
       return;
     }
 
@@ -772,7 +773,7 @@ export class GameScene extends Phaser.Scene {
       duration: 600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut'
     });
 
-    const mapBtn = this.add.text(240, 600, '🗺️  Map: ON', {
+    const mapBtn = this.add.text(240, 600, '🗺️  Map: OFF', {
       fontSize: '16px', color: '#aaaaaa',
       backgroundColor: '#1a1a1a',
       padding: { x: 20, y: 14 }
