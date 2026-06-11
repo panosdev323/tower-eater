@@ -129,7 +129,7 @@ export class IntroScreen {
     return `
       <div class="intro-step">
         <div class="intro-icon">🌍</div>
-        <h2 class="intro-heading">90 Levels · 5 Worlds</h2>
+        <h2 class="intro-heading">120 Levels · 6 Worlds</h2>
         <div class="intro-worlds">
           <div class="world-row dungeon">
             <span class="world-icon">⚔️</span>
@@ -156,7 +156,7 @@ export class IntroScreen {
             <span class="world-icon">❄️</span>
             <div>
               <strong>Levels 31–40 · Frozen</strong>
-              <p>❄️ Ice hits freeze you for 3 seconds. Plan your route.</p>
+              <p>❄️ Ice hits freeze you. Plan your route.</p>
             </div>
           </div>
           <div class="world-row void">
@@ -166,11 +166,25 @@ export class IntroScreen {
               <p>👁 Towers move randomly. Nothing stays where it was.</p>
             </div>
           </div>
+          <div class="world-row poison">
+            <span class="world-icon">☠️</span>
+            <div>
+              <strong>Levels 51–60 · Poison</strong>
+              <p>🧪 Passive poison drains your HP over time. Keep moving.</p>
+            </div>
+          </div>
           <div class="world-row hell">
             <span class="world-icon">🔥</span>
             <div>
-              <strong>Levels 51–90 · Mix & Hell</strong>
-              <p>All mechanics combined. Only the worthy survive.</p>
+              <strong>Levels 61–110 · Mix Worlds</strong>
+              <p>All mechanics combined. Every level is a new combination.</p>
+            </div>
+          </div>
+          <div class="world-row hell" style="border-color:#ff2200">
+            <span class="world-icon">💥</span>
+            <div>
+              <strong>Levels 111–120 · Hell Mode</strong>
+              <p>Maximum towers, minimum delay. Only the worthy survive.</p>
             </div>
           </div>
         </div>
@@ -230,7 +244,7 @@ export class IntroScreen {
             <span class="check">✓</span> Reach the base to advance
           </div>
           <div class="check-item">
-            <span class="check">✓</span> 90 levels of evolving chaos await
+            <span class="check">✓</span> 120 levels of evolving chaos await
           </div>
         </div>
         ${saved > 0 ? `<p class="intro-saved">⚡ You reached <strong>Level ${saved + 1}</strong> last time</p>` : ''}

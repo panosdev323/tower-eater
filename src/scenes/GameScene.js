@@ -96,20 +96,8 @@ export class GameScene extends Phaser.Scene {
     if (this.mechanics.poisonInterval) {
       this.time.addEvent({
         delay: this.mechanics.poisonInterval,
-        callback: () => {
-          if (this.gameOver || this.frozen) return;
-          this.takeDamage(this.mechanics.poisonDamage);
-          // Poison visual
-          const px = this.monsterSprite.x;
-          const py = this.monsterSprite.y;
-          const drop = this.add.circle(px, py, 6, 0x44ff44, 0.8).setDepth(8);
-          this.tweens.add({
-            targets: drop,
-            y: py + 20, alpha: 0, scaleX: 0.5, scaleY: 0.5,
-            duration: 400, ease: 'Power2',
-            onComplete: () => drop.destroy()
-          });
-        },
+        callback: this._fireGasCloud,
+        callbackScope: this,
         loop: true
       });
     }
@@ -208,7 +196,6 @@ export class GameScene extends Phaser.Scene {
     }).setOrigin(0.5).setDepth(10);
 
     this.pathVisible = globalPathVisible;
-    console.log('[createUI] pathVisible init:', this.pathVisible);
   }
 
   // ── Input ─────────────────────────────────────────────────────────────
@@ -381,6 +368,77 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
+  // gas
+  _fireGasCloud() {
+    if (this.gameOver) return;
+
+    // Διάλεξε τυχαίο poison πύργο
+    const poisonTowers = this.towers.filter(t => t.type === 'arcane'); 
+    // (χρησιμοποιούμε arcane ως proxy — ή φτιάξε poison type)
+    const shooter = poisonTowers.length
+      ? Phaser.Utils.Array.GetRandom(poisonTowers)
+      : Phaser.Utils.Array.GetRandom(this.towers);
+    if (!shooter) return;
+
+    const from = this.cellToPixel(shooter.cell);
+
+    // Το gas cloud — ξεκινάει μικρό, μεγαλώνει καθώς κινείται
+    const cloud = this.add.circle(from.x, from.y, 8, 0x44ff44, 0.7).setDepth(7);
+    const targetX = this.monsterSprite.x + (Math.random() - 0.5) * 30;
+    const targetY = this.monsterSprite.y + (Math.random() - 0.5) * 30;
+
+    this.tweens.add({
+      targets: cloud,
+      x: targetX,
+      y: targetY,
+      scaleX: 3, scaleY: 3,   // μεγαλώνει καθώς πλησιάζει
+      alpha: 0.3,
+      duration: this.mechanics.poisonInterval * 0.7,
+      ease: 'Sine.easeOut',
+      onComplete: () => {
+        cloud.destroy();
+
+        // Hit check
+        const dx   = this.monsterSprite.x - targetX;
+        const dy   = this.monsterSprite.y - targetY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < this.tileSize * 1.2 && !this.gameOver) {
+          this._applyGasPush();
+        }
+      }
+    });
+  }
+
+  _applyGasPush() {
+    if (this.isMoving || this.frozen || this.gameOver) return;
+
+    soundManager.gasPush?.(); // optional sound
+
+    // Τυχαία κατεύθυνση
+    const dirs = [{dc:0,dr:-1},{dc:0,dr:1},{dc:-1,dr:0},{dc:1,dr:0}];
+    const dir  = Phaser.Utils.Array.GetRandom(dirs);
+    const next = {
+      col: this.monsterCell.col + dir.dc,
+      row: this.monsterCell.row + dir.dr,
+    };
+
+    // Μείνε εντός grid
+    if (next.col < 0 || next.col >= this.cols ||
+        next.row < 0 || next.row >= this.rows) return;
+
+    // Visual feedback — πράσινο flash
+    this.monsterSprite.setTint(0x44ff44);
+    this.showMsg('💨 Pushed!', '#44ff44', 800);
+    this.time.delayedCall(200, () => {
+      if (!this.gameOver) this.monsterSprite.clearTint();
+    });
+
+    // Κίνηση
+    this.isMoving = true;
+    this.moveMonster(next, () => { this.isMoving = false; });
+  }
+
   // ── Shooting ──────────────────────────────────────────────────────────
 
   // Στο _fireBullet — cap στο πόσοι πύργοι πυροβολούν ανά salvo
@@ -432,8 +490,9 @@ export class GameScene extends Phaser.Scene {
           const canFreeze = this.mechanics.freezeDuration
             && tower.type === 'ice'
             && !this.frozen
-            && !this._freezeCooldown  // ← ΠΡΟΣΘΕΣΕ ΕΔΩ
+            && !this._freezeCooldown
             && (this.level.id < 50 || this._shotCounter % (this.mechanics.freezePeriod ?? 4) === 0);
+          if (canFreeze) this._applyFreeze();
         }
       }
     });
@@ -722,7 +781,6 @@ export class GameScene extends Phaser.Scene {
     if (this.pathBlinkTimer) { this.pathBlinkTimer.remove(); this.pathBlinkTimer = null; }
 
     const goal = this.baseUnlocked ? this.baseCell : this.findNearestTower();
-    console.log('[updatePath] goal:', goal, 'monster:', this.monsterCell, 'towers:', this.towers.length);
     if (!goal) return;
 
     const blocked = this.towers
@@ -744,8 +802,7 @@ export class GameScene extends Phaser.Scene {
           visible = !visible;
         }
       });
-      console.log('[updatePath-normal] pathVisible:', this.pathVisible, 'path.length:', path.length, 'depth:', this.pathGraphics.depth);
-      this.pathGraphics.setDepth(1); //
+      this.pathGraphics.setDepth(1);
       this.pathGraphics.setVisible(this.pathVisible);
       return;
     }
@@ -846,10 +903,8 @@ export class GameScene extends Phaser.Scene {
     mapBtn.on('pointerdown', () => {
       this.pathVisible = !this.pathVisible;
       globalPathVisible = this.pathVisible; // persist
-      console.log('[toggle] new pathVisible:', this.pathVisible);
       this.updatePath();
       if (this.pathGraphics) this.pathGraphics.setVisible(this.pathVisible);
-      console.log('[toggle] after setVisible:', this.pathGraphics?.visible);
       mapBtn.setText(this.pathVisible ? '🗺️  Map: ON' : '🗺️  Map: OFF');
       mapBtn.setColor(this.pathVisible ? '#aaaaaa' : '#444444');
     });
@@ -870,7 +925,7 @@ export class GameScene extends Phaser.Scene {
           [overlay, txt, sub, startBtn, mapBtn, settingsHint].forEach(o => o.destroy());
           this.isMoving = false;
           this._startShootTimer();
-          if (this.levelIndex >= 80) {
+          if (this.levelIndex >= 110) {
             this.time.delayedCall(500, () => this.showMsg('🔥 HELL MODE', '#ff4444', 2000));
           }
         }
