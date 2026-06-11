@@ -739,21 +739,32 @@ export class GameScene extends Phaser.Scene {
   // ── Get Ready countdown ───────────────────────────────────────────────
 
   _showGetReady() {
-    this.isMoving = true; // block all input during countdown
+    this.isMoving = true;
 
     const overlay = this.add.rectangle(240, 427, 480, 854, 0x000000, 0.85).setDepth(50);
-    const txt     = this.add.text(240, 380, 'GET READY', {
+    const txt = this.add.text(240, 340, 'GET READY', {
       fontSize: '36px', color: '#ffffff', fontStyle: 'bold',
       stroke: '#000000', strokeThickness: 4
     }).setOrigin(0.5).setDepth(51);
 
-    const sub = this.add.text(240, 430, 'Swipe to move', {
+    const sub = this.add.text(240, 390, 'Swipe to move', {
       fontSize: '18px', color: '#aaaaaa'
     }).setOrigin(0.5).setDepth(51);
 
-    const countdownTxt = this.add.text(240, 510, '5', {
-      fontSize: '60px', color: '#ffdd00', fontStyle: 'bold'
-    }).setOrigin(0.5).setDepth(51);
+    // ── Αντί για auto-countdown, TAP TO START button ──
+    const startBtn = this.add.text(240, 500, '▶  TAP TO START', {
+      fontSize: '22px', color: '#000000',
+      backgroundColor: '#00ff88',
+      padding: { x: 28, y: 14 },
+      fontStyle: 'bold'
+    }).setOrigin(0.5).setDepth(51).setInteractive();
+
+    // Pulse animation ώστε να τραβά το μάτι
+    this.tweens.add({
+      targets: startBtn,
+      scaleX: 1.06, scaleY: 1.06,
+      duration: 600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut'
+    });
 
     const settingsHint = this.add.text(240, 600, '⚙️ Settings', {
       fontSize: '16px', color: '#888888',
@@ -762,7 +773,19 @@ export class GameScene extends Phaser.Scene {
     }).setOrigin(0.5).setDepth(51).setInteractive();
     settingsHint.on('pointerdown', () => this._openPause());
 
-    let count = 5;
+    startBtn.on('pointerdown', () => {
+      startBtn.disableInteractive(); // prevent double-tap
+      this._runCountdown([overlay, txt, sub, startBtn, settingsHint]);
+    });
+  }
+
+  // Χωριστή μέθοδος για το countdown — καλείται μόνο μετά το tap
+  _runCountdown(toDestroy) {
+    const countdownTxt = this.add.text(240, 490, '3', {
+      fontSize: '70px', color: '#ffdd00', fontStyle: 'bold'
+    }).setOrigin(0.5).setDepth(51);
+
+    let count = 3; // 3 αρκεί εφόσον ο χρήστης ήδη είναι έτοιμος
 
     const tick = () => {
       if (count > 0) {
@@ -779,26 +802,21 @@ export class GameScene extends Phaser.Scene {
         countdownTxt.setText('GO!').setStyle({ color: '#00ff88' });
         soundManager.go();
         this.tweens.add({
-          targets: [overlay, txt, sub, countdownTxt, settingsHint],
+          targets: [...toDestroy, countdownTxt],
           alpha: 0, duration: 400, delay: 300,
           onComplete: () => {
-            overlay.destroy(); txt.destroy();
-            sub.destroy(); countdownTxt.destroy(); settingsHint.destroy();
+            [...toDestroy, countdownTxt].forEach(o => o.destroy());
             this.isMoving = false;
             this._startShootTimer();
-            
             if (this.levelIndex >= 80) {
-              this.time.delayedCall(500, () => {
-                this.showMsg('🔥 HELL MODE', '#ff4444', 2000);
-              });
+              this.time.delayedCall(500, () => this.showMsg('🔥 HELL MODE', '#ff4444', 2000));
             }
           }
         });
       }
     };
 
-    // Delay first tick so AudioContext is definitely unlocked
-    this.time.delayedCall(800, tick);
+    this.time.delayedCall(300, tick);
   }
 
   _startShootTimer() {
