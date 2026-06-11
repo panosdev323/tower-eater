@@ -184,6 +184,7 @@ export class GameScene extends Phaser.Scene {
     }).setOrigin(0.5).setDepth(10);
 
     this.pathVisible = globalPathVisible;
+    console.log('[createUI] pathVisible init:', this.pathVisible);
   }
 
   // ── Input ─────────────────────────────────────────────────────────────
@@ -684,6 +685,10 @@ export class GameScene extends Phaser.Scene {
         }
       });
       this.pathGraphics.setVisible(this.pathVisible);
+      console.log('[updatePath] pathVisible:', this.pathVisible, 
+            'graphics:', !!this.pathGraphics, 
+            'path.length:', path.length,
+            'graphics.visible:', this.pathGraphics?.visible);
       return;
     }
 
@@ -783,8 +788,10 @@ export class GameScene extends Phaser.Scene {
     mapBtn.on('pointerdown', () => {
       this.pathVisible = !this.pathVisible;
       globalPathVisible = this.pathVisible; // persist
+      console.log('[toggle] new pathVisible:', this.pathVisible);
       this.updatePath();
       if (this.pathGraphics) this.pathGraphics.setVisible(this.pathVisible);
+      console.log('[toggle] after setVisible:', this.pathGraphics?.visible);
       mapBtn.setText(this.pathVisible ? '🗺️  Map: ON' : '🗺️  Map: OFF');
       mapBtn.setColor(this.pathVisible ? '#aaaaaa' : '#444444');
     });
