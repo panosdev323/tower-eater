@@ -148,22 +148,23 @@ for (let i = 0; i < 10; i++) {
 // ── MIX WORLDS 51-80 ──────────────────────────────────────────────────
 const mixConfigs = [
   // 51-54: Dungeon + Forest
-  [['dungeon','forest'],  8, 4, 1050],
-  [['dungeon','forest'],  9, 5, 1010],
-  [['dungeon','forest'], 10, 6,  970],
-  [['dungeon','forest'], 11, 6,  930],
+  // 51-54: Dungeon + Forest
+  [['dungeon','forest'],  8, 4, 750],
+  [['dungeon','forest'],  9, 5, 720],
+  [['dungeon','forest'], 10, 6, 690],
+  [['dungeon','forest'], 11, 6, 660],
 
   // 55-58: Dungeon + Volcanic
-  [['dungeon','volcanic'], 10, 6, 920],
-  [['dungeon','volcanic'], 11, 6, 895],
-  [['dungeon','volcanic'], 12, 7, 870],
-  [['dungeon','volcanic'], 13, 7, 845],
+  [['dungeon','volcanic'], 10, 6, 640],
+  [['dungeon','volcanic'], 11, 6, 620],
+  [['dungeon','volcanic'], 12, 7, 600],
+  [['dungeon','volcanic'], 13, 7, 580],
 
   // 59-62: Forest + Volcanic
-  [['forest','volcanic'], 11, 6, 830],
-  [['forest','volcanic'], 12, 7, 810],
-  [['forest','volcanic'], 13, 7, 790],
-  [['forest','volcanic'], 14, 8, 770],
+  [['forest','volcanic'], 11, 6, 560],
+  [['forest','volcanic'], 12, 7, 545],
+  [['forest','volcanic'], 13, 7, 530],
+  [['forest','volcanic'], 14, 8, 515],
 
   // 63-66: Forest + Frozen
   [['forest','frozen'], 12, 7, 755],
