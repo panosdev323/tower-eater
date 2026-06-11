@@ -466,7 +466,7 @@ export class GameScene extends Phaser.Scene {
       targets: grenade,
       x: { value: targetX, ease: 'Linear' },
       y: { value: targetY, ease: 'Quad.easeIn' },
-      duration: 700,
+      duration: 500,
       onComplete: () => {
         grenade.destroy();
         this._grenadeExplode(targetX, targetY);
