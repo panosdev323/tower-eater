@@ -397,7 +397,7 @@ export class SoundManager {
 
     // Noise smear
     this._noise({ filterType: 'lowpass', filterFreq: 600, filterQ: 0.7,
-                  vol: 0.3, dur: 0.35 });
+                  vol: 0.5, dur: 0.35 });
   }
 
   /**

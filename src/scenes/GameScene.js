@@ -476,22 +476,53 @@ export class GameScene extends Phaser.Scene {
 
   _grenadeExplode(cx, cy) {
     soundManager.grenade();
+
+    // Explosion circle
     const boom = this.add.circle(cx, cy, 10, 0xff9900, 0.9).setDepth(7);
     this.tweens.add({
       targets: boom,
-      scaleX: 4, scaleY: 4, alpha: 0,
+      scaleX: 5, scaleY: 5, alpha: 0,
       duration: 350, ease: 'Power2',
       onComplete: () => boom.destroy()
     });
 
+    // Burning tiles γύρω από το σημείο πρόσκρουσης
+    const hitCell = this.pixelToCell(cx, cy);
+    [
+      {col:0, row:0},
+      {col:1, row:0}, {col:-1, row:0},
+      {col:0, row:1}, {col:0,  row:-1},
+      {col:1, row:1}, {col:-1, row:-1},
+      {col:1, row:-1},{col:-1, row:1},
+    ].forEach(({col, row}) => {
+      const c = hitCell.col + col;
+      const r = hitCell.row + row;
+      if (c < 0 || c >= this.cols || r < 0 || r >= this.rows) return;
+      const pos  = this.cellToPixel({col: c, row: r});
+      const fire = this.add.rectangle(pos.x, pos.y, this.tileSize - 4, this.tileSize - 4, 0xff4400, 0.5).setDepth(7);
+      this.tweens.add({
+        targets: fire,
+        alpha: 0, duration: 600, ease: 'Power2',
+        onComplete: () => fire.destroy()
+      });
+    });
+
+    // Damage με μεγαλύτερο radius
     const dx   = this.monsterSprite.x - cx;
     const dy   = this.monsterSprite.y - cy;
     const dist = Math.sqrt(dx * dx + dy * dy);
-    if (dist < this.tileSize * 1.5) {
+    if (dist < this.tileSize * 2) {
       const effectiveArmor = this.monsterArmor / 2;
       this.takeDamage(Math.floor(40 * (1 - effectiveArmor / 100)));
       this.cameras.main.shake(150, 0.015);
     }
+  }
+
+  pixelToCell(x, y) {
+    return {
+      col: Math.floor((x - this.offsetX) / this.tileSize),
+      row: Math.floor((y - this.offsetY) / this.tileSize)
+    };
   }
 
   // ── Damage / Death ────────────────────────────────────────────────────
