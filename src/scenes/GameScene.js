@@ -323,7 +323,7 @@ export class GameScene extends Phaser.Scene {
       ice: { msg: '🛡️ Armor + Freeze resist!', color: 0x66ccff, apply: () => {
         this.monsterArmor = Math.min(80, this.monsterArmor + 20);
         if (this.mechanics.freezeDuration) {
-          this.mechanics.freezeDuration = Math.max(200, this.mechanics.freezeDuration - 150);
+          this.mechanics.freezeDuration = Math.max(200, this.mechanics.freezeDuration - 200);
         }
       }},
       arcane: { msg: '⚔️ More power!',  color: 0xcc66ff, apply: () => {
@@ -406,7 +406,7 @@ export class GameScene extends Phaser.Scene {
         const dy   = this.monsterSprite.y - ty;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < this.tileSize * 1.1) {
-          this.takeDamage(Math.floor(20 * (1 - this.monsterArmor / 100)));
+          this.takeDamage(Math.floor(15 * (1 - this.monsterArmor / 100)));
           const canFreeze = this.mechanics.freezeDuration
           && tower.type === 'ice'
           && !this.frozen
@@ -514,7 +514,7 @@ export class GameScene extends Phaser.Scene {
     const dist = Math.sqrt(dx * dx + dy * dy);
     if (dist < this.tileSize * 2) {
       const effectiveArmor = this.monsterArmor / 2;
-      this.takeDamage(Math.floor(40 * (1 - effectiveArmor / 100)));
+      this.takeDamage(Math.floor(30 * (1 - effectiveArmor / 100)));
       this.cameras.main.shake(150, 0.015);
     }
   }
