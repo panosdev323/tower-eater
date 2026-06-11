@@ -1,10 +1,9 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: '/tower-eater/',
   root: 'src',
   build: {
-    outDir: '../docs',
+    outDir: '../dist',
     emptyOutDir: true,
   },
   server: {
