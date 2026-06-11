@@ -19,6 +19,7 @@ export class SpriteFactory {
       volcanic: { bg: '#1a0500', grid: '#2a0a00', gridLine: '#3a1500', accent: '#ff6600' },
       frozen:   { bg: '#050a1a', grid: '#0a1525', gridLine: '#152535', accent: '#44ccff' },
       void:     { bg: '#000000', grid: '#0a000f', gridLine: '#15001a', accent: '#ff44ff' },
+      poison: { bg: '#060f02', grid: '#091403', gridLine: '#122206', accent: '#44ff22' },
     };
     return themes[world] || themes.dungeon;
   }
@@ -139,7 +140,30 @@ export class SpriteFactory {
           <circle cx="50" cy="48" r="1" fill="#ee66ff" opacity="0.5"/>
           <circle cx="22" cy="8" r="0.7" fill="#ff00ff" opacity="0.35"/>
           <circle cx="44" cy="58" r="0.9" fill="#dd44ff" opacity="0.4"/>
-        </svg>`
+        </svg>`,
+
+        poison: `
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+            <rect width="64" height="64" fill="#061002" rx="6"/>
+            <ellipse cx="32" cy="58" rx="22" ry="5" fill="#0a1a04" opacity="0.7"/>
+            <rect x="14" y="22" width="36" height="34" fill="#112208" rx="3" opacity="0.9"/>
+            <rect x="8" y="12" width="12" height="22" fill="#162c0a" rx="2"/>
+            <rect x="44" y="12" width="12" height="22" fill="#162c0a" rx="2"/>
+            <rect x="9" y="13" width="4" height="4" fill="#0a1805"/>
+            <rect x="14" y="13" width="4" height="4" fill="#0a1805"/>
+            <rect x="45" y="13" width="4" height="4" fill="#0a1805"/>
+            <rect x="50" y="13" width="4" height="4" fill="#0a1805"/>
+            <rect x="22" y="38" width="20" height="18" fill="#0d1e06" rx="2"/>
+            <circle cx="32" cy="30" r="8" fill="#1a4a06" opacity="0.5"/>
+            <circle cx="32" cy="30" r="5" fill="#2a7a08" opacity="0.7"/>
+            <circle cx="32" cy="30" r="3" fill="#44cc10" opacity="0.85"/>
+            <circle cx="32" cy="30" r="1.5" fill="#88ff44" opacity="0.9"/>
+            <circle cx="18" cy="18" r="1.5" fill="#33aa10" opacity="0.6"/>
+            <circle cx="46" cy="18" r="1.5" fill="#33aa10" opacity="0.6"/>
+            <ellipse cx="20" cy="42" rx="2" ry="3" fill="#2a6608" opacity="0.5"/>
+            <ellipse cx="44" cy="42" rx="2" ry="3" fill="#2a6608" opacity="0.5"/>
+            <line x1="14" y1="34" x2="50" y2="34" stroke="#0d1e06" stroke-width="1.5"/>
+          </svg>`,
     };
 
     Object.entries(bases).forEach(([world, svg]) => {
@@ -510,7 +534,71 @@ export class SpriteFactory {
           <circle cx="34" cy="30" r="1.5" fill="#660088" opacity="0.65"/>
           <circle cx="18" cy="34" r="1" fill="#550077" opacity="0.5"/>
           <circle cx="30" cy="34" r="1" fill="#550077" opacity="0.5"/>
-        </svg>`
+        </svg>`,
+
+        fire_poison: `
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+            <rect x="8" y="16" width="32" height="28" fill="#0d1f05" rx="2"/>
+            <rect x="4" y="12" width="10" height="16" fill="#142808" rx="1"/>
+            <rect x="34" y="12" width="10" height="16" fill="#142808" rx="1"/>
+            <rect x="14" y="8" width="8" height="10" fill="#142808"/>
+            <rect x="26" y="8" width="8" height="10" fill="#142808"/>
+            <rect x="6" y="10" width="3" height="4" fill="#0a1804"/>
+            <rect x="10" y="10" width="3" height="4" fill="#0a1804"/>
+            <rect x="35" y="10" width="3" height="4" fill="#0a1804"/>
+            <rect x="39" y="10" width="3" height="4" fill="#0a1804"/>
+            <rect x="20" y="26" width="8" height="18" fill="#0d1e06"/>
+            <ellipse cx="24" cy="19" rx="9" ry="7" fill="#cc3300" opacity="0.7"/>
+            <ellipse cx="24" cy="17" rx="6" ry="5" fill="#ff5500" opacity="0.85"/>
+            <ellipse cx="22" cy="14" rx="3" ry="4" fill="#ff8800"/>
+            <ellipse cx="26" cy="13" rx="2" ry="3" fill="#ffbb00"/>
+            <ellipse cx="24" cy="12" rx="2" ry="2" fill="#ffff88"/>
+            <circle cx="10" cy="26" r="2" fill="#33aa10" opacity="0.5"/>
+            <circle cx="38" cy="26" r="2" fill="#33aa10" opacity="0.5"/>
+          </svg>`,
+
+        ice_poison: `
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+            <rect x="8" y="16" width="32" height="28" fill="#061505" rx="2"/>
+            <rect x="4" y="12" width="10" height="16" fill="#0a1e08" rx="1"/>
+            <rect x="34" y="12" width="10" height="16" fill="#0a1e08" rx="1"/>
+            <rect x="14" y="8" width="8" height="10" fill="#0a1e08"/>
+            <rect x="26" y="8" width="8" height="10" fill="#0a1e08"/>
+            <rect x="6" y="10" width="3" height="4" fill="#050f04"/>
+            <rect x="10" y="10" width="3" height="4" fill="#050f04"/>
+            <rect x="35" y="10" width="3" height="4" fill="#050f04"/>
+            <rect x="39" y="10" width="3" height="4" fill="#050f04"/>
+            <rect x="20" y="26" width="8" height="18" fill="#071205"/>
+            <line x1="24" y1="10" x2="24" y2="32" stroke="#44ff44" stroke-width="1" opacity="0.8"/>
+            <line x1="12" y1="21" x2="36" y2="21" stroke="#44ff44" stroke-width="1" opacity="0.8"/>
+            <line x1="15" y1="13" x2="33" y2="29" stroke="#44ff44" stroke-width="0.7" opacity="0.6"/>
+            <line x1="33" y1="13" x2="15" y2="29" stroke="#44ff44" stroke-width="0.7" opacity="0.6"/>
+            <circle cx="24" cy="21" r="7" fill="#005500" opacity="0.5"/>
+            <circle cx="24" cy="21" r="4" fill="#22aa22" opacity="0.6"/>
+            <circle cx="24" cy="21" r="2" fill="#88ff88" opacity="0.9"/>
+            <circle cx="10" cy="26" r="1.5" fill="#44cc14" opacity="0.5"/>
+            <circle cx="38" cy="26" r="1.5" fill="#44cc14" opacity="0.5"/>
+          </svg>`,
+
+        arcane_poison: `
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+            <rect x="8" y="16" width="32" height="28" fill="#0a1a06" rx="2"/>
+            <rect x="4" y="12" width="10" height="16" fill="#102208" rx="1"/>
+            <rect x="34" y="12" width="10" height="16" fill="#102208" rx="1"/>
+            <rect x="14" y="8" width="8" height="10" fill="#102208"/>
+            <rect x="26" y="8" width="8" height="10" fill="#102208"/>
+            <rect x="6" y="10" width="3" height="4" fill="#081505"/>
+            <rect x="10" y="10" width="3" height="4" fill="#081505"/>
+            <rect x="35" y="10" width="3" height="4" fill="#081505"/>
+            <rect x="39" y="10" width="3" height="4" fill="#081505"/>
+            <rect x="20" y="26" width="8" height="18" fill="#0a1806"/>
+            <circle cx="24" cy="20" r="9" fill="#226600" opacity="0.4"/>
+            <polygon points="24,9 26.4,16.2 34,16.2 28,21 30.4,28.2 24,24 17.6,28.2 20,21 14,16.2 21.6,16.2" fill="#66ff22" opacity="0.85"/>
+            <circle cx="24" cy="20" r="3" fill="#99ff66" opacity="0.8"/>
+            <circle cx="24" cy="20" r="1.5" fill="#eeffcc" opacity="0.7"/>
+            <circle cx="10" cy="26" r="1.5" fill="#44aa10" opacity="0.6"/>
+            <circle cx="38" cy="26" r="1.5" fill="#44aa10" opacity="0.6"/>
+          </svg>`,
     };
 
     Object.entries(towers).forEach(([key, svg]) => {
@@ -703,7 +791,31 @@ export class SpriteFactory {
           <!-- Grid -->
           <line x1="0" y1="0" x2="48" y2="0" stroke="#0f0015" stroke-width="0.5"/>
           <line x1="0" y1="0" x2="0" y2="48" stroke="#0f0015" stroke-width="0.5"/>
-        </svg>`
+        </svg>`,
+
+        poison: `
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+            <rect width="48" height="48" fill="#060f02"/>
+            <rect x="1" y="1" width="46" height="46" fill="#091403" rx="1"/>
+            <ellipse cx="10" cy="10" rx="8" ry="6" fill="#0d1f05" opacity="0.8"/>
+            <ellipse cx="38" cy="8" rx="6" ry="5" fill="#0f2206" opacity="0.7"/>
+            <ellipse cx="24" cy="28" rx="10" ry="7" fill="#0d1f05" opacity="0.8"/>
+            <ellipse cx="8" cy="38" rx="6" ry="4" fill="#0f2206" opacity="0.6"/>
+            <ellipse cx="40" cy="36" rx="7" ry="5" fill="#0d1f05" opacity="0.7"/>
+            <circle cx="14" cy="20" r="3" fill="#1a4a05" opacity="0.5"/>
+            <circle cx="34" cy="14" r="2" fill="#22660a" opacity="0.6"/>
+            <circle cx="8" cy="34" r="2.5" fill="#1a4a05" opacity="0.4"/>
+            <ellipse cx="28" cy="40" rx="3" ry="2" fill="#2a6608" opacity="0.5"/>
+            <circle cx="42" cy="24" r="2" fill="#22660a" opacity="0.45"/>
+            <path d="M6 18 Q10 14 14 20 Q18 26 14 32" stroke="#1a3a08" stroke-width="1.2" fill="none" opacity="0.5"/>
+            <path d="M38 28 Q42 24 44 30 Q46 36 42 40" stroke="#1a3a08" stroke-width="1" fill="none" opacity="0.4"/>
+            <circle cx="20" cy="6" r="1.5" fill="#33aa10" opacity="0.4"/>
+            <circle cx="40" cy="42" r="1.5" fill="#33aa10" opacity="0.35"/>
+            <circle cx="6" cy="28" r="1" fill="#44cc14" opacity="0.3"/>
+            <ellipse cx="32" cy="22" rx="2" ry="1.2" fill="#2a6608" opacity="0.5"/>
+            <line x1="0" y1="0" x2="48" y2="0" stroke="#0f1f05" stroke-width="0.5"/>
+            <line x1="0" y1="0" x2="0" y2="48" stroke="#0f1f05" stroke-width="0.5"/>
+          </svg>`,
     };
 
     Object.entries(tiles).forEach(([world, svg]) => {

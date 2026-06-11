@@ -93,6 +93,27 @@ export class GameScene extends Phaser.Scene {
       });
     }
 
+    if (this.mechanics.poisonInterval) {
+      this.time.addEvent({
+        delay: this.mechanics.poisonInterval,
+        callback: () => {
+          if (this.gameOver || this.frozen) return;
+          this.takeDamage(this.mechanics.poisonDamage);
+          // Poison visual
+          const px = this.monsterSprite.x;
+          const py = this.monsterSprite.y;
+          const drop = this.add.circle(px, py, 6, 0x44ff44, 0.8).setDepth(8);
+          this.tweens.add({
+            targets: drop,
+            y: py + 20, alpha: 0, scaleX: 0.5, scaleY: 0.5,
+            duration: 400, ease: 'Power2',
+            onComplete: () => drop.destroy()
+          });
+        },
+        loop: true
+      });
+    }
+
     if (AdManager.isShowing) {
       window.__onAdClosed__ = () => this._showGetReady();
     } else {

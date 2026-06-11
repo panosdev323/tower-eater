@@ -46,8 +46,14 @@ function makeMechanics(worlds, shootDelay, levelId) {
   if (worlds.includes('frozen')) {
     const t = Math.min(1, (levelId - 31) / 9);
     m.bulletDuration = m.bulletDuration ?? Math.round(390 - t * 80)
-    m.freezeDuration = worlds.length > 1 ? 400 : 600; // λιγότερο σε mix
+    m.freezeDuration = worlds.length > 1 ? 500 : 600; // λιγότερο σε mix
     m.freezePeriod   = worlds.length > 1 ? 6 : 3;
+  }
+
+  if (worlds.includes('poison')) {
+    const t = Math.min(1, (levelId - 51) / 9);
+    m.poisonInterval = Math.round(2000 - t * 800); // 2000→1200ms
+    m.poisonDamage   = Math.round(3 + t * 4);      // 3→7 damage ανά tick
   }
 
   return m;
@@ -60,6 +66,7 @@ const WORLD_NAMES = {
   volcanic: ['Ember Fields','Lava Flow','Ash Plains','Magma Gate','Fire Pits','The Caldera','Inferno Pass','Molten Core','Brimstone','The Volcano'],
   frozen:   ['Frost Edge','Ice Plains','Blizzard Pass','Frozen Lake','Glacial Rift','The Tundra','Crystal Caves','Permafrost','The Blizzard','The Citadel'],
   void:     ['The Rift','Dark Matter','Null Space','The Abyss','Shadow Realm','Void Nexus','The Nothing','Dark Infinity','Oblivion','The End'],
+  poison:   ['Toxic Fields','Plague Gate','The Swamp','Venom Pits','Rot Hollow','The Fungus','Spore Cloud','Decay Marsh','The Blight','Toxic Core'],
 };
 
 const MIX_NAMES = [
@@ -143,6 +150,15 @@ for (let i = 0; i < 10; i++) {
   const required   = Math.max(1, Math.floor(towerCount * 0.6));
   const shootDelay = Math.round(700 - i * 18);
   levels.push(buildLevel(id, ['void'], towerCount, required, shootDelay));
+}
+
+// Poison 51-60
+for (let i = 0; i < 10; i++) {
+  const id         = 51 + i;
+  const towerCount = i + 5;
+  const required   = Math.max(1, Math.floor(towerCount * 0.6));
+  const shootDelay = Math.round(680 - i * 18);
+  levels.push(buildLevel(id, ['poison'], towerCount, required, shootDelay));
 }
 
 // ── MIX WORLDS 51-80 ──────────────────────────────────────────────────
