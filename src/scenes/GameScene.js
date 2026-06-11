@@ -26,6 +26,7 @@ export class GameScene extends Phaser.Scene {
 
     this.invincible = false;
     this.frozen     = false;
+    this._freezeCooldown = false;
     this.tileSize   = 48;
     this.cols       = 10;
     this.rows       = 16;
@@ -408,10 +409,10 @@ export class GameScene extends Phaser.Scene {
         if (dist < this.tileSize * 1.1) {
           this.takeDamage(Math.floor(15 * (1 - this.monsterArmor / 100)));
           const canFreeze = this.mechanics.freezeDuration
-          && tower.type === 'ice'
-          && !this.frozen
-          && (this.level.id < 50 || this._shotCounter % (this.mechanics.freezePeriod ?? 4) === 0);
-          if (canFreeze) this._applyFreeze();
+            && tower.type === 'ice'
+            && !this.frozen
+            && !this._freezeCooldown  // ← ΠΡΟΣΘΕΣΕ ΕΔΩ
+            && (this.level.id < 50 || this._shotCounter % (this.mechanics.freezePeriod ?? 4) === 0);
         }
       }
     });
@@ -461,6 +462,9 @@ export class GameScene extends Phaser.Scene {
       this._freezeOverlay.destroy();
       this._freezeOverlay = null;
     }
+    // ← cooldown 2 secons
+    this._freezeCooldown = true;
+    this.time.delayedCall(2000, () => { this._freezeCooldown = false; });
   }
 
   _fireGrenade(from, targetX, targetY) {
