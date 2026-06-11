@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>TowerEater</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #000; overflow: hidden; }
+    canvas { display: block; }
+
+    #pause-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(6px);
+    }
+
+    #pause-modal {
+      background: #0f0f1f;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 32px 28px;
+      width: min(340px, 90vw);
+      display: flex; flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 0 60px rgba(100,50,255,0.3);
+    }
+
+    .pm-title {
+      text-align: center;
+      font-family: system-ui, sans-serif;
+      font-size: 22px; font-weight: bold;
+      color: #fff; letter-spacing: 2px;
+      margin-bottom: 4px;
+    }
+
+    .pm-btn {
+      width: 100%; padding: 14px;
+      border: none; border-radius: 12px;
+      font-size: 16px; font-weight: bold;
+      cursor: pointer;
+      font-family: system-ui, sans-serif;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .pm-btn:active { transform: scale(0.97); }
+
+    .pm-primary {
+      background: linear-gradient(135deg, #4a2aff, #8844ff);
+      color: #fff;
+    }
+    .pm-danger {
+      background: rgba(255,60,60,0.15);
+      color: #ff6666;
+      border: 1px solid rgba(255,60,60,0.3);
+    }
+    .pm-danger:hover { background: rgba(255,60,60,0.25); }
+
+    .pm-toggle-row {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 4px 0;
+    }
+    .pm-label {
+      font-family: system-ui, sans-serif;
+      font-size: 15px; color: #aaa;
+    }
+
+    .pm-switch { position: relative; display: inline-block; width: 46px; height: 26px; }
+    .pm-switch input { opacity: 0; width: 0; height: 0; }
+    .pm-slider {
+      position: absolute; cursor: pointer; inset: 0;
+      background: #333; border-radius: 26px; transition: 0.3s;
+    }
+    .pm-slider:before {
+      content: '';
+      position: absolute;
+      height: 20px; width: 20px;
+      left: 3px; bottom: 3px;
+      background: #fff; border-radius: 50%; transition: 0.3s;
+    }
+    input:checked + .pm-slider { background: #6633ff; }
+    input:checked + .pm-slider:before { transform: translateX(20px); }
+
+    .pm-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+      margin: 2px 0;
+    }
+
+    .pm-warning {
+      font-family: system-ui, sans-serif;
+      font-size: 12px; color: #666;
+      text-align: center; margin-top: -8px;
+    }
+
+    .pm-privacy {
+      display: block; text-align: center;
+      font-family: system-ui, sans-serif;
+      font-size: 15px; color: #666;
+      text-decoration: underline;
+      margin-top: 10px; padding: 6px 0;
+    }
+    .pm-privacy:hover { color: #aaa; }
+  </style>
+  <script type="module" crossorigin src="/tower-eater/assets/index-BnYA1MET.js"></script>
+  <link rel="stylesheet" crossorigin href="/tower-eater/assets/index-DdrjPlUk.css">
+</head>
+<body>
+</body>
+</html>
