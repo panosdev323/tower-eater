@@ -17,6 +17,8 @@ export class GameScene extends Phaser.Scene {
   }
 
   create() {
+    this.pathGraphics = null;
+    this.pathBlinkTimer = null;
     this.level     = LEVELS[this.levelIndex];
     this.world     = this.level.world;
     this.theme     = SpriteFactory.getWorldTheme(this.world);
@@ -663,6 +665,7 @@ export class GameScene extends Phaser.Scene {
     if (this.pathBlinkTimer) { this.pathBlinkTimer.remove(); this.pathBlinkTimer = null; }
 
     const goal = this.baseUnlocked ? this.baseCell : this.findNearestTower();
+    console.log('[updatePath] goal:', goal, 'monster:', this.monsterCell, 'towers:', this.towers.length);
     if (!goal) return;
 
     const blocked = this.towers
