@@ -32,7 +32,8 @@ function makeMechanics(worlds, shootDelay, levelId) {
 
   if (worlds.includes('volcanic')) {
     m.grenadePeriod  = 3;
-    m.bulletDuration = (m.bulletDuration ?? Math.round(350 - t * 80)); // κρατάει forest speed αν mix
+    const t = Math.min(1, (levelId - 21) / 9); // ← ΠΡΟΣΘΕΣΕ ΕΔΩ
+    m.bulletDuration = m.bulletDuration ?? Math.round(350 - t * 80);
   }
 
   if (worlds.includes('void')) {
