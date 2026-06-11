@@ -170,9 +170,9 @@ export class GameScene extends Phaser.Scene {
       }).setOrigin(0.5, 0).setDepth(10);
     }
 
-    this.add.rectangle(240, 24, 302, 14, 0x222222).setDepth(10);
-    this.hpBarFill = this.add.rectangle(90, 28, 300, 12, 0x00ff88).setDepth(11).setOrigin(0, 0.5);
-    this.hpText    = this.add.text(240, 24, 'HP 100', { fontSize: '10px', color: '#000' }).setOrigin(0.5).setDepth(12);
+    this.add.rectangle(240, 34, 302, 14, 0x222222).setDepth(10);
+    this.hpBarFill = this.add.rectangle(90, 34, 300, 12, 0x00ff88).setDepth(11).setOrigin(0, 0.5);
+    this.hpText    = this.add.text(240, 34, 'HP 100', { fontSize: '10px', color: '#000' }).setOrigin(0.5).setDepth(12);
 
     this.eatCounter = this.add.text(240, 42, `🏰 Eat ${this.level.required} more!`, {
       fontSize: '16px', color: '#ffffff'
@@ -183,12 +183,6 @@ export class GameScene extends Phaser.Scene {
     }).setOrigin(0.5).setDepth(10);
 
     this.pathVisible = true;
-    this.add.text(470, 62, '🗺️', { fontSize: '18px' })
-      .setOrigin(1, 0).setDepth(10).setInteractive()
-      .on('pointerdown', () => {
-        this.pathVisible = !this.pathVisible;
-        if (this.pathGraphics) this.pathGraphics.setVisible(this.pathVisible);
-      });
   }
 
   // ── Input ─────────────────────────────────────────────────────────────
@@ -778,6 +772,19 @@ export class GameScene extends Phaser.Scene {
       duration: 600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut'
     });
 
+    const mapBtn = this.add.text(240, 560, '🗺️  Map: ON', {
+      fontSize: '16px', color: '#aaaaaa',
+      backgroundColor: '#1a1a1a',
+      padding: { x: 16, y: 8 }
+    }).setOrigin(0.5).setDepth(51).setInteractive();
+
+    mapBtn.on('pointerdown', () => {
+      this.pathVisible = !this.pathVisible;
+      if (this.pathGraphics) this.pathGraphics.setVisible(this.pathVisible);
+      mapBtn.setText(this.pathVisible ? '🗺️  Map: ON' : '🗺️  Map: OFF');
+      mapBtn.setColor(this.pathVisible ? '#aaaaaa' : '#444444');
+    });
+
     const settingsHint = this.add.text(240, 600, '⚙️ Settings', {
       fontSize: '16px', color: '#888888',
       backgroundColor: '#1a1a1a',
@@ -788,10 +795,10 @@ export class GameScene extends Phaser.Scene {
     startBtn.on('pointerdown', () => {
       startBtn.disableInteractive();
       this.tweens.add({
-        targets: [overlay, txt, sub, startBtn, settingsHint],
+        targets: [overlay, txt, sub, startBtn, mapBtn, settingsHint],
         alpha: 0, duration: 300,
         onComplete: () => {
-          [overlay, txt, sub, startBtn, settingsHint].forEach(o => o.destroy());
+          [overlay, txt, sub, startBtn, mapBtn, settingsHint].forEach(o => o.destroy());
           this.isMoving = false;
           this._startShootTimer();
           if (this.levelIndex >= 80) {
