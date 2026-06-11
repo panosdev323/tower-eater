@@ -106,8 +106,16 @@ export class GameScene extends Phaser.Scene {
   createMonster() {
     this.monsterCell   = { col: 1, row: 13 };
     const pos          = this.cellToPixel(this.monsterCell);
-    this.monsterSprite = this.add.image(pos.x, pos.y, 'monster').setDepth(5);
-    this.monsterGlow   = this.add.circle(pos.x, pos.y, 26, 0x00ff88, 0.15).setDepth(4);
+    this.monsterSprite = this.add.image(pos.x, pos.y, 'monster').setDepth(5).setScale(1.3);
+    this.monsterGlow   = this.add.circle(pos.x, pos.y, 30, 0x00ff88, 0.18).setDepth(4);
+    this.tweens.add({
+      targets: this.monsterSprite,
+      scaleY: 0.85,
+      duration: 350,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
+    });
   }
 
   createTowers() {
@@ -395,7 +403,7 @@ export class GameScene extends Phaser.Scene {
         const dx   = this.monsterSprite.x - tx;
         const dy   = this.monsterSprite.y - ty;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < this.tileSize) {
+        if (dist < this.tileSize * 1.1) {
           this.takeDamage(Math.floor(20 * (1 - this.monsterArmor / 100)));
           const canFreeze = this.mechanics.freezeDuration
           && tower.type === 'ice'
