@@ -622,27 +622,45 @@ export class GameScene extends Phaser.Scene {
         if (t.hp <= 0) {
           soundManager.eatTower();
           const tx = t.sprite.x, ty = t.sprite.y;
+          const towerType = t.type;
           t.sprite.destroy(); t.hpBar.destroy(); t.hpBarBg.destroy();
-          [...Array(8)].forEach((_, i) => {
-            const rad   = (i / 8) * Math.PI * 2;
-            const color = t.type === 'fire' ? 0xff6600 : t.type === 'ice' ? 0x44aaff : 0xaa44ff;
-            const p     = this.add.circle(tx, ty, 4, color).setDepth(10);
-            this.tweens.add({
-              targets: p,
-              x: tx + Math.cos(rad) * 40,
-              y: ty + Math.sin(rad) * 40,
-              scaleX: 0, scaleY: 0, alpha: 0,
-              duration: 400, ease: 'Power2',
-              onComplete: () => p.destroy()
-            });
-          });
-          this.evolve(t.type);
+          this._destroyTower(tx, ty, towerType);
+          this.evolve(towerType);
           this.towers.splice(i, 1);
-          this.cameras.main.shake(200, 0.01);
         }
         break;
       }
     }
+  }
+
+  _destroyTower(tx, ty, type) {
+    const color = type === 'fire' ? 0xff6600
+                : type === 'ice'  ? 0x44aaff
+                : 0xaa44ff;
+
+    [[-12,-10], [12,-10], [-12,10], [12,10]].forEach(([ox, oy]) => {
+      const chunk = this.add.rectangle(tx + ox, ty + oy, 10, 10, color).setDepth(10);
+      this.tweens.add({
+        targets: chunk,
+        x: tx + ox + (Math.random() - 0.5) * 60,
+        y: ty + oy + 80 + Math.random() * 40,
+        angle: (Math.random() - 0.5) * 180,
+        scaleX: 0, scaleY: 0, alpha: 0,
+        duration: 500 + Math.random() * 200,
+        ease: 'Quad.easeIn',
+        onComplete: () => chunk.destroy()
+      });
+    });
+
+    const flash = this.add.circle(tx, ty, 24, color, 0.8).setDepth(9);
+    this.tweens.add({
+      targets: flash,
+      scaleX: 2.5, scaleY: 2.5, alpha: 0,
+      duration: 250, ease: 'Power2',
+      onComplete: () => flash.destroy()
+    });
+
+    this.cameras.main.shake(180, 0.012);
   }
 
   // ── Path ──────────────────────────────────────────────────────────────
