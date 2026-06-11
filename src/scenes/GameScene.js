@@ -677,18 +677,15 @@ export class GameScene extends Phaser.Scene {
         callback: () => {
           this.pathGraphics.clear();
           if (visible) {
-            this.pathGraphics.fillStyle(0xff0000, 0.4);
+            this.pathGraphics.lineStyle(4, 0xff0000, 0.8);
             const mp = this.cellToPixel(this.monsterCell);
-            this.pathGraphics.fillCircle(mp.x, mp.y, 28);
+            this.pathGraphics.strokeCircle(mp.x, mp.y, 36); // ring γύρω, όχι fill από πάνω
           }
           visible = !visible;
         }
       });
+      this.pathGraphics.setDepth(1); //
       this.pathGraphics.setVisible(this.pathVisible);
-      console.log('[updatePath] pathVisible:', this.pathVisible, 
-            'graphics:', !!this.pathGraphics, 
-            'path.length:', path.length,
-            'graphics.visible:', this.pathGraphics?.visible);
       return;
     }
 
