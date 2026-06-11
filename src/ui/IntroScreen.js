@@ -220,6 +220,13 @@ export class IntroScreen {
             </div>
             <p>+Power & +Max HP — hit harder, survive longer</p>
           </div>
+          <div class="tower-card poison">
+            <div class="tower-header">
+              <span class="tower-dot poison-dot"></span>
+              <strong>☠️ Poison Tower</strong>
+            </div>
+            <p>+Resistance — reduces chance of being pushed by gas clouds</p>
+          </div>
         </div>
         <div class="intro-tip">
           💡 The path hint (🗺️) shows the shortest route to your next target

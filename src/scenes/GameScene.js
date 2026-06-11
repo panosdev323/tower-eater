@@ -340,6 +340,9 @@ export class GameScene extends Phaser.Scene {
         this.monsterMaxHP += 20;
         this.monsterHP = Math.min(this.monsterMaxHP, this.monsterHP + 20);
       }},
+      poison: { msg: '🧪 More resistant!', color: 0x44ff44, apply: () => {
+        this.gasResistance = Math.min(80, (this.gasResistance ?? 0) + 20);
+      }},
     };
 
     const evo = defs[towerType];
@@ -414,6 +417,12 @@ export class GameScene extends Phaser.Scene {
     if (this.isMoving || this.frozen || this.gameOver) return;
 
     soundManager.gasPush?.(); // optional sound
+
+    const resist = this.gasResistance ?? 0;
+      if (Math.random() * 100 < resist) {
+        this.showMsg('🧪 Resisted!', '#44ff44', 600);
+        return;
+    }
 
     // Τυχαία κατεύθυνση
     const dirs = [{dc:0,dr:-1},{dc:0,dr:1},{dc:-1,dr:0},{dc:1,dr:0}];
