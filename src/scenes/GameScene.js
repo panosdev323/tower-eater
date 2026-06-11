@@ -170,7 +170,7 @@ export class GameScene extends Phaser.Scene {
       }).setOrigin(0.5, 0).setDepth(10);
     }
 
-    this.add.rectangle(240, 34, 302, 14, 0x222222).setDepth(10);
+    this.add.rectangle(240, 30, 302, 14, 0x222222).setDepth(10);
     this.hpBarFill = this.add.rectangle(90, 30, 300, 12, 0x00ff88).setDepth(11).setOrigin(0, 0.5);
     this.hpText    = this.add.text(240, 30, 'HP 100', { fontSize: '10px', color: '#000' }).setOrigin(0.5).setDepth(12);
 
