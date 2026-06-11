@@ -781,6 +781,7 @@ export class GameScene extends Phaser.Scene {
 
     mapBtn.on('pointerdown', () => {
       this.pathVisible = !this.pathVisible;
+      this.updatePath();
       if (this.pathGraphics) this.pathGraphics.setVisible(this.pathVisible);
       mapBtn.setText(this.pathVisible ? '🗺️  Map: ON' : '🗺️  Map: OFF');
       mapBtn.setColor(this.pathVisible ? '#aaaaaa' : '#444444');
