@@ -684,6 +684,7 @@ export class GameScene extends Phaser.Scene {
           visible = !visible;
         }
       });
+      console.log('[updatePath-normal] pathVisible:', this.pathVisible, 'path.length:', path.length, 'depth:', this.pathGraphics.depth);
       this.pathGraphics.setDepth(1); //
       this.pathGraphics.setVisible(this.pathVisible);
       return;
