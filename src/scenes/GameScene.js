@@ -440,7 +440,14 @@ export class GameScene extends Phaser.Scene {
     this.monsterSprite.setTint(0x44ff44);
     this.showMsg('💨 Pushed!', '#44ff44', 800);
     this.time.delayedCall(200, () => {
-      if (!this.gameOver) this.monsterSprite.clearTint();
+      if (!this.gameOver) {
+        this.monsterSprite.clearTint();
+        const lastEvo = this.evolutions[this.evolutions.length - 1];
+        if (lastEvo) {
+          const evoColors = { fire: 0xff6600, ice: 0x66ccff, arcane: 0xcc66ff, poison: 0x44ff44 };
+          this.monsterSprite.setTint(evoColors[lastEvo]);
+        }
+      }
     });
 
     // Κίνηση
