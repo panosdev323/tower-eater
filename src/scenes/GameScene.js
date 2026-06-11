@@ -785,7 +785,7 @@ export class GameScene extends Phaser.Scene {
       mapBtn.setColor(this.pathVisible ? '#aaaaaa' : '#444444');
     });
 
-    const settingsHint = this.add.text(240, 700, '⚙️ Settings', {
+    const settingsHint = this.add.text(240, 660, '⚙️ Settings', {
       fontSize: '16px', color: '#888888',
       backgroundColor: '#1a1a1a',
       padding: { x: 20, y: 14 }
