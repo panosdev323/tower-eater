@@ -39,13 +39,13 @@ function makeMechanics(worlds, shootDelay, levelId) {
   if (worlds.includes('void')) {
     const t = Math.min(1, (levelId - 41) / 9);
     m.towerMoveDelay = Math.round(2000 - t * 1100); // 2000→1100ms (πιο γρήγορη κίνηση)
-    m.bulletDuration = m.bulletDuration ?? Math.round(400 - t * 80);
+    m.bulletDuration = m.bulletDuration ?? Math.round(380 - t * 80);
   }
 
   // Στο makeMechanics — το freeze να είναι λίγο πιο ελαφρύ σε mix worlds
   if (worlds.includes('frozen')) {
     const t = Math.min(1, (levelId - 31) / 9);
-    m.bulletDuration = m.bulletDuration ?? Math.round(400 - t * 80)
+    m.bulletDuration = m.bulletDuration ?? Math.round(390 - t * 80)
     m.freezeDuration = worlds.length > 1 ? 400 : 600; // λιγότερο σε mix
     m.freezePeriod   = worlds.length > 1 ? 6 : 3;
   }
