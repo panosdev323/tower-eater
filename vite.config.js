@@ -4,7 +4,7 @@ export default defineConfig({
   base: '/tower-eater/',
   root: 'src',
   build: {
-    outDir: '../dist',
+    outDir: '../docs',
     emptyOutDir: true,
   },
   server: {
