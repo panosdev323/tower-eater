@@ -187,6 +187,13 @@ export class IntroScreen {
               <p>Maximum towers, minimum delay. Only the worthy survive.</p>
             </div>
           </div>
+          <div class="world-row hell" style="border-color:#ff44ff">
+            <span class="world-icon">🌀</span>
+            <div>
+              <strong>Endless Mode</strong>
+              <p>After level 120 — infinite waves, ever-increasing difficulty. How far can you go?</p>
+            </div>
+          </div>
         </div>
       </div>
     `;
@@ -252,6 +259,9 @@ export class IntroScreen {
           </div>
           <div class="check-item">
             <span class="check">✓</span> 120 levels of evolving chaos await
+          </div>
+          <div class="check-item">
+            <span class="check">✓</span> 120 levels + endless mode await
           </div>
         </div>
         ${saved > 0 ? `<p class="intro-saved">⚡ You reached <strong>Level ${saved + 1}</strong> last time</p>` : ''}
