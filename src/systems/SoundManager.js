@@ -452,7 +452,7 @@ export class SoundManager {
 
     // Master music gain (low volume so it doesn't clash with SFX)
     this._musicGain = this.ctx.createGain();
-    this._musicGain.gain.value = 0.07;
+    this._musicGain.gain.value = 0.3;
     this._musicGain.connect(this.ctx.destination);
 
     // World → scale & drone frequency
@@ -474,7 +474,7 @@ export class SoundManager {
       o.frequency.value = cfg.drone;
       o.detune.value = detune;
       const g = this.ctx.createGain();
-      g.gain.value = 0.55;
+      g.gain.value = 0.99;
       o.connect(g);
       g.connect(this._musicGain);
       o.start();
@@ -491,10 +491,10 @@ export class SoundManager {
 
       const lfo = this.ctx.createOscillator();
       lfo.type = 'sine';
-      lfo.frequency.value = 0.3 + i * 0.07;
+      lfo.frequency.value = 0.5 + i * 0.09;
 
       const lfoGain = this.ctx.createGain();
-      lfoGain.gain.value = 0.012;
+      lfoGain.gain.value = 0.12;
       lfo.connect(lfoGain);
       lfoGain.connect(o.frequency); // vibrato
 
@@ -503,7 +503,7 @@ export class SoundManager {
       lp.frequency.value = 600;
 
       const g = this.ctx.createGain();
-      g.gain.value = 0.28;
+      g.gain.value = 0.88;
 
       o.connect(lp);
       lp.connect(g);
@@ -533,7 +533,7 @@ export class SoundManager {
 
     const g = this.ctx.createGain();
     g.gain.setValueAtTime(0, now);
-    g.gain.linearRampToValueAtTime(0.18, now + 0.04);
+    g.gain.linearRampToValueAtTime(0.68, now + 0.12);
     g.gain.exponentialRampToValueAtTime(0.0001, now + this._arpeggioTempo * 0.85);
 
     o.connect(g);
@@ -563,7 +563,7 @@ export class SoundManager {
     if (this._musicGain) {
       const now = this.ctx.currentTime;
       this._musicGain.gain.setValueAtTime(this._musicGain.gain.value, now);
-      this._musicGain.gain.linearRampToValueAtTime(0, now + 1.2);
+      this._musicGain.gain.linearRampToValueAtTime(0, now + 2.2);
       setTimeout(() => {
         this._musicNodes?.forEach(n => { try { n.stop?.(); n.disconnect?.(); } catch(_){} });
         this._musicNodes = [];
