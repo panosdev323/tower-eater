@@ -375,38 +375,46 @@ export class GameScene extends Phaser.Scene {
   _fireGasCloud() {
     if (this.gameOver) return;
 
-    // Διάλεξε τυχαίο poison πύργο
-    const poisonTowers = this.towers.filter(t => t.type === 'arcane'); 
-    // (χρησιμοποιούμε arcane ως proxy — ή φτιάξε poison type)
-    const shooter = poisonTowers.length
-      ? Phaser.Utils.Array.GetRandom(poisonTowers)
-      : Phaser.Utils.Array.GetRandom(this.towers);
+    const shooter = Phaser.Utils.Array.GetRandom(this.towers);
     if (!shooter) return;
 
     const from = this.cellToPixel(shooter.cell);
-
-    // Το gas cloud — ξεκινάει μικρό, μεγαλώνει καθώς κινείται
     const cloud = this.add.circle(from.x, from.y, 8, 0x44ff44, 0.7).setDepth(7);
-    const targetX = this.monsterSprite.x + (Math.random() - 0.5) * 30;
-    const targetY = this.monsterSprite.y + (Math.random() - 0.5) * 30;
+    const targetX = this.monsterSprite.x + (Math.random() - 0.5) * 20;
+    const targetY = this.monsterSprite.y + (Math.random() - 0.5) * 20;
 
+    // ← Ίδια ταχύτητα με grenade
     this.tweens.add({
       targets: cloud,
-      x: targetX,
-      y: targetY,
-      scaleX: 3, scaleY: 3,   // μεγαλώνει καθώς πλησιάζει
-      alpha: 0.3,
-      duration: this.mechanics.poisonInterval * 0.7,
-      ease: 'Sine.easeOut',
+      x: { value: targetX, ease: 'Linear' },
+      y: { value: targetY, ease: 'Quad.easeIn' },
+      duration: 500,
       onComplete: () => {
         cloud.destroy();
 
-        // Hit check
-        const dx   = this.monsterSprite.x - targetX;
-        const dy   = this.monsterSprite.y - targetY;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+        // 3x3 τετράγωνο (9 κελιά) αντί σταυρός
+        const hitCell = this.pixelToCell(targetX, targetY);
+        [
+          {col:-1,row:-1},{col:0,row:-1},{col:1,row:-1},
+          {col:-1,row:0}, {col:0,row:0}, {col:1,row:0},
+          {col:-1,row:1}, {col:0,row:1}, {col:1,row:1},
+        ].forEach(({col, row}) => {
+          const c = hitCell.col + col;
+          const r = hitCell.row + row;
+          if (c < 0 || c >= this.cols || r < 0 || r >= this.rows) return;
+          const pos = this.cellToPixel({col: c, row: r});
+          const gas = this.add.rectangle(pos.x, pos.y, this.tileSize - 2, this.tileSize - 2, 0x44ff44, 0.35).setDepth(7);
+          this.tweens.add({
+            targets: gas,
+            alpha: 0, duration: 1000, ease: 'Power2',
+            onComplete: () => gas.destroy()
+          });
+        });
 
-        if (dist < this.tileSize * 1.2 && !this.gameOver) {
+        const dx = this.monsterSprite.x - targetX;
+        const dy = this.monsterSprite.y - targetY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < this.tileSize * 1.8 && !this.gameOver) {
           this._applyGasPush();
         }
       }
@@ -414,43 +422,38 @@ export class GameScene extends Phaser.Scene {
   }
 
   _applyGasPush() {
-    if (this.isMoving || this.frozen || this.gameOver) return;
-
-    soundManager.gasPush?.(); // optional sound
+    if (this.gameOver) return;
 
     const resist = this.gasResistance ?? 0;
-      if (Math.random() * 100 < resist) {
-        this.showMsg('🧪 Resisted!', '#44ff44', 600);
-        return;
+    if (Math.random() * 100 < resist) {
+      this.showMsg('🧪 Resisted!', '#44ff44', 600);
+      return;
     }
 
-    // Τυχαία κατεύθυνση
+    // Damage
+    this.takeDamage(Math.floor(10 * (1 - this.monsterArmor / 100)));
+
+    // Slow 50% για 2 δευτερόλεπτα
+    if (!this._gasSlowed) {
+      this._gasSlowed = true;
+      const originalSpeed = this.monsterSpeed;
+      this.monsterSpeed = Math.min(this.monsterSpeed * 2, 350);
+      this.showMsg('🧪 Slowed!', '#44ff44', 2000);
+      this.time.delayedCall(2000, () => {
+        if (!this.gameOver) {
+          this.monsterSpeed = originalSpeed;
+          this._gasSlowed = false;
+        }
+      });
+    }
+
+    // Σπρωξιμο
+    if (this.isMoving || this.frozen) return;
     const dirs = [{dc:0,dr:-1},{dc:0,dr:1},{dc:-1,dr:0},{dc:1,dr:0}];
     const dir  = Phaser.Utils.Array.GetRandom(dirs);
-    const next = {
-      col: this.monsterCell.col + dir.dc,
-      row: this.monsterCell.row + dir.dr,
-    };
+    const next = { col: this.monsterCell.col + dir.dc, row: this.monsterCell.row + dir.dr };
+    if (next.col < 0 || next.col >= this.cols || next.row < 0 || next.row >= this.rows) return;
 
-    // Μείνε εντός grid
-    if (next.col < 0 || next.col >= this.cols ||
-        next.row < 0 || next.row >= this.rows) return;
-
-    // Visual feedback — πράσινο flash
-    this.monsterSprite.setTint(0x44ff44);
-    this.showMsg('💨 Pushed!', '#44ff44', 800);
-    this.time.delayedCall(200, () => {
-      if (!this.gameOver) {
-        this.monsterSprite.clearTint();
-        const lastEvo = this.evolutions[this.evolutions.length - 1];
-        if (lastEvo) {
-          const evoColors = { fire: 0xff6600, ice: 0x66ccff, arcane: 0xcc66ff, poison: 0x44ff44 };
-          this.monsterSprite.setTint(evoColors[lastEvo]);
-        }
-      }
-    });
-
-    // Κίνηση
     this.isMoving = true;
     this.moveMonster(next, () => { this.isMoving = false; });
   }
