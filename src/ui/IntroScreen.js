@@ -204,39 +204,42 @@ export class IntroScreen {
       <div class="intro-step">
         <div class="intro-icon">🏰</div>
         <h2 class="intro-heading">Tower Types</h2>
-        <p class="intro-body" style="margin-bottom:20px">Each tower you eat grants a permanent bonus for that run:</p>
+        <p class="intro-body" style="margin-bottom:16px">
+          Each tower you eat grants a <strong style="color:#fff">permanent bonus</strong> for that run.
+          Tower appearance changes per world — the effect is always the same.
+        </p>
         <div class="intro-towers">
           <div class="tower-card fire">
             <div class="tower-header">
               <span class="tower-dot fire-dot"></span>
               <strong>🔥 Fire Tower</strong>
             </div>
-            <p>+Speed — your monster moves faster</p>
+            <p>+Speed — your monster moves faster across the grid</p>
           </div>
           <div class="tower-card ice">
             <div class="tower-header">
               <span class="tower-dot ice-dot"></span>
               <strong>❄️ Ice Tower</strong>
             </div>
-            <p>+Armor — reduces all incoming damage</p>
+            <p>+Armor — reduces all incoming damage. Shoots freezing bullets that immobilize you</p>
           </div>
           <div class="tower-card arcane">
             <div class="tower-header">
               <span class="tower-dot arcane-dot"></span>
               <strong>✨ Arcane Tower</strong>
             </div>
-            <p>+Power & +Max HP — hit harder, survive longer</p>
+            <p>+Power & +Max HP — hit towers harder and survive longer</p>
           </div>
           <div class="tower-card poison">
             <div class="tower-header">
               <span class="tower-dot poison-dot"></span>
               <strong>☠️ Poison Tower</strong>
             </div>
-            <p>+Resistance — chance to resist gas cloud effects</p>
+            <p>+Resistance — chance to resist gas clouds that slow and push you</p>
           </div>
         </div>
         <div class="intro-tip">
-          💡 The path hint (🗺️) shows the shortest route to your next target
+          💡 The path hint <strong>(🗺️)</strong> shows the shortest route to your next target
         </div>
       </div>
     `;
@@ -261,7 +264,7 @@ export class IntroScreen {
             <span class="check">✓</span> 120 levels of evolving chaos await
           </div>
           <div class="check-item">
-            <span class="check">✓</span> 120 levels + endless mode await
+            <span class="check">✓</span> endless mode
           </div>
         </div>
         ${saved > 0 ? `<p class="intro-saved">⚡ You reached <strong>Level ${saved + 1}</strong> last time</p>` : ''}

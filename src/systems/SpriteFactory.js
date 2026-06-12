@@ -960,6 +960,20 @@ export class SpriteFactory {
                 fill="white" opacity="0.35" transform="scale(0.52) translate(9.3,9.3)"/>
         <circle cx="7" cy="6.5" r="1" fill="#f8eeff" opacity="0.7"/>
       </svg>`,
+
+      poison: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+        <defs>
+          <radialGradient id="pg" cx="40%" cy="35%" r="60%">
+            <stop offset="0%" stop-color="#ccffaa"/>
+            <stop offset="45%" stop-color="#44cc00"/>
+            <stop offset="100%" stop-color="#115500" stop-opacity="0.95"/>
+          </radialGradient>
+        </defs>
+        <circle cx="8" cy="8" r="7" fill="#44ff00" opacity="0.2"/>
+        <circle cx="8" cy="8" r="5" fill="url(#pg)"/>
+        <circle cx="8" cy="8" r="3" fill="#88ff44" opacity="0.4"/>
+        <circle cx="7" cy="6.5" r="1" fill="#eeffcc" opacity="0.7"/>
+      </svg>`,
     };
 
     Object.entries(bullets).forEach(([type, svg]) => {
