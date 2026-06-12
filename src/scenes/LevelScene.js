@@ -1,24 +1,26 @@
 import { TOTAL_LEVELS } from '../data/levels.js';
+import { ProgressManager } from '../systems/ProgressManager.js';
+
 export class LevelScene extends Phaser.Scene {
   constructor() {
     super({ key: 'LevelScene' });
   }
 
   init(data) {
-    this.levelData = data.level;
-    this.win       = data.win;
-    this.stats     = data.stats;
+    this.levelData   = data.level;
+    this.win         = data.win;
+    this.stats       = data.stats;
+    this.isEndless   = data.isEndless ?? false;
+    this.endlessWave = data.endlessWave ?? 0;
   }
 
   create() {
-    // Σκόπιμα αφαιρούμε τυχόν παλιούς GameScene listeners
     window.removeEventListener('pauseGame',  window.__lastPauseHandler__);
     window.removeEventListener('resumeGame', window.__lastResumeHandler__);
 
     const cx = 240;
     this.add.rectangle(cx, 427, 480, 854, 0x0a0a1a);
 
-    // ── Settings button ──────────────────────────────────
     const settingsBtn = document.getElementById('settings-btn');
     if (settingsBtn) {
       settingsBtn.onclick = null;
@@ -33,7 +35,6 @@ export class LevelScene extends Phaser.Scene {
     if (this._settingsOpen) return;
     this._settingsOpen = true;
 
-    // Simple DOM overlay — χωρίς pauseGame/resumeGame events
     const overlay = document.createElement('div');
     overlay.id = 'level-settings-overlay';
     overlay.style.cssText = `
@@ -114,7 +115,6 @@ export class LevelScene extends Phaser.Scene {
 
     document.body.appendChild(overlay);
 
-    // Toggle sounds
     document.getElementById('ls-sounds').onchange = (e) => {
       window.__soundManager__?.setSounds(e.target.checked);
       const slider = document.getElementById('ls-sounds-slider');
@@ -129,17 +129,15 @@ export class LevelScene extends Phaser.Scene {
       slider.querySelector('span').style.left = e.target.checked ? '23px' : '3px';
     };
 
-    // Restart
     document.getElementById('ls-restart').onclick = () => {
       if (confirm('Are you sure? All progress will be lost.')) {
-        window.__progress__?.reset();
+        ProgressManager.reset();
         overlay.remove();
         this._settingsOpen = false;
         this.scene.start('GameScene', { levelIndex: 0 });
       }
     };
 
-    // Close
     const close = () => {
       overlay.remove();
       this._settingsOpen = false;
@@ -147,7 +145,6 @@ export class LevelScene extends Phaser.Scene {
     document.getElementById('ls-close').onclick = close;
     overlay.onclick = (e) => { if (e.target === overlay) close(); };
 
-    // Privacy
     document.getElementById('ls-privacy').onclick = (e) => {
       e.preventDefault();
       window.open('https://panosdev323.github.io/tower-eater/privacy-policy.html', '_blank');
@@ -155,6 +152,53 @@ export class LevelScene extends Phaser.Scene {
   }
 
   showWin(cx) {
+    // ── ENDLESS WIN ──────────────────────────────────────
+    if (this.isEndless) {
+      this.add.text(cx, 160, `🌀 WAVE ${this.endlessWave} CLEAR!`, {
+        fontSize: '34px', color: '#ff44ff', fontStyle: 'bold'
+      }).setOrigin(0.5);
+
+      this.add.text(cx, 220, this.levelData.name, {
+        fontSize: '18px', color: '#aaaaaa'
+      }).setOrigin(0.5);
+
+      const best = ProgressManager.getBestEndlessWave();
+      this.add.text(cx, 265, `Best Wave: ${best}`, {
+        fontSize: '16px', color: '#ff44ff'
+      }).setOrigin(0.5);
+
+      this.add.text(cx, 310, `HP: ${this.stats.hp} / ${this.stats.maxHp}`, {
+        fontSize: '15px', color: '#00ff88'
+      }).setOrigin(0.5);
+
+      this.add.text(cx, 338, `Towers eaten: ${this.stats.eaten}`, {
+        fontSize: '15px', color: '#ffaa00'
+      }).setOrigin(0.5);
+
+      const btn = this.add.text(cx, 430, '▶  NEXT WAVE', {
+        fontSize: '28px', color: '#ffffff',
+        backgroundColor: '#2a003a',
+        padding: { x: 28, y: 14 }
+      }).setOrigin(0.5).setInteractive();
+      btn.on('pointerover', () => btn.setColor('#ff44ff'));
+      btn.on('pointerout',  () => btn.setColor('#ffffff'));
+      btn.on('pointerdown', () => {
+        this.scene.start('GameScene', {
+          isEndless: true,
+          endlessWave: this.endlessWave + 1
+        });
+      });
+
+      const quitBtn = this.add.text(cx, 530, 'quit to menu', {
+        fontSize: '15px', color: '#444444'
+      }).setOrigin(0.5).setInteractive();
+      quitBtn.on('pointerdown', () => {
+        this.scene.start('GameScene', { levelIndex: 0 });
+      });
+      return;
+    }
+
+    // ── NORMAL WIN ───────────────────────────────────────
     const nextLevel = this.levelData.id + 1;
     const hasNext   = nextLevel <= TOTAL_LEVELS;
 
@@ -166,7 +210,6 @@ export class LevelScene extends Phaser.Scene {
       fontSize: '20px', color: '#aaaaaa'
     }).setOrigin(0.5);
 
-    // Stats
     this.add.text(cx, 290, '— Stats —', {
       fontSize: '15px', color: '#ffffff'
     }).setOrigin(0.5);
@@ -184,13 +227,12 @@ export class LevelScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     const evoIcons = this.stats.evolutions
-      .map(e => ({ fire:'🔥', ice:'❄️', arcane:'✨' }[e])).join(' ');
+      .map(e => ({ fire:'🔥', ice:'❄️', arcane:'✨', poison:'🧪' }[e])).join(' ');
     this.add.text(cx, 410, `Absorbed: ${evoIcons || 'none'}`, {
       fontSize: '16px'
     }).setOrigin(0.5);
 
     if (hasNext) {
-      // Next level button
       const btn = this.add.text(cx, 510, '▶  NEXT LEVEL', {
         fontSize: '28px', color: '#ffffff',
         backgroundColor: '#1a3a1a',
@@ -206,7 +248,6 @@ export class LevelScene extends Phaser.Scene {
         fontSize: '14px', color: '#555555'
       }).setOrigin(0.5);
 
-      // Settings στο LevelScene
       const settingsInline = this.add.text(cx, 630, '⚙️ Settings', {
         fontSize: '16px', color: '#555555',
         backgroundColor: '#111111',
@@ -217,16 +258,30 @@ export class LevelScene extends Phaser.Scene {
       settingsInline.on('pointerdown', () => this._openSettings());
 
     } else {
-      this.add.text(cx, 500, '🏆 ALL LEVELS COMPLETE!', {
-        fontSize: '26px', color: '#ffdd00', fontStyle: 'bold'
+      // ── ΤΕΛΟΣ LEVELS → Endless transition ───────────────
+      this.add.text(cx, 480, '🏆 ALL 120 LEVELS COMPLETE!', {
+        fontSize: '22px', color: '#ffdd00', fontStyle: 'bold'
       }).setOrigin(0.5);
 
-      const btn = this.add.text(cx, 580, '↺  PLAY AGAIN', {
-        fontSize: '24px', color: '#ffffff',
-        backgroundColor: '#1a1a3a',
-        padding: { x: 24, y: 12 }
+      this.add.text(cx, 524, 'You are ready for the endless.', {
+        fontSize: '15px', color: '#aaaaaa'
+      }).setOrigin(0.5);
+
+      const endlessBtn = this.add.text(cx, 590, '🌀  START ENDLESS', {
+        fontSize: '26px', color: '#000000',
+        backgroundColor: '#ff44ff',
+        padding: { x: 24, y: 14 }
       }).setOrigin(0.5).setInteractive();
-      btn.on('pointerdown', () => {
+      endlessBtn.on('pointerover', () => endlessBtn.setStyle({ color: '#ffffff' }));
+      endlessBtn.on('pointerout',  () => endlessBtn.setStyle({ color: '#000000' }));
+      endlessBtn.on('pointerdown', () => {
+        this.scene.start('GameScene', { isEndless: true, endlessWave: 1 });
+      });
+
+      const replayBtn = this.add.text(cx, 680, '↺ play from start', {
+        fontSize: '15px', color: '#444444'
+      }).setOrigin(0.5).setInteractive();
+      replayBtn.on('pointerdown', () => {
         this.scene.start('GameScene', { levelIndex: 0 });
       });
     }
@@ -240,6 +295,59 @@ export class LevelScene extends Phaser.Scene {
   }
 
   showDeath(cx) {
+    // ── ENDLESS DEATH ─────────────────────────────────────
+    if (this.isEndless) {
+      const best = ProgressManager.getBestEndlessWave();
+
+      this.add.text(cx, 160, '💀 WAVE FAILED', {
+        fontSize: '36px', color: '#ff4444', fontStyle: 'bold'
+      }).setOrigin(0.5);
+
+      this.add.text(cx, 220, `Wave ${this.endlessWave}`, {
+        fontSize: '22px', color: '#ff44ff'
+      }).setOrigin(0.5);
+
+      this.add.text(cx, 270, `Best Wave: ${best}`, {
+        fontSize: '18px', color: '#ffdd00'
+      }).setOrigin(0.5);
+
+      this.add.text(cx, 318, `Towers eaten: ${this.stats.eaten}`, {
+        fontSize: '16px', color: '#ffaa00'
+      }).setOrigin(0.5);
+
+      const retryBtn = this.add.text(cx, 420, '↺  RETRY WAVE', {
+        fontSize: '26px', color: '#ffffff',
+        backgroundColor: '#3a0011',
+        padding: { x: 28, y: 14 }
+      }).setOrigin(0.5).setInteractive();
+      retryBtn.on('pointerover', () => retryBtn.setColor('#ff44ff'));
+      retryBtn.on('pointerout',  () => retryBtn.setColor('#ffffff'));
+      retryBtn.on('pointerdown', () => {
+        this.scene.start('GameScene', {
+          isEndless: true,
+          endlessWave: this.endlessWave
+        });
+      });
+
+      const startOverBtn = this.add.text(cx, 510, '🌀 Start from Wave 1', {
+        fontSize: '16px', color: '#555555',
+        backgroundColor: '#111111',
+        padding: { x: 16, y: 8 }
+      }).setOrigin(0.5).setInteractive();
+      startOverBtn.on('pointerdown', () => {
+        this.scene.start('GameScene', { isEndless: true, endlessWave: 1 });
+      });
+
+      const quitBtn = this.add.text(cx, 590, 'quit to normal levels', {
+        fontSize: '15px', color: '#444444'
+      }).setOrigin(0.5).setInteractive();
+      quitBtn.on('pointerdown', () => {
+        this.scene.start('GameScene', { levelIndex: 0 });
+      });
+      return;
+    }
+
+    // ── NORMAL DEATH ──────────────────────────────────────
     this.add.text(cx, 180, '💀 YOU DIED', {
       fontSize: '40px', color: '#ff4444', fontStyle: 'bold'
     }).setOrigin(0.5);
@@ -253,7 +361,7 @@ export class LevelScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     const evoIcons = this.stats.evolutions
-      .map(e => ({ fire:'🔥', ice:'❄️', arcane:'✨' }[e])).join(' ');
+      .map(e => ({ fire:'🔥', ice:'❄️', arcane:'✨', poison:'🧪' }[e])).join(' ');
     this.add.text(cx, 348, `Absorbed: ${evoIcons || 'none'}`, {
       fontSize: '17px'
     }).setOrigin(0.5);
@@ -269,7 +377,6 @@ export class LevelScene extends Phaser.Scene {
       this.scene.start('GameScene', { levelIndex: this.levelData.id - 1 });
     });
 
-    // Settings
     const settingsInline = this.add.text(cx, 560, '⚙️ Settings', {
       fontSize: '16px', color: '#555555',
       backgroundColor: '#111111',

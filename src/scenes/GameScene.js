@@ -1,6 +1,6 @@
 import { AdManager } from '../systems/AdManager.js';
 import { PathFinder } from '../systems/PathFinder.js';
-import { LEVELS } from '../data/levels.js';
+import { LEVELS, TOTAL_LEVELS, generateEndlessLevel } from '../data/levels.js';
 import { SpriteFactory } from '../systems/SpriteFactory.js';
 import { soundManager } from '../systems/SoundManager.js';
 import { ProgressManager } from '../systems/ProgressManager.js';
@@ -14,12 +14,19 @@ export class GameScene extends Phaser.Scene {
 
   init(data) {
     this.levelIndex = data?.levelIndex ?? 0;
+    this.endlessWave  = data?.endlessWave ?? 0;
+    this.isEndless    = data?.isEndless ?? false;
   }
 
   create() {
     this.pathGraphics = null;
     this.pathBlinkTimer = null;
-    this.level     = LEVELS[this.levelIndex];
+    if (this.isEndless) {
+      this.level = generateEndlessLevel(this.endlessWave);
+    } else {
+      this.level = LEVELS[this.levelIndex];
+    }
+
     this.world     = this.level.world;
     this.theme     = SpriteFactory.getWorldTheme(this.world);
     this.mechanics = this.level.mechanics ?? {};
@@ -167,6 +174,12 @@ export class GameScene extends Phaser.Scene {
     this.add.text(10, 6, `${worldIcons[this.world]} ${this.level.name}`, {
       fontSize: '13px', color: '#aaaaaa'
     }).setDepth(10);
+
+    if (this.isEndless) {
+      this.add.text(240, 6, `🌀 ENDLESS · Wave ${this.endlessWave}`, {
+        fontSize: '12px', color: '#ff44ff'
+      }).setOrigin(0.5, 0).setDepth(10);
+    }
 
     this.add.text(470, 6, `Lv.${this.level.id}`, {
       fontSize: '13px', color: '#666666'
@@ -482,8 +495,14 @@ export class GameScene extends Phaser.Scene {
       this.time.delayedCall(idx * 80, () => {
         if (this.gameOver) return;
         const from = this.cellToPixel(tower.cell);
-        if (isGrenade) this._fireGrenade(from, this.monsterSprite.x, this.monsterSprite.y);
-        else this._fireBullet(tower, from, this.monsterSprite.x, this.monsterSprite.y, duration);
+
+        if (tower.type === 'poison') {
+          this._fireGasCloudFrom(tower);
+        } else if (isGrenade) {
+          this._fireGrenade(from, this.monsterSprite.x, this.monsterSprite.y);
+        } else {
+          this._fireBullet(tower, from, this.monsterSprite.x, this.monsterSprite.y, duration);
+        }
       });
     });
   }
@@ -564,6 +583,47 @@ export class GameScene extends Phaser.Scene {
     // ← cooldown 2 secons
     this._freezeCooldown = true;
     this.time.delayedCall(2000, () => { this._freezeCooldown = false; });
+  }
+
+  _fireGasCloudFrom(shooter) {
+    if (this.gameOver) return;
+
+    const from = this.cellToPixel(shooter.cell);
+    const cloud = this.add.circle(from.x, from.y, 8, 0x44ff44, 0.7).setDepth(7);
+    const targetX = this.monsterSprite.x + (Math.random() - 0.5) * 20;
+    const targetY = this.monsterSprite.y + (Math.random() - 0.5) * 20;
+
+    this.tweens.add({
+      targets: cloud,
+      x: { value: targetX, ease: 'Linear' },
+      y: { value: targetY, ease: 'Quad.easeIn' },
+      duration: 500,
+      onComplete: () => {
+        cloud.destroy();
+        const hitCell = this.pixelToCell(targetX, targetY);
+        [
+          {col:-1,row:-1},{col:0,row:-1},{col:1,row:-1},
+          {col:-1,row:0}, {col:0,row:0}, {col:1,row:0},
+          {col:-1,row:1}, {col:0,row:1}, {col:1,row:1},
+        ].forEach(({col, row}) => {
+          const c = hitCell.col + col;
+          const r = hitCell.row + row;
+          if (c < 0 || c >= this.cols || r < 0 || r >= this.rows) return;
+          const pos = this.cellToPixel({col: c, row: r});
+          const gas = this.add.rectangle(pos.x, pos.y, this.tileSize - 2, this.tileSize - 2, 0x44ff44, 0.35).setDepth(7);
+          this.tweens.add({
+            targets: gas, alpha: 0, duration: 1000, ease: 'Power2',
+            onComplete: () => gas.destroy()
+          });
+        });
+
+        const dx = this.monsterSprite.x - targetX;
+        const dy = this.monsterSprite.y - targetY;
+        if (Math.sqrt(dx*dx+dy*dy) < this.tileSize * 1.8 && !this.gameOver) {
+          this._applyGasPush();
+        }
+      }
+    });
   }
 
   _fireGrenade(from, targetX, targetY) {
@@ -866,10 +926,50 @@ export class GameScene extends Phaser.Scene {
     this.isMoving = false;
     this.input.off('pointerdown');
     this.input.off('pointermove');
-    if (win) soundManager.win();
+
+    if (win) {
+      soundManager.win();
+
+      // Endless: επόμενο wave → απευθείας στο LevelScene για το win screen
+      if (this.isEndless) {
+        const nextWave = this.endlessWave + 1;
+        ProgressManager.updateBestEndlessWave(nextWave);
+        this._cleanupListeners();
+        this.scene.start('LevelScene', {
+          level: this.level, win: true,
+          isEndless: true,
+          endlessWave: this.endlessWave,
+          stats: {
+            hp: this.monsterHP, maxHp: this.monsterMaxHP,
+            eaten: this.towersEaten, power: this.monsterPower,
+            evolutions: this.evolutions
+          }
+        });
+        return;
+      }
+
+      // Τελευταίο level → LevelScene με endless transition
+      if (this.levelIndex >= TOTAL_LEVELS - 1) {
+        this._cleanupListeners();
+        this.scene.start('LevelScene', {
+          level: this.level, win: true,
+          isEndless: false,
+          endlessWave: 0,
+          stats: {
+            hp: this.monsterHP, maxHp: this.monsterMaxHP,
+            eaten: this.towersEaten, power: this.monsterPower,
+            evolutions: this.evolutions
+          }
+        });
+        return;
+      }
+    }
+
     this._cleanupListeners();
     this.scene.start('LevelScene', {
       level: this.level, win,
+      isEndless: this.isEndless,
+      endlessWave: this.endlessWave,
       stats: {
         hp: this.monsterHP, maxHp: this.monsterMaxHP,
         eaten: this.towersEaten, power: this.monsterPower,

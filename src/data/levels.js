@@ -11,10 +11,13 @@ const POS_POOL = [
 function generateTowers(count, levelId, worlds) {
   const offset  = (levelId * 3) % POS_POOL.length;
   const rotated = [...POS_POOL.slice(offset), ...POS_POOL.slice(0, offset)];
-  const types   = ['fire', 'ice', 'arcane'];
+  const types   = worlds.includes('poison')
+    ? ['fire', 'ice', 'arcane', 'poison']
+    : ['fire', 'ice', 'arcane'];
+
   return rotated.slice(0, count).map((pos, i) => ({
     ...pos,
-    type:  types[i % 3],
+    type:  types[i % types.length],
     world: worlds[i % worlds.length],
   }));
 }
@@ -293,6 +296,20 @@ hellConfigs.forEach(([worlds, towerCount, required, shootDelay], i) => {
   const id = 111 + i;
   levels.push(buildLevel(id, worlds, towerCount, required, shootDelay, HELL_NAMES[i]));
 });
+
+export function generateEndlessLevel(wave) {
+  const allWorlds = ['dungeon','forest','volcanic','frozen','void','poison'];
+  
+  // Shuffle χωρίς Phaser
+  const shuffled = [...allWorlds].sort(() => Math.random() - 0.5);
+  
+  const worldCount = Math.min(2 + Math.floor(wave / 3), 6);
+  const worlds     = shuffled.slice(0, worldCount);
+  const towerCount = Math.min(10 + wave * 2, 40);
+  const required   = Math.floor(towerCount * 0.6);
+  const shootDelay = Math.max(80, 500 - wave * 15);
+  return buildLevel(120 + wave, worlds, towerCount, required, shootDelay, `☠️ Wave ${wave}`);
+}
 
 export const LEVELS = levels;
 export const TOTAL_LEVELS = levels.length; // 120

@@ -599,6 +599,96 @@ export class SpriteFactory {
             <circle cx="10" cy="26" r="1.5" fill="#44aa10" opacity="0.6"/>
             <circle cx="38" cy="26" r="1.5" fill="#44aa10" opacity="0.6"/>
           </svg>`,
+
+          poison_dungeon: `
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+            <rect x="8" y="16" width="32" height="28" fill="#1a2208" rx="2"/>
+            <rect x="4" y="12" width="10" height="16" fill="#222e0a" rx="1"/>
+            <rect x="34" y="12" width="10" height="16" fill="#222e0a" rx="1"/>
+            <rect x="14" y="8" width="8" height="10" fill="#222e0a"/>
+            <rect x="26" y="8" width="8" height="10" fill="#222e0a"/>
+            <rect x="20" y="26" width="8" height="18" fill="#161f06"/>
+            <circle cx="24" cy="19" r="8" fill="#225500" opacity="0.6"/>
+            <circle cx="24" cy="19" r="5" fill="#44aa00" opacity="0.75"/>
+            <circle cx="24" cy="19" r="2.5" fill="#88ff22" opacity="0.9"/>
+            <circle cx="18" cy="14" r="1.5" fill="#66cc00" opacity="0.5"/>
+            <circle cx="30" cy="14" r="1.5" fill="#66cc00" opacity="0.5"/>
+            <circle cx="14" cy="28" r="1.5" fill="#44aa00" opacity="0.4"/>
+            <circle cx="34" cy="28" r="1.5" fill="#44aa00" opacity="0.4"/>
+          </svg>`,
+
+        poison_forest: `
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+            <rect x="20" y="30" width="8" height="14" fill="#1e2a06"/>
+            <ellipse cx="24" cy="25" rx="15" ry="13" fill="#14200a"/>
+            <ellipse cx="19" cy="27" rx="8" ry="7" fill="#101a06"/>
+            <ellipse cx="29" cy="27" rx="8" ry="7" fill="#101a06"/>
+            <ellipse cx="24" cy="19" rx="11" ry="10" fill="#1c3208"/>
+            <ellipse cx="24" cy="14" rx="8" ry="7" fill="#28480c"/>
+            <circle cx="24" cy="19" r="6" fill="#44aa00" opacity="0.7"/>
+            <circle cx="24" cy="19" r="3" fill="#88ff22" opacity="0.85"/>
+            <circle cx="16" cy="22" r="1.5" fill="#66cc00" opacity="0.6"/>
+            <circle cx="32" cy="20" r="1.5" fill="#66cc00" opacity="0.5"/>
+            <circle cx="22" cy="11" r="1.2" fill="#aaff44" opacity="0.6"/>
+          </svg>`,
+
+        poison_volcanic: `
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+            <polygon points="24,4 44,44 4,44" fill="#0f1c00"/>
+            <polygon points="24,8 41,44 7,44" fill="#172a00"/>
+            <polygon points="24,12 38,44 10,44" fill="#1f3800"/>
+            <rect x="10" y="38" width="28" height="6" fill="#244000"/>
+            <circle cx="24" cy="18" r="7" fill="#225500" opacity="0.7"/>
+            <circle cx="24" cy="15" r="4.5" fill="#44aa00" opacity="0.85"/>
+            <circle cx="24" cy="12" r="2.5" fill="#88ff22"/>
+            <circle cx="17" cy="38" r="2" fill="#33aa00" opacity="0.5"/>
+            <circle cx="31" cy="38" r="2" fill="#33aa00" opacity="0.5"/>
+          </svg>`,
+
+        poison_frozen: `
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+            <rect x="10" y="18" width="28" height="26" fill="#7a9a6a" rx="2" opacity="0.95"/>
+            <rect x="6" y="12" width="10" height="18" fill="#8eae7e" rx="1"/>
+            <rect x="32" y="12" width="10" height="18" fill="#8eae7e" rx="1"/>
+            <rect x="18" y="28" width="12" height="16" fill="#5a7848"/>
+            <rect x="20" y="20" width="8" height="10" fill="#42603a"/>
+            <circle cx="24" cy="20" r="6" fill="#225500" opacity="0.7"/>
+            <circle cx="24" cy="20" r="3" fill="#66cc00" opacity="0.85"/>
+            <circle cx="24" cy="20" r="1.3" fill="#aaff44"/>
+            <ellipse cx="11" cy="29" rx="2" ry="5" fill="#cce0ee" opacity="0.4"/>
+            <ellipse cx="37" cy="29" rx="2" ry="5" fill="#cce0ee" opacity="0.4"/>
+          </svg>`,
+
+        poison_void: `
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+            <circle cx="24" cy="26" r="20" fill="#050f00"/>
+            <circle cx="24" cy="26" r="16" fill="#0a1a00"/>
+            <circle cx="24" cy="26" r="11" fill="#102800"/>
+            <circle cx="24" cy="20" r="7" fill="#225500" opacity="0.75"/>
+            <circle cx="24" cy="20" r="4" fill="#66cc00" opacity="0.85"/>
+            <circle cx="24" cy="20" r="1.8" fill="#aaff44"/>
+            <circle cx="14" cy="30" r="1.5" fill="#33aa00" opacity="0.5"/>
+            <circle cx="34" cy="30" r="1.5" fill="#33aa00" opacity="0.5"/>
+            <circle cx="16" cy="18" r="1.5" fill="#44cc00" opacity="0.5"/>
+            <circle cx="32" cy="18" r="1.5" fill="#44cc00" opacity="0.5"/>
+          </svg>`,
+
+        poison_poison: `
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+            <rect x="8" y="16" width="32" height="28" fill="#0a1804" rx="2"/>
+            <rect x="4" y="12" width="10" height="16" fill="#0e2006" rx="1"/>
+            <rect x="34" y="12" width="10" height="16" fill="#0e2006" rx="1"/>
+            <rect x="20" y="26" width="8" height="18" fill="#081404"/>
+            <circle cx="24" cy="19" r="9" fill="#225500" opacity="0.65"/>
+            <circle cx="24" cy="17" r="6" fill="#44aa00" opacity="0.8"/>
+            <circle cx="24" cy="14" r="3.5" fill="#88ff22" opacity="0.9"/>
+            <circle cx="24" cy="12" r="1.8" fill="#ccff88"/>
+            <circle cx="14" cy="24" r="1.8" fill="#33aa00" opacity="0.5"/>
+            <circle cx="34" cy="24" r="1.8" fill="#33aa00" opacity="0.5"/>
+            <circle cx="18" cy="14" r="1.3" fill="#66cc00" opacity="0.5"/>
+            <circle cx="30" cy="14" r="1.3" fill="#66cc00" opacity="0.5"/>
+          </svg>`,
+
     };
 
     Object.entries(towers).forEach(([key, svg]) => {
