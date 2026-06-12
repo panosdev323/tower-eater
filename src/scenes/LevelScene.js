@@ -245,11 +245,11 @@ export class LevelScene extends Phaser.Scene {
       });
 
       this.add.text(cx, 518, `Level ${nextLevel} / ${TOTAL_LEVELS}`, {
-        fontSize: '15px', color: '#555555', fontStyle: 'bold'
+        fontSize: '15px', color: '#b4b4b4', fontStyle: 'bold'
       }).setOrigin(0.5);
 
       const settingsInline = this.add.text(cx, 570, '⚙️ Settings', {
-        fontSize: '16px', color: '#555555', fontStyle: 'bold',
+        fontSize: '16px', color: '#b4b4b4', fontStyle: 'bold',
         backgroundColor: '#111111',
         padding: { x: 16, y: 8 }
       }).setOrigin(0.5).setInteractive();
@@ -286,7 +286,7 @@ export class LevelScene extends Phaser.Scene {
     }
 
     const retryBtn = this.add.text(cx, 650, 'retry level', {
-      fontSize: '16px', color: '#444444'
+      fontSize: '16px', color: '#b4b4b4', fontStyle: 'bold'
     }).setOrigin(0.5).setInteractive();
     retryBtn.on('pointerdown', () => {
       this.scene.start('GameScene', { levelIndex: this.levelData.id - 1 });
