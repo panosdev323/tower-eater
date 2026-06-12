@@ -180,14 +180,14 @@ export class IntroScreen {
               <p>All mechanics combined. Every level is a new combination.</p>
             </div>
           </div>
-          <div class="world-row hell" style="border-color:#ff2200">
+          <div class="world-row hell" style="border-color:#ff2200; background:rgba(255,34,0,0.1)">
             <span class="world-icon">💥</span>
             <div>
               <strong>Levels 111–120 · Hell Mode</strong>
               <p>Maximum towers, minimum delay. Only the worthy survive.</p>
             </div>
           </div>
-          <div class="world-row hell" style="border-color:#ff44ff">
+          <div class="world-row endless" style="border-color:#ff44ff">
             <span class="world-icon">🌀</span>
             <div>
               <strong>Endless Mode</strong>

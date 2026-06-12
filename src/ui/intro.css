@@ -113,6 +113,7 @@
 .world-row.frozen   { background: rgba(68,170,255,0.08); border-color: #44aaff; }
 .world-row.void     { background: rgba(255,68,255,0.06); border-color: #ff44ff; }
 .world-row.hell     { background: rgba(255,68,68,0.08);  border-color: #ff4444; }
+.world-row.endless  { background: rgba(255,68,255,0.08); border-color: #c40505; }
 
 /* Towers */
 .intro-towers { display: flex; flex-direction: column; gap: 10px; }
@@ -219,3 +220,7 @@ button:active { transform: scale(0.97); }
   padding: 10px;
   border: 1px solid rgba(255,255,255,0.08);
 }
+
+.world-row.poison  { background: rgba(68,255,68,0.06);  border-color: #44ff44; }
+.tower-card.poison { background: rgba(68,255,68,0.08); border-color: rgba(68,255,68,0.3); }
+.poison-dot { background: #44ff44; }
