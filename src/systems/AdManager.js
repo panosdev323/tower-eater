@@ -59,13 +59,14 @@ export const AdManager = {
   // ── Main: show rewarded ad ────────────────────────────────────────────
   // Returns: 'rewarded' | 'no_fill' | 'cooldown' | 'web' | 'error'
 
-  async showContinueAd() {
+  async showContinueAd(soundManager = null) {
     // Web fallback
     if (!IS_NATIVE) return 'web';
 
     // Cooldown check
     if (this.isOnCooldown()) return 'cooldown';
     this.isShowing = true;
+    soundManager?.stopMusic();
     let rewardEarned    = false;
     let onLoaded        = null;
     let onFailedToLoad  = null;
@@ -146,6 +147,9 @@ export const AdManager = {
     } finally {
       cleanup();
       this.isShowing = false;
+      if (soundManager?.musicOn) {
+        soundManager.startMusic(soundManager._currentWorld ?? 'dungeon');
+      }
     }
   }
 };

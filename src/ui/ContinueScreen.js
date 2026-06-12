@@ -1,4 +1,5 @@
 import { AdManager } from '../systems/AdManager.js';
+import { soundManager } from '../systems/SoundManager.js';
 
 export class ContinueScreen {
   constructor(onContinue, onGiveUp) {
@@ -106,7 +107,7 @@ export class ContinueScreen {
     btn.style.opacity = '0.5';
     btn.textContent = 'Loading Ad...';
 
-    const result = await AdManager.showContinueAd();
+    const result = await AdManager.showContinueAd(soundManager);
 
     if (result === 'rewarded') {
       this._close();
