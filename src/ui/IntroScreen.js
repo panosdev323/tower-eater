@@ -170,7 +170,7 @@ export class IntroScreen {
             <span class="world-icon">☠️</span>
             <div>
               <strong>Levels 51–60 · Poison</strong>
-              <p>🧪 Passive poison drains your HP over time. Keep moving.</p>
+              <p>🧪 Gas clouds slow you, push you and deal damage. Eat poison towers to resist.</p>
             </div>
           </div>
           <div class="world-row hell">
@@ -225,7 +225,7 @@ export class IntroScreen {
               <span class="tower-dot poison-dot"></span>
               <strong>☠️ Poison Tower</strong>
             </div>
-            <p>+Resistance — reduces chance of being pushed by gas clouds</p>
+            <p>+Resistance — chance to resist gas cloud effects</p>
           </div>
         </div>
         <div class="intro-tip">
