@@ -154,28 +154,28 @@ export class LevelScene extends Phaser.Scene {
   showWin(cx) {
     // ── ENDLESS WIN ──────────────────────────────────────
     if (this.isEndless) {
-      this.add.text(cx, 160, `🌀 WAVE ${this.endlessWave} CLEAR!`, {
+      this.add.text(cx, 120, `🌀 WAVE ${this.endlessWave} CLEAR!`, {
         fontSize: '34px', color: '#ff44ff', fontStyle: 'bold'
       }).setOrigin(0.5);
 
-      this.add.text(cx, 220, this.levelData.name, {
+      this.add.text(cx, 178, this.levelData.name, {
         fontSize: '18px', color: '#aaaaaa'
       }).setOrigin(0.5);
 
       const best = ProgressManager.getBestEndlessWave();
-      this.add.text(cx, 265, `Best Wave: ${best}`, {
+      this.add.text(cx, 220, `Best Wave: ${best}`, {
         fontSize: '16px', color: '#ff44ff'
       }).setOrigin(0.5);
 
-      this.add.text(cx, 310, `HP: ${this.stats.hp} / ${this.stats.maxHp}`, {
+      this.add.text(cx, 262, `HP: ${this.stats.hp} / ${this.stats.maxHp}`, {
         fontSize: '15px', color: '#00ff88'
       }).setOrigin(0.5);
 
-      this.add.text(cx, 338, `Towers eaten: ${this.stats.eaten}`, {
+      this.add.text(cx, 298, `Towers eaten: ${this.stats.eaten}`, {
         fontSize: '15px', color: '#ffaa00'
       }).setOrigin(0.5);
 
-      const btn = this.add.text(cx, 430, '▶  NEXT WAVE', {
+      const btn = this.add.text(cx, 390, '▶  NEXT WAVE', {
         fontSize: '28px', color: '#ffffff',
         backgroundColor: '#2a003a',
         padding: { x: 28, y: 14 }
@@ -189,8 +189,8 @@ export class LevelScene extends Phaser.Scene {
         });
       });
 
-      const quitBtn = this.add.text(cx, 530, 'quit to menu', {
-        fontSize: '15px', color: '#444444'
+      const quitBtn = this.add.text(cx, 490, 'quit to menu', {
+        fontSize: '16px', color: '#444444'
       }).setOrigin(0.5).setInteractive();
       quitBtn.on('pointerdown', () => {
         this.scene.start('GameScene', { levelIndex: 0 });
@@ -202,38 +202,38 @@ export class LevelScene extends Phaser.Scene {
     const nextLevel = this.levelData.id + 1;
     const hasNext   = nextLevel <= TOTAL_LEVELS;
 
-    this.add.text(cx, 160, '✅ LEVEL CLEAR', {
+    this.add.text(cx, 100, '✅ LEVEL CLEAR', {
       fontSize: '36px', color: '#ffdd00', fontStyle: 'bold'
     }).setOrigin(0.5);
 
-    this.add.text(cx, 218, this.levelData.name, {
-      fontSize: '20px', color: '#aaaaaa'
+    this.add.text(cx, 155, this.levelData.name, {
+      fontSize: '20px', color: '#aaaaaa', fontStyle: 'bold'
     }).setOrigin(0.5);
 
-    this.add.text(cx, 290, '— Stats —', {
-      fontSize: '15px', color: '#ffffff'
+    this.add.text(cx, 220, '— Stats —', {
+      fontSize: '16px', color: '#ffffff', fontStyle: 'bold'
     }).setOrigin(0.5);
 
-    this.add.text(cx, 322, `HP remaining: ${this.stats.hp} / ${this.stats.maxHp}`, {
-      fontSize: '15px', color: '#00ff88'
+    this.add.text(cx, 258, `HP remaining: ${this.stats.hp} / ${this.stats.maxHp}`, {
+      fontSize: '16px', color: '#00ff88', fontStyle: 'bold'
     }).setOrigin(0.5);
 
-    this.add.text(cx, 350, `Towers eaten: ${this.stats.eaten}`, {
-      fontSize: '15px', color: '#ffaa00'
+    this.add.text(cx, 292, `Towers eaten: ${this.stats.eaten}`, {
+      fontSize: '16px', color: '#ffaa00', fontStyle: 'bold'
     }).setOrigin(0.5);
 
-    this.add.text(cx, 378, `Power reached: ${this.stats.power}`, {
-      fontSize: '15px', color: '#aa44ff'
+    this.add.text(cx, 326, `Power reached: ${this.stats.power}`, {
+      fontSize: '16px', color: '#aa44ff', fontStyle: 'bold'
     }).setOrigin(0.5);
 
     const evoIcons = this.stats.evolutions
       .map(e => ({ fire:'🔥', ice:'❄️', arcane:'✨', poison:'🧪' }[e])).join(' ');
-    this.add.text(cx, 410, `Absorbed: ${evoIcons || 'none'}`, {
-      fontSize: '16px'
+    this.add.text(cx, 362, `Absorbed: ${evoIcons || 'none'}`, {
+      fontSize: '17px', fontStyle: 'bold'
     }).setOrigin(0.5);
 
     if (hasNext) {
-      const btn = this.add.text(cx, 510, '▶  NEXT LEVEL', {
+      const btn = this.add.text(cx, 450, '▶  NEXT LEVEL', {
         fontSize: '28px', color: '#ffffff',
         backgroundColor: '#1a3a1a',
         padding: { x: 28, y: 14 }
@@ -244,12 +244,12 @@ export class LevelScene extends Phaser.Scene {
         this.scene.start('GameScene', { levelIndex: nextLevel - 1 });
       });
 
-      this.add.text(cx, 578, `Level ${nextLevel} / ${TOTAL_LEVELS}`, {
-        fontSize: '14px', color: '#555555'
+      this.add.text(cx, 518, `Level ${nextLevel} / ${TOTAL_LEVELS}`, {
+        fontSize: '15px', color: '#555555', fontStyle: 'bold'
       }).setOrigin(0.5);
 
-      const settingsInline = this.add.text(cx, 630, '⚙️ Settings', {
-        fontSize: '16px', color: '#555555',
+      const settingsInline = this.add.text(cx, 570, '⚙️ Settings', {
+        fontSize: '16px', color: '#555555', fontStyle: 'bold',
         backgroundColor: '#111111',
         padding: { x: 16, y: 8 }
       }).setOrigin(0.5).setInteractive();
@@ -258,17 +258,16 @@ export class LevelScene extends Phaser.Scene {
       settingsInline.on('pointerdown', () => this._openSettings());
 
     } else {
-      // ── ΤΕΛΟΣ LEVELS → Endless transition ───────────────
-      this.add.text(cx, 480, '🏆 ALL 120 LEVELS COMPLETE!', {
+      this.add.text(cx, 430, '🏆 ALL 120 LEVELS COMPLETE!', {
         fontSize: '22px', color: '#ffdd00', fontStyle: 'bold'
       }).setOrigin(0.5);
 
-      this.add.text(cx, 524, 'You are ready for the endless.', {
-        fontSize: '15px', color: '#aaaaaa'
+      this.add.text(cx, 472, 'You are ready for the endless.', {
+        fontSize: '16px', color: '#aaaaaa', fontStyle: 'bold'
       }).setOrigin(0.5);
 
-      const endlessBtn = this.add.text(cx, 590, '🌀  START ENDLESS', {
-        fontSize: '26px', color: '#000000',
+      const endlessBtn = this.add.text(cx, 538, '🌀  START ENDLESS', {
+        fontSize: '26px', color: '#000000', fontStyle: 'bold',
         backgroundColor: '#ff44ff',
         padding: { x: 24, y: 14 }
       }).setOrigin(0.5).setInteractive();
@@ -278,16 +277,16 @@ export class LevelScene extends Phaser.Scene {
         this.scene.start('GameScene', { isEndless: true, endlessWave: 1 });
       });
 
-      const replayBtn = this.add.text(cx, 680, '↺ play from start', {
-        fontSize: '15px', color: '#444444'
+      const replayBtn = this.add.text(cx, 626, '↺ play from start', {
+        fontSize: '16px', color: '#444444', fontStyle: 'bold'
       }).setOrigin(0.5).setInteractive();
       replayBtn.on('pointerdown', () => {
         this.scene.start('GameScene', { levelIndex: 0 });
       });
     }
 
-    const retryBtn = this.add.text(cx, 700, 'retry level', {
-      fontSize: '15px', color: '#444444'
+    const retryBtn = this.add.text(cx, 650, 'retry level', {
+      fontSize: '16px', color: '#444444'
     }).setOrigin(0.5).setInteractive();
     retryBtn.on('pointerdown', () => {
       this.scene.start('GameScene', { levelIndex: this.levelData.id - 1 });
