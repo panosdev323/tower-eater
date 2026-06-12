@@ -437,7 +437,150 @@ export class SoundManager {
       o.start(now); o.stop(now + 0.24);
     });
   }
+
+  // ═════════════════════════════════════════════════════════════════
+  // Background Music
+  // ═════════════════════════════════════════════════════════════════
+
+  startMusic(world = 'dungeon') {
+    if (!this.musicOn) return;
+    if (this._musicPlaying) return;
+    if (this.ctx.state === 'suspended') this.ctx.resume();
+
+    this._musicPlaying = true;
+    this._musicNodes   = [];
+
+    // Master music gain (low volume so it doesn't clash with SFX)
+    this._musicGain = this.ctx.createGain();
+    this._musicGain.gain.value = 0.07;
+    this._musicGain.connect(this.ctx.destination);
+
+    // World → scale & drone frequency
+    const configs = {
+      dungeon:  { drone: 55,  scale: [220, 247, 261, 294, 330, 370, 392], tempo: 1.8 },
+      forest:   { drone: 65,  scale: [261, 294, 330, 349, 392, 440, 494], tempo: 1.4 },
+      volcanic: { drone: 46,  scale: [185, 208, 233, 277, 311, 370, 415], tempo: 1.1 },
+      frozen:   { drone: 49,  scale: [196, 220, 247, 261, 294, 330, 370], tempo: 2.0 },
+      void:     { drone: 41,  scale: [164, 185, 196, 220, 247, 277, 311], tempo: 1.6 },
+      poison:   { drone: 58,  scale: [233, 261, 277, 311, 349, 392, 415], tempo: 1.3 },
+    };
+
+    const cfg = configs[world] ?? configs.dungeon;
+
+    // ── 1. Bass drone (two detuned sines, very low) ──────────────
+    [0, 7].forEach(detune => {
+      const o = this.ctx.createOscillator();
+      o.type = 'sine';
+      o.frequency.value = cfg.drone;
+      o.detune.value = detune;
+      const g = this.ctx.createGain();
+      g.gain.value = 0.55;
+      o.connect(g);
+      g.connect(this._musicGain);
+      o.start();
+      this._musicNodes.push(o, g);
+    });
+
+    // ── 2. Pad chord (3 triangle oscs, slow LFO tremolo) ─────────
+    const padFreqs = [cfg.scale[0], cfg.scale[2], cfg.scale[4]];
+    padFreqs.forEach((f, i) => {
+      const o = this.ctx.createOscillator();
+      o.type = 'triangle';
+      o.frequency.value = f;
+      o.detune.value = (i - 1) * 4;
+
+      const lfo = this.ctx.createOscillator();
+      lfo.type = 'sine';
+      lfo.frequency.value = 0.3 + i * 0.07;
+
+      const lfoGain = this.ctx.createGain();
+      lfoGain.gain.value = 0.012;
+      lfo.connect(lfoGain);
+      lfoGain.connect(o.frequency); // vibrato
+
+      const lp = this.ctx.createBiquadFilter();
+      lp.type = 'lowpass';
+      lp.frequency.value = 600;
+
+      const g = this.ctx.createGain();
+      g.gain.value = 0.28;
+
+      o.connect(lp);
+      lp.connect(g);
+      g.connect(this._musicGain);
+
+      o.start(); lfo.start();
+      this._musicNodes.push(o, lfo, lfoGain, lp, g);
+    });
+
+    // ── 3. Arpeggio (scheduled sine notes, loops forever) ────────
+    this._arpeggioStep = 0;
+    this._arpeggioScale = cfg.scale;
+    this._arpeggioTempo = cfg.tempo;
+    this._scheduleArpeggio();
+  }
+
+  _scheduleArpeggio() {
+    if (!this._musicPlaying) return;
+
+    const now   = this.ctx.currentTime;
+    const scale = this._arpeggioScale;
+    const freq  = scale[this._arpeggioStep % scale.length];
+
+    const o = this.ctx.createOscillator();
+    o.type = 'sine';
+    o.frequency.value = freq * 2; // one octave up from pad
+
+    const g = this.ctx.createGain();
+    g.gain.setValueAtTime(0, now);
+    g.gain.linearRampToValueAtTime(0.18, now + 0.04);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + this._arpeggioTempo * 0.85);
+
+    o.connect(g);
+    g.connect(this._musicGain);
+    o.start(now);
+    o.stop(now + this._arpeggioTempo);
+
+    this._arpeggioStep++;
+
+    // Schedule next note
+    this._arpeggioTimer = setTimeout(
+      () => this._scheduleArpeggio(),
+      this._arpeggioTempo * 1000
+    );
+  }
+
+  stopMusic() {
+    if (!this._musicPlaying) return;
+    this._musicPlaying = false;
+
+    if (this._arpeggioTimer) {
+      clearTimeout(this._arpeggioTimer);
+      this._arpeggioTimer = null;
+    }
+
+    // Fade out master music gain
+    if (this._musicGain) {
+      const now = this.ctx.currentTime;
+      this._musicGain.gain.setValueAtTime(this._musicGain.gain.value, now);
+      this._musicGain.gain.linearRampToValueAtTime(0, now + 1.2);
+      setTimeout(() => {
+        this._musicNodes?.forEach(n => { try { n.stop?.(); n.disconnect?.(); } catch(_){} });
+        this._musicNodes = [];
+        this._musicGain?.disconnect();
+        this._musicGain = null;
+      }, 1300);
+    }
+  }
+
+  setMusic(on) {
+    this.musicOn = on;
+    this._save('te_music', on);
+    if (on)  this.startMusic(this._currentWorld ?? 'dungeon');
+    else     this.stopMusic();
+  }
 }
+
 
 // Singleton
 export const soundManager = new SoundManager();

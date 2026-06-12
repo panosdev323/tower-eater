@@ -30,6 +30,8 @@ export class GameScene extends Phaser.Scene {
     this.world     = this.level.world;
     this.theme     = SpriteFactory.getWorldTheme(this.world);
     this.mechanics = this.level.mechanics ?? {};
+    soundManager._currentWorld = this.world;
+    soundManager.startMusic(this.world);
 
     this.invincible = false;
     this.frozen     = false;
@@ -1091,6 +1093,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   _cleanupListeners() {
+    soundManager.stopMusic();
     window.removeEventListener('pauseGame',  this._pauseHandler);
     window.removeEventListener('resumeGame', this._resumeHandler);
     const btn = document.getElementById('settings-btn');
