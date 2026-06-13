@@ -145,24 +145,38 @@ export class SpriteFactory {
         poison: `
           <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64">
             <rect width="64" height="64" fill="#061002" rx="6"/>
-            <ellipse cx="32" cy="58" rx="22" ry="5" fill="#0a1a04" opacity="0.7"/>
-            <rect x="14" y="22" width="36" height="34" fill="#112208" rx="3" opacity="0.9"/>
-            <rect x="8" y="12" width="12" height="22" fill="#162c0a" rx="2"/>
-            <rect x="44" y="12" width="12" height="22" fill="#162c0a" rx="2"/>
-            <rect x="9" y="13" width="4" height="4" fill="#0a1805"/>
-            <rect x="14" y="13" width="4" height="4" fill="#0a1805"/>
-            <rect x="45" y="13" width="4" height="4" fill="#0a1805"/>
-            <rect x="50" y="13" width="4" height="4" fill="#0a1805"/>
-            <rect x="22" y="38" width="20" height="18" fill="#0d1e06" rx="2"/>
-            <circle cx="32" cy="30" r="8" fill="#1a4a06" opacity="0.5"/>
-            <circle cx="32" cy="30" r="5" fill="#2a7a08" opacity="0.7"/>
-            <circle cx="32" cy="30" r="3" fill="#44cc10" opacity="0.85"/>
-            <circle cx="32" cy="30" r="1.5" fill="#88ff44" opacity="0.9"/>
-            <circle cx="18" cy="18" r="1.5" fill="#33aa10" opacity="0.6"/>
-            <circle cx="46" cy="18" r="1.5" fill="#33aa10" opacity="0.6"/>
-            <ellipse cx="20" cy="42" rx="2" ry="3" fill="#2a6608" opacity="0.5"/>
-            <ellipse cx="44" cy="42" rx="2" ry="3" fill="#2a6608" opacity="0.5"/>
-            <line x1="14" y1="34" x2="50" y2="34" stroke="#0d1e06" stroke-width="1.5"/>
+            <ellipse cx="32" cy="58" rx="20" ry="4" fill="#0a1a04" opacity="0.8"/>   
+            <rect x="18" y="48" width="5" height="12" fill="#0f2208" rx="2"/>
+            <rect x="41" y="48" width="5" height="12" fill="#0f2208" rx="2"/>
+            <rect x="29" y="52" width="6" height="8" fill="#0f2208" rx="2"/>           
+            <ellipse cx="32" cy="46" rx="18" ry="6" fill="#0d1e06"/>
+            <ellipse cx="32" cy="38" rx="16" ry="14" fill="#122208"/>
+            <ellipse cx="32" cy="36" rx="14" ry="12" fill="#162a0a"/>
+            <ellipse cx="32" cy="26" rx="16" ry="5" fill="#1e3a0e"/>
+            <ellipse cx="32" cy="25" rx="14" ry="4" fill="#264e12"/>
+            <ellipse cx="32" cy="24" rx="12" ry="3.5" fill="#1a4a06" opacity="0.9"/>
+            <ellipse cx="32" cy="24" rx="10" ry="3" fill="#22660a" opacity="0.9"/>
+            <ellipse cx="32" cy="24" rx="7" ry="2" fill="#33aa10" opacity="0.85"/>
+            <circle cx="26" cy="23" r="2" fill="#44cc10" opacity="0.7"/>
+            <circle cx="26" cy="23" r="1" fill="#88ff44" opacity="0.9"/>
+            <circle cx="38" cy="22" r="1.5" fill="#44cc10" opacity="0.65"/>
+            <circle cx="38" cy="22" r="0.7" fill="#88ff44" opacity="0.85"/>
+            <circle cx="32" cy="21" r="2.5" fill="#44cc10" opacity="0.6"/>
+            <circle cx="32" cy="21" r="1.2" fill="#aaffcc" opacity="0.8"/>
+            <ellipse cx="24" cy="16" rx="4" ry="6" fill="#33aa10" opacity="0.2"/>
+            <ellipse cx="32" cy="12" rx="5" ry="7" fill="#44cc10" opacity="0.18"/>
+            <ellipse cx="40" cy="15" rx="4" ry="6" fill="#33aa10" opacity="0.2"/>
+            <circle cx="20" cy="10" r="2" fill="#66ff22" opacity="0.4"/>
+            <circle cx="44" cy="8" r="1.5" fill="#66ff22" opacity="0.35"/>
+            <circle cx="32" cy="6" r="2.5" fill="#88ff44" opacity="0.3"/>
+            <circle cx="32" cy="36" r="6" fill="#0a1804" opacity="0.7"/>
+            <circle cx="29" cy="34" r="1.5" fill="#44ff22" opacity="0.6"/>
+            <circle cx="35" cy="34" r="1.5" fill="#44ff22" opacity="0.6"/>
+            <rect x="30" y="37" width="4" height="2" fill="#44ff22" opacity="0.5" rx="1"/>
+            <rect x="29" y="37" width="2" height="3" fill="#44ff22" opacity="0.4" rx="1"/>
+            <rect x="33" y="37" width="2" height="3" fill="#44ff22" opacity="0.4" rx="1"/>
+            <ellipse cx="32" cy="25" rx="14" ry="4" fill="none" stroke="#44cc10" stroke-width="0.8" opacity="0.5"/>
+            <ellipse cx="32" cy="24" rx="18" ry="8" fill="#22ff00" opacity="0.04"/>
           </svg>`,
     };
 
