@@ -458,7 +458,7 @@ export class GameScene extends Phaser.Scene {
     if (!this.traps) this.traps = [];
 
     // Max 3 traps ταυτόχρονα
-    if (this.traps.length >= (this.mechanics.trapCount ?? 3)) return;
+    if (this.traps.length >= (this.mechanics.trapCount ?? 5)) return;
 
     // Τυχαίο κελί που δεν είναι occupied
     const freeCells = [];
@@ -505,7 +505,7 @@ export class GameScene extends Phaser.Scene {
               this.traps.splice(i, 1);
 
               // ✅ Καθαρό damage, χωρίς gasResistance/slow/push
-              this.takeDamage(Math.floor(15 * (1 - this.monsterArmor / 100)));
+              this.takeDamage(Math.floor(20 * (1 - this.monsterArmor / 100)));
               this.showMsg('🌿 TRAPPED!', '#44ff44', 1200);
           }
       }
@@ -521,7 +521,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     // Damage
-    this.takeDamage(Math.floor(10 * (1 - this.monsterArmor / 100)));
+    this.takeDamage(Math.floor(20 * (1 - this.monsterArmor / 100)));
 
     // Slow 50% για 2 δευτερόλεπτα
     if (!this._gasSlowed) {

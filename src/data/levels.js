@@ -28,7 +28,7 @@ function makeMechanics(worlds, shootDelay, levelId) {
   if (worlds.includes('forest')) {
     const t = Math.min(1, (levelId - 11) / 9);
     m.bulletDuration = Math.round(440 - t * 100);
-    m.trapCount = worlds.length > 1 ? 2 : 3; // max 3 σε pure forest, 2 σε mix
+    m.trapCount = worlds.length > 1 ? 3 : 5; // max 5 σε pure forest, 3 σε mix
     m.trapInterval = Math.round(8000 - t * 3000); // 8s→5s μεταξύ νέων traps
   }
 
