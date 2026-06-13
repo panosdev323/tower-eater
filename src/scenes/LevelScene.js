@@ -377,7 +377,7 @@ export class LevelScene extends Phaser.Scene {
     });
 
     const settingsInline = this.add.text(cx, 560, '⚙️ Settings', {
-      fontSize: '16px', color: '#555555', fontStyle: 'bold',
+      fontSize: '16px', color: '#aaaaaa', fontStyle: 'bold',
       backgroundColor: '#111111',
       padding: { x: 16, y: 8 }
     }).setOrigin(0.5).setInteractive();
