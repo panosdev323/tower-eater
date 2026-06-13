@@ -167,10 +167,8 @@ export class ContinueScreen {
   }
 
   _setRetryCooldown() {
-    // Βάλε cooldown μόνο αν δεν υπάρχει ήδη
-    if (!localStorage.getItem(RETRY_KEY)) {
-      localStorage.setItem(RETRY_KEY, String(Date.now() + RETRY_MS));
-    }
+    // Βάλε cooldown κάθε φορά
+    localStorage.setItem(RETRY_KEY, String(Date.now() + RETRY_MS));
   }
 
   _retryRemaining() {
