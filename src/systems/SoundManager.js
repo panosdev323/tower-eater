@@ -474,7 +474,7 @@ export class SoundManager {
       o.frequency.value = cfg.drone;
       o.detune.value = detune;
       const g = this.ctx.createGain();
-      g.gain.value = 0.99;
+      g.gain.value = 0.5;
       o.connect(g);
       g.connect(this._musicGain);
       o.start();
@@ -503,7 +503,7 @@ export class SoundManager {
       lp.frequency.value = 600;
 
       const g = this.ctx.createGain();
-      g.gain.value = 0.88;
+      g.gain.value = 0.4;
 
       o.connect(lp);
       lp.connect(g);
@@ -533,7 +533,7 @@ export class SoundManager {
 
     const g = this.ctx.createGain();
     g.gain.setValueAtTime(0, now);
-    g.gain.linearRampToValueAtTime(0.68, now + 0.12);
+    g.gain.linearRampToValueAtTime(0.3, now + 0.12);
     g.gain.exponentialRampToValueAtTime(0.0001, now + this._arpeggioTempo * 0.85);
 
     o.connect(g);
