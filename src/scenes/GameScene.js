@@ -147,7 +147,7 @@ export class GameScene extends Phaser.Scene {
 
   createTowers() {
     this.towers = [];
-    const towerHp = Math.max(3, Math.floor(this.level.id / 5));
+    const towerHp = Math.min(6, Math.max(3, Math.floor(this.level.id / 10)));
     this.level.towers.forEach(td => {
       const pos        = this.cellToPixel(td);
       const textureKey = `tower_${td.type}_${this.world}`;
