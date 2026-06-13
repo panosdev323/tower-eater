@@ -114,6 +114,18 @@ export class GameScene extends Phaser.Scene {
       });
     }
 
+    if (this.mechanics.trapInterval) {
+      this.traps = [];
+      this.time.addEvent({
+        delay: this.mechanics.trapInterval,
+        callback: this._placeTrap,
+        callbackScope: this,
+        loop: true
+      });
+      // Πρώτη trap μετά από 3s
+      this.time.delayedCall(3000, () => this._placeTrap());
+    }
+
     if (AdManager.isShowing) {
       window.__onAdClosed__ = () => this._showGetReady();
     } else {
@@ -438,6 +450,65 @@ export class GameScene extends Phaser.Scene {
         }
       }
     });
+  }
+
+  // traps
+  _placeTrap() {
+    if (this.gameOver) return;
+    if (!this.traps) this.traps = [];
+
+    // Max 3 traps ταυτόχρονα
+    if (this.traps.length >= (this.mechanics.trapCount ?? 3)) return;
+
+    // Τυχαίο κελί που δεν είναι occupied
+    const freeCells = [];
+    for (let c = 0; c < this.cols; c++) {
+      for (let r = 0; r < this.rows; r++) {
+        const isMonster  = c === this.monsterCell.col && r === this.monsterCell.row;
+        const isTower    = this.towers.some(t => t.cell.col === c && t.cell.row === r);
+        const isBase     = c === this.baseCell.col && r === this.baseCell.row;
+        const isTrap     = this.traps.some(t => t.col === c && t.row === r);
+        if (!isMonster && !isTower && !isBase && !isTrap) {
+          freeCells.push({ col: c, row: r });
+        }
+      }
+    }
+    if (!freeCells.length) return;
+
+    const cell = Phaser.Utils.Array.GetRandom(freeCells);
+    const pos  = this.cellToPixel(cell);
+
+    // Sprite — μικρό πράσινο X
+    const trap = this.add.graphics().setDepth(2);
+    trap.lineStyle(2, 0x44ff44, 0.8);
+    trap.strokeRect(pos.x - 10, pos.y - 10, 20, 20);
+    trap.lineStyle(1.5, 0x44ff44, 0.6);
+    trap.lineBetween(pos.x - 7, pos.y - 7, pos.x + 7, pos.y + 7);
+    trap.lineBetween(pos.x + 7, pos.y - 7, pos.x - 7, pos.y + 7);
+
+    // Pulse animation
+    this.tweens.add({
+      targets: trap,
+      alpha: 0.4,
+      duration: 800, yoyo: true, repeat: -1, ease: 'Sine.easeInOut'
+    });
+
+    this.traps.push({ col: cell.col, row: cell.row, sprite: trap });
+  }
+
+  _checkTraps() {
+      if (!this.traps || !this.traps.length) return;
+      for (let i = this.traps.length - 1; i >= 0; i--) {
+          const trap = this.traps[i];
+          if (trap.col === this.monsterCell.col && trap.row === this.monsterCell.row) {
+              trap.sprite.destroy();
+              this.traps.splice(i, 1);
+
+              // ✅ Καθαρό damage, χωρίς gasResistance/slow/push
+              this.takeDamage(Math.floor(10 * (1 - this.monsterArmor / 100)));
+              this.showMsg('🌿 TRAPPED!', '#44ff44', 1200);
+          }
+      }
   }
 
   _applyGasPush() {
@@ -798,7 +869,7 @@ export class GameScene extends Phaser.Scene {
 
   checkCollisions() {
     if (this.gameOver) return;
-
+    this._checkTraps();
     if (this.baseUnlocked &&
         this.monsterCell.col === this.baseCell.col &&
         this.monsterCell.row === this.baseCell.row) {
@@ -972,6 +1043,8 @@ export class GameScene extends Phaser.Scene {
     }
 
     this._cleanupListeners();
+    this.traps?.forEach(t => t.sprite?.destroy());
+    this.traps = [];
     this.scene.start('LevelScene', {
       level: this.level, win,
       isEndless: this.isEndless,
