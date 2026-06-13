@@ -504,8 +504,8 @@ export class GameScene extends Phaser.Scene {
               trap.sprite.destroy();
               this.traps.splice(i, 1);
 
-              // ✅ Καθαρό damage, χωρίς gasResistance/slow/push
-              this.takeDamage(Math.floor(20 * (1 - this.monsterArmor / 100)));
+              // ✅ Καθαρό damage
+              this.takeDamage(Math.floor(25 * (1 - this.monsterArmor / 100)));
               this.showMsg('🌿 TRAPPED!', '#44ff44', 1200);
           }
       }

@@ -29,7 +29,7 @@ function makeMechanics(worlds, shootDelay, levelId) {
     const t = Math.min(1, (levelId - 11) / 9);
     m.bulletDuration = Math.round(440 - t * 100);
     m.trapCount = worlds.length > 1 ? 3 : 6; // max 6 σε pure forest, 3 σε mix
-    m.trapInterval = Math.round(6000 - t * 3000); // 6s → 3s
+    m.trapInterval = Math.round(4000 - t * 2000); // 6s → 3s
   }
 
   if (worlds.includes('volcanic')) {
