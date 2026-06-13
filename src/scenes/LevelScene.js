@@ -352,11 +352,11 @@ export class LevelScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     this.add.text(cx, 240, this.levelData.name, {
-      fontSize: '20px', color: '#aaaaaa'
+      fontSize: '20px', color: '#aaaaaa', fontStyle: 'bold'
     }).setOrigin(0.5);
 
     this.add.text(cx, 310, `Towers eaten: ${this.stats.eaten}`, {
-      fontSize: '17px', color: '#ffaa00'
+      fontSize: '17px', color: '#ffaa00', fontStyle: 'bold'
     }).setOrigin(0.5);
 
     const evoIcons = this.stats.evolutions
@@ -366,7 +366,7 @@ export class LevelScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     const retryBtn = this.add.text(cx, 460, '↺  RETRY', {
-      fontSize: '28px', color: '#ffffff',
+      fontSize: '28px', color: '#ffffff', fontStyle: 'bold',
       backgroundColor: '#3a1111',
       padding: { x: 28, y: 14 }
     }).setOrigin(0.5).setInteractive();
@@ -377,7 +377,7 @@ export class LevelScene extends Phaser.Scene {
     });
 
     const settingsInline = this.add.text(cx, 560, '⚙️ Settings', {
-      fontSize: '16px', color: '#555555',
+      fontSize: '16px', color: '#555555', fontStyle: 'bold',
       backgroundColor: '#111111',
       padding: { x: 16, y: 8 }
     }).setOrigin(0.5).setInteractive();
@@ -386,7 +386,7 @@ export class LevelScene extends Phaser.Scene {
     settingsInline.on('pointerdown', () => this._openSettings());
 
     const menuBtn = this.add.text(cx, 640, 'level select', {
-      fontSize: '15px', color: '#444444'
+      fontSize: '15px', color: '#444444', fontStyle: 'bold'
     }).setOrigin(0.5).setInteractive();
     menuBtn.on('pointerdown', () => {
       this.scene.start('GameScene', { levelIndex: this.levelData.id - 1 });
