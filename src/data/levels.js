@@ -141,7 +141,7 @@ for (let i = 0; i < 10; i++) {
   const id         = 31 + i;
   const towerCount = i + 4;
   const required   = Math.max(1, Math.floor(towerCount * 0.6));
-  const shootDelay = Math.round(800 - i * 20);
+  const shootDelay = Math.round(900 - i * 20);
   levels.push(buildLevel(id, ['frozen'], towerCount, required, shootDelay));
 }
 
@@ -150,7 +150,7 @@ for (let i = 0; i < 10; i++) {
   const id         = 41 + i;
   const towerCount = i + 5;
   const required   = Math.max(1, Math.floor(towerCount * 0.6));
-  const shootDelay = Math.round(700 - i * 18);
+  const shootDelay = Math.round(800 - i * 18);
   levels.push(buildLevel(id, ['void'], towerCount, required, shootDelay));
 }
 
@@ -159,7 +159,7 @@ for (let i = 0; i < 10; i++) {
   const id         = 51 + i;
   const towerCount = i + 5;
   const required   = Math.max(1, Math.floor(towerCount * 0.6));
-  const shootDelay = Math.round(680 - i * 18);
+  const shootDelay = Math.round(700 - i * 18);
   levels.push(buildLevel(id, ['poison'], towerCount, required, shootDelay));
 }
 
