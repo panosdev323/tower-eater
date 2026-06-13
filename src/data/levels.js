@@ -126,7 +126,7 @@ for (let i = 0; i < 10; i++) {
   const id         = 11 + i;
   const towerCount = i + 2;
   const required   = Math.max(1, Math.floor(towerCount * 0.6));
-  const shootDelay = Math.round(1150 - i * 29);
+  const shootDelay = Math.round(1100 - i * 30);
   levels.push(buildLevel(id, ['forest'], towerCount, required, shootDelay));
 }
 
