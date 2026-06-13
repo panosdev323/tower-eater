@@ -885,26 +885,33 @@ export class SpriteFactory {
 
         poison: `
           <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48">
-            <rect width="48" height="48" fill="#060f02"/>
-            <rect x="1" y="1" width="46" height="46" fill="#091403" rx="1"/>
-            <ellipse cx="10" cy="10" rx="8" ry="6" fill="#0d1f05" opacity="0.8"/>
-            <ellipse cx="38" cy="8" rx="6" ry="5" fill="#0f2206" opacity="0.7"/>
-            <ellipse cx="24" cy="28" rx="10" ry="7" fill="#0d1f05" opacity="0.8"/>
-            <ellipse cx="8" cy="38" rx="6" ry="4" fill="#0f2206" opacity="0.6"/>
-            <ellipse cx="40" cy="36" rx="7" ry="5" fill="#0d1f05" opacity="0.7"/>
-            <circle cx="14" cy="20" r="3" fill="#1a4a05" opacity="0.5"/>
-            <circle cx="34" cy="14" r="2" fill="#22660a" opacity="0.6"/>
-            <circle cx="8" cy="34" r="2.5" fill="#1a4a05" opacity="0.4"/>
-            <ellipse cx="28" cy="40" rx="3" ry="2" fill="#2a6608" opacity="0.5"/>
-            <circle cx="42" cy="24" r="2" fill="#22660a" opacity="0.45"/>
-            <path d="M6 18 Q10 14 14 20 Q18 26 14 32" stroke="#1a3a08" stroke-width="1.2" fill="none" opacity="0.5"/>
-            <path d="M38 28 Q42 24 44 30 Q46 36 42 40" stroke="#1a3a08" stroke-width="1" fill="none" opacity="0.4"/>
-            <circle cx="20" cy="6" r="1.5" fill="#33aa10" opacity="0.4"/>
-            <circle cx="40" cy="42" r="1.5" fill="#33aa10" opacity="0.35"/>
-            <circle cx="6" cy="28" r="1" fill="#44cc14" opacity="0.3"/>
-            <ellipse cx="32" cy="22" rx="2" ry="1.2" fill="#2a6608" opacity="0.5"/>
-            <line x1="0" y1="0" x2="48" y2="0" stroke="#0f1f05" stroke-width="0.5"/>
-            <line x1="0" y1="0" x2="0" y2="48" stroke="#0f1f05" stroke-width="0.5"/>
+            <rect width="48" height="48" fill="#030a01"/>
+            <rect x="1" y="1" width="46" height="46" fill="#050f02" rx="1"/>
+            <ellipse cx="12" cy="12" rx="9" ry="6" fill="#0a2204" opacity="0.9"/>
+            <ellipse cx="36" cy="10" rx="7" ry="5" fill="#0c2805" opacity="0.8"/>
+            <ellipse cx="8" cy="36" rx="7" ry="5" fill="#0a2204" opacity="0.8"/>
+            <ellipse cx="38" cy="38" rx="8" ry="5" fill="#0c2805" opacity="0.9"/>
+            <ellipse cx="24" cy="26" rx="11" ry="7" fill="#0a2204" opacity="0.85"/>
+            <ellipse cx="12" cy="12" rx="6" ry="4" fill="#44cc00" opacity="0.12"/>
+            <ellipse cx="36" cy="38" rx="6" ry="4" fill="#44cc00" opacity="0.1"/>
+            <ellipse cx="24" cy="26" rx="7" ry="4" fill="#44cc00" opacity="0.08"/>
+            <circle cx="10" cy="18" r="3" fill="#1a5500" opacity="0.7"/>
+            <circle cx="10" cy="18" r="1.5" fill="#44cc00" opacity="0.5"/>
+            <circle cx="38" cy="14" r="2.5" fill="#1a5500" opacity="0.6"/>
+            <circle cx="38" cy="14" r="1.2" fill="#44cc00" opacity="0.45"/>
+            <circle cx="22" cy="38" r="3.5" fill="#1a5500" opacity="0.65"/>
+            <circle cx="22" cy="38" r="1.8" fill="#44cc00" opacity="0.5"/>
+            <circle cx="42" cy="28" r="2" fill="#1a5500" opacity="0.55"/>
+            <circle cx="42" cy="28" r="1" fill="#44cc00" opacity="0.4"/>
+            <circle cx="6" cy="26" r="2.5" fill="#1a5500" opacity="0.6"/>
+            <circle cx="6" cy="26" r="1.2" fill="#44cc00" opacity="0.45"/>
+            <path d="M4 8 Q8 4 14 8 Q18 12 14 18 Q10 22 6 18 Q2 14 4 8" stroke="#1a5500" stroke-width="0.8" fill="none" opacity="0.5"/>
+            <path d="M34 28 Q38 24 44 28 Q46 34 42 38 Q38 42 34 38 Q30 34 34 28" stroke="#1a5500" stroke-width="0.8" fill="none" opacity="0.45"/>
+            <circle cx="28" cy="8" r="1.5" fill="#66ff00" opacity="0.25"/>
+            <circle cx="16" cy="42" r="1.2" fill="#66ff00" opacity="0.2"/>
+            <circle cx="44" cy="16" r="1" fill="#66ff00" opacity="0.2"/>
+            <line x1="0" y1="0" x2="48" y2="0" stroke="#0a1f04" stroke-width="0.5"/>
+            <line x1="0" y1="0" x2="0" y2="48" stroke="#0a1f04" stroke-width="0.5"/>
           </svg>`,
     };
 

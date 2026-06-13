@@ -52,6 +52,7 @@ function makeMechanics(worlds, shootDelay, levelId) {
   if (worlds.includes('poison')) {
     const t = Math.min(1, (levelId - 51) / 9);
     m.poisonInterval = Math.round(2000 - t * 800);
+    m.bulletDuration = m.bulletDuration ?? Math.round(420 - t * 60);
   }
 
   return m;
