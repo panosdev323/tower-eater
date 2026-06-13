@@ -2,7 +2,7 @@ import { AdManager } from '../systems/AdManager.js';
 import { soundManager } from '../systems/SoundManager.js';
 
 const RETRY_KEY = 'te_retry_cooldown';
-const RETRY_MS  = 8 * 60 * 1000; // 8 λεπτά
+const RETRY_MS  = 5 * 60 * 1000; // 5 λεπτά
 
 export class ContinueScreen {
   constructor(onContinue, onGiveUp) {
