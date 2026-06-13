@@ -115,7 +115,7 @@ for (let i = 0; i < 10; i++) {
   const id         = i + 1;
   const towerCount = i + 1;
   const required   = Math.max(1, Math.floor(towerCount * 0.6));
-  const shootDelay = Math.round(1250 - i * 40);
+  const shootDelay = Math.round(1150 - i * 40);
   levels.push(buildLevel(id, ['dungeon'], towerCount, required, shootDelay));
 }
 
@@ -160,7 +160,7 @@ for (let i = 0; i < 10; i++) {
   const id         = 51 + i;
   const towerCount = i + 5;
   const required   = Math.max(1, Math.floor(towerCount * 0.6));
-  const shootDelay = Math.round(700 - i * 18);
+  const shootDelay = Math.round(700 - i * 16);
   levels.push(buildLevel(id, ['poison'], towerCount, required, shootDelay));
 }
 
@@ -172,86 +172,86 @@ const mixConfigs = [
   // ── 2-world pairs ────────────────────────────────────────────────────
 
   // 61-62: Dungeon + Forest (lightest intro to mix)
-  [['dungeon','forest'],  8, 4, 750],
-  [['dungeon','forest'],  9, 5, 720],
+  [['dungeon','forest'],  8, 4, 720],
+  [['dungeon','forest'],  9, 5, 700],
 
   // 63-64: Dungeon + Volcanic
-  [['dungeon','volcanic'], 9, 5, 700],
-  [['dungeon','volcanic'],10, 6, 675],
+  [['dungeon','volcanic'], 9, 5, 680],
+  [['dungeon','volcanic'],10, 6, 655],
 
   // 65-66: Forest + Volcanic
-  [['forest','volcanic'], 10, 6, 655],
-  [['forest','volcanic'], 11, 6, 635],
+  [['forest','volcanic'], 10, 6, 635],
+  [['forest','volcanic'], 11, 6, 615],
 
   // 67-68: Dungeon + Frozen
-  [['dungeon','frozen'], 10, 6, 615],
-  [['dungeon','frozen'], 11, 6, 595],
+  [['dungeon','frozen'], 10, 6, 595],
+  [['dungeon','frozen'], 11, 6, 587],
 
   // 69-70: Forest + Frozen
-  [['forest','frozen'], 11, 6, 578],
-  [['forest','frozen'], 12, 7, 561],
+  [['forest','frozen'], 11, 6, 561],
+  [['forest','frozen'], 12, 7, 544],
 
   // 71-72: Volcanic + Frozen
-  [['volcanic','frozen'], 12, 7, 544],
-  [['volcanic','frozen'], 13, 7, 527],
+  [['volcanic','frozen'], 12, 7, 527],
+  [['volcanic','frozen'], 13, 7, 510],
 
   // 73-74: Dungeon + Void
-  [['dungeon','void'], 12, 7, 510],
-  [['dungeon','void'], 13, 8, 495],
+  [['dungeon','void'], 12, 7, 490],
+  [['dungeon','void'], 13, 8, 475],
 
   // 75-76: Forest + Void
-  [['forest','void'], 13, 7, 480],
-  [['forest','void'], 14, 8, 465],
+  [['forest','void'], 13, 7, 460],
+  [['forest','void'], 14, 8, 450],
 
   // 77-78: Frozen + Void
-  [['frozen','void'], 13, 8, 450],
-  [['frozen','void'], 14, 8, 435],
+  [['frozen','void'], 13, 8, 435],
+  [['frozen','void'], 14, 8, 420],
 
   // 79-80: Volcanic + Void
-  [['volcanic','void'], 14, 8, 420],
-  [['volcanic','void'], 15, 9, 405],
+  [['volcanic','void'], 14, 8, 400],
+  [['volcanic','void'], 15, 9, 390],
 
   // 81-82: Dungeon + Poison
-  [['dungeon','poison'], 13, 7, 390],
-  [['dungeon','poison'], 14, 8, 375],
+  [['dungeon','poison'], 13, 7, 380],
+  [['dungeon','poison'], 14, 8, 370],
 
   // 83-84: Forest + Poison
-  [['forest','poison'], 14, 8, 362],
-  [['forest','poison'], 15, 9, 349],
+  [['forest','poison'], 14, 8, 360],
+  [['forest','poison'], 15, 9, 350],
 
   // 85-86: Volcanic + Poison
-  [['volcanic','poison'], 14, 8, 336],
-  [['volcanic','poison'], 15, 9, 323],
+  [['volcanic','poison'], 14, 8, 340],
+  [['volcanic','poison'], 15, 9, 330],
 
   // 87-88: Frozen + Poison
-  [['frozen','poison'], 15, 9, 310],
-  [['frozen','poison'], 16, 9, 297],
+  [['frozen','poison'], 15, 9, 320],
+  [['frozen','poison'], 16, 9, 310],
 
   // 89-90: Void + Poison
-  [['void','poison'], 15, 9, 284],
-  [['void','poison'], 16,10, 271],
+  [['void','poison'], 15, 9, 290],
+  [['void','poison'], 16,10, 280],
 
   // ── 3-world combos (harder) ──────────────────────────────────────────
 
   // 91-92: Dungeon + Forest + Volcanic
-  [['dungeon','forest','volcanic'], 14, 8, 258],
-  [['dungeon','forest','volcanic'], 15, 9, 246],
+  [['dungeon','forest','volcanic'], 14, 8, 270],
+  [['dungeon','forest','volcanic'], 15, 9, 260],
 
   // 93-94: Forest + Frozen + Void
-  [['forest','frozen','void'], 15, 9, 234],
-  [['forest','frozen','void'], 16,10, 222],
+  [['forest','frozen','void'], 15, 9, 250],
+  [['forest','frozen','void'], 16,10, 240],
 
   // 95-96: Volcanic + Frozen + Poison
-  [['volcanic','frozen','poison'], 15, 9, 212],
-  [['volcanic','frozen','poison'], 16,10, 202],
+  [['volcanic','frozen','poison'], 15, 9, 230],
+  [['volcanic','frozen','poison'], 16,10, 220],
 
   // 97-98: Dungeon + Void + Poison
-  [['dungeon','void','poison'], 16,10, 192],
-  [['dungeon','void','poison'], 17,11, 182],
+  [['dungeon','void','poison'], 16,10, 210],
+  [['dungeon','void','poison'], 17,11, 200],
 
   // 99-100: Forest + Volcanic + Poison
-  [['forest','volcanic','poison'], 16,10, 172],
-  [['forest','volcanic','poison'], 17,11, 163],
+  [['forest','volcanic','poison'], 16,10, 190],
+  [['forest','volcanic','poison'], 17,11, 180],
 
   // ── 4-world combos (very hard) ───────────────────────────────────────
 
