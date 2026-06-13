@@ -458,7 +458,7 @@ export class GameScene extends Phaser.Scene {
     if (!this.traps) this.traps = [];
 
     // Max 3 traps ταυτόχρονα
-    if (this.traps.length >= (this.mechanics.trapCount ?? 4)) return;
+    if (this.traps.length >= (this.mechanics.trapCount ?? 6)) return;
 
     // Τυχαίο κελί που δεν είναι occupied
     const freeCells = [];
