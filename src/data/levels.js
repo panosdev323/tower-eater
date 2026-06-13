@@ -117,7 +117,7 @@ for (let i = 0; i < 10; i++) {
   const id         = i + 1;
   const towerCount = i + 1;
   const required   = Math.max(1, Math.floor(towerCount * 0.6));
-  const shootDelay = Math.round(1150 - i * 35);
+  const shootDelay = Math.round(1150 - i * 33);
   levels.push(buildLevel(id, ['dungeon'], towerCount, required, shootDelay));
 }
 
