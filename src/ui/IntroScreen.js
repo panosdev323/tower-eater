@@ -142,7 +142,7 @@ export class IntroScreen {
             <span class="world-icon">🌿</span>
             <div>
               <strong>Levels 11–20 · Cursed Forest</strong>
-              <p>⚡ Bullets travel faster. Stay mobile.</p>
+              <p>⚡ Faster bullets. 🌿 Hidden traps appear on the grid — avoid them.</p>
             </div>
           </div>
           <div class="world-row volcanic">
