@@ -24,8 +24,11 @@ export class BootScene extends Phaser.Scene {
     SpriteFactory.preloadAll(this);
   }
 
-  create() {
-    AdManager.initialize();
+  async create() {
+    await AdManager.initialize();
+    if (this.scene.isActive('GameScene')) {
+        this.scene.stop('GameScene');
+    }
     // Small delay so the loading bar flash isn't jarring
     this.time.delayedCall(200, () => {
       const isFirstTime = !localStorage.getItem('te_seen_intro');
